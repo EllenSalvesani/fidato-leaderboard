@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fidato — Estimator Leaderboard</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Inter',Arial,sans-serif;background:#0a1628;color:#fff;min-height:100vh;}
+
+/* TOPBAR */
+.topbar{background:linear-gradient(135deg,#deeaf7 0%,#c8dff2 100%);padding:0 28px;display:flex;align-items:center;height:82px;gap:16px;border-bottom:2px solid #b5d0ea;position:relative;}
+.topbar-logo{height:58px;width:auto;position:relative;z-index:1;}
+.logo-text{display:flex;flex-direction:column;justify-content:center;line-height:1.1;margin-left:2px;}
+.logo-text span{font-size:10px;font-weight:800;color:#0d1f3c;letter-spacing:2px;text-transform:uppercase;}
+.topbar-divider{width:1px;height:32px;background:rgba(13,31,60,0.15);}
+.topbar-text .topbar-title{color:#0d1f3c;font-size:15px;font-weight:800;letter-spacing:0.5px;text-transform:uppercase;}
+.topbar-text .topbar-sub{color:rgba(13,31,60,0.55);font-size:11px;font-weight:500;margin-top:2px;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.updated-tag{color:rgba(13,31,60,0.5);font-size:11px;}
+.btn-add{padding:8px 16px;background:#1E5799;border:1px solid #1E5799;color:#fff;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.15s;}
+.btn-add:hover{background:#174a80;}
+
+/* WINNER BANNER */
+.winner-banner{background:linear-gradient(135deg,rgba(250,199,117,0.15) 0%,rgba(240,165,0,0.08) 100%);border:1px solid rgba(250,199,117,0.3);border-radius:14px;padding:16px 22px;margin-bottom:20px;display:flex;align-items:center;gap:16px;}
+.winner-trophy{font-size:32px;filter:drop-shadow(0 0 12px rgba(250,199,117,0.6));}
+.winner-info{flex:1;}
+.winner-label{font-size:11px;font-weight:700;color:rgba(250,199,117,0.7);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:3px;}
+.winner-name{font-size:20px;font-weight:900;color:#FAC775;}
+.winner-detail{font-size:12px;color:rgba(255,255,255,0.45);margin-top:2px;}
+.winner-stat{text-align:right;}
+.winner-rev{font-size:24px;font-weight:900;color:#FAC775;}
+.winner-rev-label{font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;}
+
+/* MAIN */
+.main{padding:22px 28px;max-width:1280px;margin:0 auto;}
+
+/* CONTROLS */
+.controls{display:flex;align-items:center;gap:10px;margin-bottom:20px;flex-wrap:wrap;}
+.tab-group{display:flex;background:rgba(255,255,255,0.06);border-radius:10px;border:1px solid rgba(255,255,255,0.1);overflow:hidden;}
+.tab{padding:8px 18px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:transparent;color:rgba(255,255,255,0.5);transition:all 0.2s;}
+.tab.active{background:#1E5799;color:#fff;}
+select{padding:7px 11px;font-size:13px;border:1px solid rgba(255,255,255,0.12);border-radius:8px;background:rgba(255,255,255,0.06);color:#fff;cursor:pointer;}
+select option{background:#1a2d4a;color:#fff;}
+.fy-pill{background:rgba(30,87,153,0.3);color:#7EB8F7;font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;border:1px solid rgba(30,87,153,0.5);}
+
+/* STAT CARDS */
+.stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:20px;}
+.stat-card{background:linear-gradient(135deg,rgba(255,255,255,0.06) 0%,rgba(255,255,255,0.03) 100%);border-radius:14px;padding:14px 18px;border:1px solid rgba(255,255,255,0.08);position:relative;overflow:hidden;transition:transform 0.2s;}
+.stat-card:hover{transform:translateY(-2px);}
+.stat-label{font-size:10px;color:rgba(255,255,255,0.45);font-weight:700;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px;}
+.stat-value{font-size:24px;font-weight:800;color:#fff;line-height:1;}
+.stat-sub{font-size:11px;color:rgba(255,255,255,0.3);margin-top:4px;}
+.stat-card.highlight .stat-value{color:#7EB8F7;}
+
+/* TARGET */
+.target-card{background:linear-gradient(135deg,rgba(30,87,153,0.25) 0%,rgba(14,40,80,0.4) 100%);border-radius:14px;padding:16px 20px;border:1px solid rgba(30,87,153,0.35);margin-bottom:20px;display:none;}
+.target-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;}
+.target-title{font-size:13px;font-weight:700;color:rgba(255,255,255,0.8);}
+.target-nums{font-size:12px;color:rgba(255,255,255,0.4);margin-top:3px;}
+.target-pct{font-size:30px;font-weight:900;color:#7EB8F7;}
+.track{background:rgba(255,255,255,0.08);border-radius:6px;height:12px;overflow:hidden;}
+.track-fill{height:12px;border-radius:6px;background:linear-gradient(90deg,#1E5799,#4da6ff);transition:width 0.8s cubic-bezier(.4,0,.2,1);box-shadow:0 0 12px rgba(77,166,255,0.4);}
+.track-labels{display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,0.3);margin-top:5px;}
+
+/* INDIVIDUAL TARGETS */
+.ind-targets{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:20px;display:none;}
+.ind-target-card{background:rgba(255,255,255,0.04);border-radius:10px;padding:12px 14px;border:1px solid rgba(255,255,255,0.07);}
+.ind-name{font-size:12px;font-weight:700;color:#fff;margin-bottom:2px;}
+.ind-nums{display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:6px;}
+.ind-track{background:rgba(255,255,255,0.06);border-radius:4px;height:6px;}
+.ind-fill{height:6px;border-radius:4px;background:linear-gradient(90deg,#1E5799,#4da6ff);transition:width 0.6s;}
+
+/* ENTITY BREAKDOWN */
+.entity-section{margin-bottom:20px;display:none;}
+.entity-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.entity-card{background:rgba(255,255,255,0.04);border-radius:12px;padding:14px 16px;border:1px solid rgba(255,255,255,0.08);}
+.entity-name{font-size:11px;font-weight:700;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;}
+.entity-rev{font-size:20px;font-weight:800;color:#7EB8F7;}
+.entity-stats{display:flex;gap:12px;margin-top:6px;}
+.entity-stat{font-size:11px;color:rgba(255,255,255,0.4);}
+.entity-stat span{color:rgba(255,255,255,0.7);font-weight:600;}
+.entity-rate-bar{margin-top:8px;}
+.entity-rate-track{background:rgba(255,255,255,0.06);border-radius:3px;height:4px;}
+.entity-rate-fill{height:4px;border-radius:3px;background:#4da6ff;}
+
+/* PENDING QUOTES */
+.pending-section{margin-bottom:20px;}
+.section-title{font-size:12px;font-weight:700;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;display:flex;align-items:center;gap:8px;}
+.section-title::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.06);}
+.pending-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;}
+.pending-card{background:rgba(255,255,255,0.04);border-radius:10px;padding:12px 14px;border:1px solid rgba(255,255,255,0.07);display:flex;justify-content:space-between;align-items:center;gap:12px;}
+.pending-card.overdue{border-color:rgba(255,112,112,0.3);background:rgba(255,112,112,0.05);}
+.pending-left .pending-project{font-size:13px;font-weight:600;color:#fff;margin-bottom:2px;}
+.pending-left .pending-client{font-size:11px;color:rgba(255,255,255,0.4);}
+.pending-left .pending-person{font-size:11px;color:#7EB8F7;margin-top:3px;}
+.pending-right{text-align:right;flex-shrink:0;}
+.pending-value{font-size:15px;font-weight:800;color:#fff;}
+.pending-days{font-size:11px;margin-top:2px;font-weight:600;}
+.days-ok{color:rgba(255,255,255,0.35);}
+.days-warn{color:#FAC775;}
+.days-over{color:#FF7070;}
+.overdue-flag{font-size:10px;color:#FF7070;font-weight:700;letter-spacing:0.5px;}
+
+/* INSIGHT */
+.insight-bar{background:rgba(30,87,153,0.2);border-left:3px solid #4da6ff;border-radius:0 10px 10px 0;padding:10px 16px;margin-bottom:18px;font-size:13px;color:rgba(255,255,255,0.75);display:none;}
+
+/* LEADERBOARD TABLE */
+.lb-wrap{background:rgba(255,255,255,0.03);border-radius:16px;border:1px solid rgba(255,255,255,0.08);overflow:hidden;margin-bottom:10px;}
+.lb-head{display:grid;grid-template-columns:54px 1fr 75px 75px 75px 130px 95px 105px 105px 80px;padding:10px 20px;background:rgba(30,87,153,0.3);gap:6px;align-items:center;border-bottom:1px solid rgba(255,255,255,0.06);}
+.lb-head span{font-size:9px;font-weight:700;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:0.8px;}
+.lb-head .r{text-align:right;}
+.lb-row{display:grid;grid-template-columns:54px 1fr 75px 75px 75px 130px 95px 105px 105px 80px;padding:13px 20px;gap:6px;align-items:center;border-bottom:1px solid rgba(255,255,255,0.04);transition:background 0.15s;position:relative;}
+.lb-row:last-child{border-bottom:none;}
+.lb-row:hover{background:rgba(255,255,255,0.04);}
+.lb-row.r1{background:linear-gradient(90deg,rgba(250,199,117,0.08) 0%,transparent 60%);}
+.lb-row.r1::before,.lb-row.r2::before,.lb-row.r3::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:0 2px 2px 0;}
+.lb-row.r1::before{background:linear-gradient(180deg,#FAC775,#f0a500);}
+.lb-row.r2::before{background:#A8A8A8;}
+.lb-row.r3::before{background:#cd7f32;}
+.badge{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0;}
+.b1{background:linear-gradient(135deg,#FAC775,#f0a500);color:#412402;box-shadow:0 0 14px rgba(250,199,117,0.4);}
+.b2{background:linear-gradient(135deg,#D3D1C7,#b0aea8);color:#2C2C2A;}
+.b3{background:linear-gradient(135deg,#F5C4B3,#cd7f32);color:#4A1B0C;}
+.bx{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);}
+.pname{font-weight:700;font-size:13px;color:#fff;}
+.prole{font-size:11px;color:rgba(255,255,255,0.4);margin-top:1px;}
+.pstreak{font-size:10px;color:#FAC775;margin-top:2px;}
+.ppb{font-size:10px;color:#6DD671;margin-top:1px;}
+.nc{text-align:right;font-size:13px;color:rgba(255,255,255,0.7);}
+.nc.rev{font-weight:800;color:#fff;font-size:15px;}
+.nc.pipeline{font-size:12px;color:rgba(255,255,255,0.4);}
+.nc.lost{color:#FF7070;font-size:13px;}
+.cr{text-align:right;font-weight:700;font-size:13px;}
+.cr-hi{color:#6DD671;}.cr-mid{color:#FAC775;}.cr-lo{color:#FF7070;}.cr-z{color:rgba(255,255,255,0.2);}
+.bar-bg{background:rgba(255,255,255,0.06);border-radius:3px;height:4px;margin-top:5px;}
+.bar-f{height:4px;border-radius:3px;background:linear-gradient(90deg,#1E5799,#4da6ff);box-shadow:0 0 6px rgba(77,166,255,0.3);}
+.pending-flag{font-size:10px;text-align:right;}
+.flag-ok{color:rgba(255,255,255,0.25);}
+.flag-warn{color:#FAC775;}
+.flag-over{color:#FF7070;font-weight:700;}
+.empty{padding:60px;text-align:center;color:rgba(255,255,255,0.25);font-size:14px;}
+.source-note{font-size:11px;color:rgba(255,255,255,0.2);text-align:right;margin-top:8px;}
+
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.modal-bg.open{display:flex;}
+.modal{background:#0f1f38;border:1px solid rgba(255,255,255,0.12);border-radius:16px;padding:24px 28px;width:440px;max-width:95vw;max-height:90vh;overflow-y:auto;}
+.modal h3{font-size:16px;font-weight:700;color:#7EB8F7;margin-bottom:16px;}
+.modal label{display:block;font-size:10px;font-weight:700;color:rgba(255,255,255,0.45);margin-bottom:3px;margin-top:10px;text-transform:uppercase;letter-spacing:0.5px;}
+.modal input,.modal select{width:100%;padding:8px 11px;border:1px solid rgba(255,255,255,0.12);border-radius:8px;font-size:13px;background:rgba(255,255,255,0.06);color:#fff;}
+.modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px;}
+.modal-btns{display:flex;gap:8px;margin-top:18px;justify-content:flex-end;}
+.btn{padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.06);color:#fff;}
+.btn-primary{background:#1E5799;border-color:#1E5799;}
+</style>
+</head>
+<body>
+
+<!-- ADD ENTRY MODAL -->
+<div class="modal-bg" id="entryModal">
+  <div class="modal">
+    <h3>Update Leaderboard Data</h3>
+    <label>Person</label>
+    <select id="mPerson">
+      <option>Matt Salvesani</option><option>Tom Land</option>
+      <option>Andrew Smith</option><option>Courtney Keong</option>
+      <option>Connor Gibbs-Patterson</option>
+    </select>
+    <div class="modal-grid">
+      <div>
+        <label>Period Type</label>
+        <select id="mPeriodType" onchange="updatePeriodOpts()">
+          <option>Monthly</option><option>Annual</option>
+        </select>
+      </div>
+      <div>
+        <label>Period</label>
+        <select id="mPeriod"></select>
+      </div>
+    </div>
+    <label>Financial Year</label>
+    <select id="mFY"><option>FY2025/26</option><option>FY2026/27</option></select>
+    <div class="modal-grid">
+      <div><label>Tenders Submitted</label><input type="number" id="mTenders" min="0" value="0"></div>
+      <div><label>Jobs Won</label><input type="number" id="mWon" min="0" value="0"></div>
+    </div>
+    <div class="modal-grid">
+      <div><label>Revenue Closed ($)</label><input type="number" id="mRevenue" min="0" value="0"></div>
+      <div><label>Lost</label><input type="number" id="mLost" min="0" value="0"></div>
+    </div>
+    <label>Avg Margin % (e.g. 33)</label>
+    <input type="number" id="mMargin" min="0" max="100" value="0">
+    <div class="modal-btns">
+      <button class="btn" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEntry()">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div style="display:flex;align-items:center;gap:4px;position:relative;z-index:1;">
+    <img class="topbar-logo" src="data:image/png;base64,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" alt="Fidato">
+    <div class="logo-text"><span>SERVICES GROUP</span></div>
+  </div>
+  <div class="topbar-divider"></div>
+  <div class="topbar-text">
+    <div class="topbar-title">Estimator Leaderboard</div>
+    <div class="topbar-sub">Sales &amp; tender performance · Source: Simpro BI</div>
+  </div>
+  <div class="topbar-right">
+    <span class="updated-tag" id="updatedTag">Data: 14 May 2026</span>
+    <button class="btn-add" onclick="document.getElementById('entryModal').classList.add('open')">+ Update data</button>
+  </div>
+</div>
+
+<div class="main">
+  <!-- CONTROLS -->
+  <div class="controls">
+    <div class="tab-group">
+      <button class="tab active" onclick="setView('Monthly',this)">Monthly</button>
+      <button class="tab" onclick="setView('Annual',this)">Calendar Year</button>
+    </div>
+    <select id="periodSelect" onchange="render()"></select>
+    <select id="fySelect" onchange="onFYChange()"><option>FY2025/26</option><option>FY2026/27</option></select>
+    <span class="fy-pill" id="fyPill">FY2025/26</span>
+  </div>
+
+  <!-- WINNER BANNER -->
+  <div class="winner-banner" id="winnerBanner">
+    <div class="winner-trophy">🏆</div>
+    <div class="winner-info">
+      <div class="winner-label">This Period's Leader</div>
+      <div class="winner-name" id="winnerName">—</div>
+      <div class="winner-detail" id="winnerDetail">—</div>
+    </div>
+    <div class="winner-stat">
+      <div class="winner-rev" id="winnerRev">—</div>
+      <div class="winner-rev-label">Revenue Won</div>
+    </div>
+  </div>
+
+  <!-- STAT CARDS -->
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-label">Total Tenders</div><div class="stat-value" id="sTenders">—</div><div class="stat-sub">this period</div></div>
+    <div class="stat-card highlight"><div class="stat-label">Jobs Won</div><div class="stat-value" id="sWon">—</div><div class="stat-sub">this period</div></div>
+    <div class="stat-card highlight"><div class="stat-label">Revenue Won</div><div class="stat-value" id="sRevenue">—</div><div class="stat-sub">this period</div></div>
+    <div class="stat-card"><div class="stat-label">Group Win Rate</div><div class="stat-value" id="sRate">—</div><div class="stat-sub">cohort won ÷ submitted</div></div>
+    <div class="stat-card"><div class="stat-label">Lost</div><div class="stat-value" id="sLost" style="color:#FF7070;">—</div><div class="stat-sub">this period</div></div>
+    <div class="stat-card"><div class="stat-label">Avg Deal Size</div><div class="stat-value" id="sAvg">—</div><div class="stat-sub">this period</div></div>
+  </div>
+
+  <!-- GROUP TARGET -->
+  <div class="target-card" id="targetCard">
+    <div class="target-top">
+      <div>
+        <div class="target-title">Calendar Year 2026 — Group Revenue Target</div>
+        <div id="targetNums" class="target-nums"></div>
+      </div>
+      <div class="target-pct" id="targetPct">0%</div>
+    </div>
+    <div class="track"><div class="track-fill" id="trackFill" style="width:0%"></div></div>
+    <div class="track-labels"><span>$0</span><span>$10,000,000 target</span></div>
+  </div>
+
+  <!-- INDIVIDUAL TARGETS -->
+  <div class="ind-targets" id="indTargets">
+    <div class="section-title">Individual Targets</div>
+  </div>
+
+  <!-- ENTITY BREAKDOWN -->
+  <div class="entity-section" id="entitySection">
+    <div class="section-title">Performance by Entity</div>
+    <div class="entity-grid" id="entityGrid"></div>
+  </div>
+
+  <!-- TOP PENDING QUOTES -->
+  <div class="pending-section" id="pendingSection">
+    <div class="section-title">Top Pending Quotes — Awaiting Decision</div>
+    <div class="pending-grid" id="pendingGrid"></div>
+  </div>
+
+  <!-- INSIGHT -->
+  <div class="insight-bar" id="insightBar"></div>
+
+  <!-- LEADERBOARD -->
+  <div class="lb-wrap">
+    <div class="lb-head">
+      <span>#</span><span>Person</span>
+      <span class="r">Tenders</span><span class="r">Won</span><span class="r">Lost</span>
+      <span class="r">Revenue</span><span class="r">Win Rate</span>
+      <span class="r">Avg Deal</span><span class="r">Pipeline</span>
+      <span class="r">Margin</span>
+    </div>
+    <div id="lbBody"><div class="empty">Loading...</div></div>
+  </div>
+  <div class="source-note">Source: Simpro BI — Won by Month tab · Win Rate = Cohort Won ÷ Submitted · May 2026 partial (to 14 May) · ⚠ = pending 30+ days</div>
+</div>
+
+<script>
+const ANNUAL_TARGET = 10000000;
+const DATA_KEY = 'fidato_lb_v4';
+
+const PEOPLE = [
+  {name:'Connor Gibbs-Patterson',role:'GC Branch Manager',target:3000000},
+  {name:'Tom Land',              role:'Shareholder / BDM',target:3000000},
+  {name:'Andrew Smith',          role:'Estimator',        target:1500000},
+  {name:'Matt Salvesani',        role:'CEO',              target:1000000},
+  {name:'Courtney Keong',        role:'Estimator',        target:1000000},
+];
+
+const PIPELINE = {
+  'Connor Gibbs-Patterson':6390000,
+  'Tom Land':16990000,
+  'Andrew Smith':2080000,
+  'Matt Salvesani':3940000,
+  'Courtney Keong':5840000,
+};
+
+const ENTITY_DATA = {
+  'January 2026':   [{name:'Coatings',won:6,revenue:76000,rate:14,margin:33},{name:'Services',won:15,revenue:87000,rate:48,margin:33},{name:'Services GC',won:3,revenue:7000,rate:43,margin:42}],
+  'February 2026':  [{name:'Coatings',won:9,revenue:266000,rate:22,margin:39},{name:'Services',won:21,revenue:78000,rate:40,margin:33},{name:'Services GC',won:5,revenue:260000,rate:0,margin:32}],
+  'March 2026':     [{name:'Coatings',won:12,revenue:555000,rate:9,margin:33},{name:'Services',won:26,revenue:152000,rate:31,margin:30},{name:'Services GC',won:1,revenue:11000,rate:29,margin:32}],
+  'April 2026':     [{name:'Coatings',won:7,revenue:681000,rate:17,margin:24},{name:'Services',won:14,revenue:184000,rate:19,margin:32},{name:'Services GC',won:6,revenue:1460000,rate:8,margin:24}],
+  'May 2026':       [{name:'Coatings',won:10,revenue:107000,rate:16,margin:33},{name:'Services',won:9,revenue:34000,rate:25,margin:35},{name:'Services GC',won:3,revenue:343000,rate:14,margin:30}],
+  'FY2025/26':      [{name:'Coatings',won:44,revenue:1685000,rate:78,margin:33},{name:'Services',won:85,revenue:535000,rate:49,margin:32},{name:'Services GC',won:18,revenue:2080000,rate:75,margin:30}],
+};
+
+const PENDING_QUOTES = [
+  {id:'260368',customer:'Aperi',project:'Window Remediation Works',person:'Matt Salvesani',value:1800000,days:16},
+  {id:'260310',customer:'PASG Projects',project:'Rooftop Waterproofing & Remediation',person:'Courtney Keong',value:1730000,days:31},
+  {id:'250651',customer:'The Village - Kelvin Grove',project:'External Repair & Repaint Tender',person:'Courtney Keong',value:1330000,days:191},
+  {id:'260407',customer:'Safer Buildings',project:'2/3/4 Tower Waterproofing',person:'Connor Gibbs-Patterson',value:1170000,days:4},
+  {id:'250640',customer:'Coolum at the Beach',project:'External Repair & Repaint Tender',person:'Tom Land',value:1140000,days:197},
+  {id:'260378',customer:'The Arbour on Grey',project:'Roof Waterproofing Works',person:'Matt Salvesani',value:996000,days:14},
+];
+
+const SEED_DATA = [
+  {person:'Connor Gibbs-Patterson',periodType:'Monthly',period:'January 2026',  fy:'FY2025/26',tenders:7,  won:3,  lost:0,revenue:7000,   margin:42},
+  {person:'Tom Land',              periodType:'Monthly',period:'January 2026',  fy:'FY2025/26',tenders:29, won:6,  lost:5,revenue:76000,  margin:33},
+  {person:'Matt Salvesani',        periodType:'Monthly',period:'January 2026',  fy:'FY2025/26',tenders:0,  won:0,  lost:0,revenue:0,      margin:0},
+  {person:'Courtney Keong',        periodType:'Monthly',period:'January 2026',  fy:'FY2025/26',tenders:27, won:15, lost:1,revenue:87000,  margin:33},
+  {person:'Andrew Smith',          periodType:'Monthly',period:'January 2026',  fy:'FY2025/26',tenders:0,  won:0,  lost:0,revenue:0,      margin:0},
+  {person:'Connor Gibbs-Patterson',periodType:'Monthly',period:'February 2026', fy:'FY2025/26',tenders:9,  won:5,  lost:0,revenue:260000, margin:32},
+  {person:'Tom Land',              periodType:'Monthly',period:'February 2026', fy:'FY2025/26',tenders:41, won:9,  lost:3,revenue:266000, margin:39},
+  {person:'Matt Salvesani',        periodType:'Monthly',period:'February 2026', fy:'FY2025/26',tenders:50, won:21, lost:5,revenue:78000,  margin:33},
+  {person:'Courtney Keong',        periodType:'Monthly',period:'February 2026', fy:'FY2025/26',tenders:0,  won:0,  lost:0,revenue:0,      margin:0},
+  {person:'Andrew Smith',          periodType:'Monthly',period:'February 2026', fy:'FY2025/26',tenders:0,  won:0,  lost:0,revenue:0,      margin:0},
+  {person:'Connor Gibbs-Patterson',periodType:'Monthly',period:'March 2026',    fy:'FY2025/26',tenders:7,  won:1,  lost:1,revenue:11000,  margin:32},
+  {person:'Tom Land',              periodType:'Monthly',period:'March 2026',    fy:'FY2025/26',tenders:0,  won:0,  lost:0,revenue:0,      margin:0},
+  {person:'Matt Salvesani',        periodType:'Monthly',period:'March 2026',    fy:'FY2025/26',tenders:55, won:26, lost:2,revenue:152000, margin:30},
+  {person:'Courtney Keong',        periodType:'Monthly',period:'March 2026',    fy:'FY2025/26',tenders:0,  won:0,  lost:0,revenue:0,      margin:0},
+  {person:'Andrew Smith',          periodType:'Monthly',period:'March 2026',    fy:'FY2025/26',tenders:44, won:12, lost:1,revenue:555000, margin:33},
+  {person:'Connor Gibbs-Patterson',periodType:'Monthly',period:'April 2026',    fy:'FY2025/26',tenders:13, won:6,  lost:0,revenue:1460000,margin:24},
+  {person:'Tom Land',              periodType:'Monthly',period:'April 2026',    fy:'FY2025/26',tenders:46, won:7,  lost:3,revenue:681000, margin:24},
+  {person:'Matt Salvesani',        periodType:'Monthly',period:'April 2026',    fy:'FY2025/26',tenders:37, won:14, lost:3,revenue:184000, margin:32},
+  {person:'Courtney Keong',        periodType:'Monthly',period:'April 2026',    fy:'FY2025/26',tenders:0,  won:0,  lost:0,revenue:0,      margin:0},
+  {person:'Andrew Smith',          periodType:'Monthly',period:'April 2026',    fy:'FY2025/26',tenders:0,  won:0,  lost:0,revenue:0,      margin:0},
+  {person:'Connor Gibbs-Patterson',periodType:'Monthly',period:'May 2026',      fy:'FY2025/26',tenders:7,  won:3,  lost:0,revenue:343000, margin:30},
+  {person:'Tom Land',              periodType:'Monthly',period:'May 2026',      fy:'FY2025/26',tenders:10, won:5,  lost:0,revenue:53500,  margin:33},
+  {person:'Matt Salvesani',        periodType:'Monthly',period:'May 2026',      fy:'FY2025/26',tenders:16, won:9,  lost:0,revenue:34000,  margin:35},
+  {person:'Courtney Keong',        periodType:'Monthly',period:'May 2026',      fy:'FY2025/26',tenders:16, won:9,  lost:0,revenue:34000,  margin:35},
+  {person:'Andrew Smith',          periodType:'Monthly',period:'May 2026',      fy:'FY2025/26',tenders:9,  won:5,  lost:0,revenue:53500,  margin:33},
+  {person:'Connor Gibbs-Patterson',periodType:'Annual',period:'FY2025/26',fy:'FY2025/26',tenders:43, won:18, lost:1, revenue:2080000,margin:30},
+  {person:'Tom Land',              periodType:'Annual',period:'FY2025/26',fy:'FY2025/26',tenders:116,won:22, lost:11,revenue:1020000,margin:33},
+  {person:'Andrew Smith',          periodType:'Annual',period:'FY2025/26',fy:'FY2025/26',tenders:63, won:22, lost:2, revenue:661000, margin:33},
+  {person:'Matt Salvesani',        periodType:'Annual',period:'FY2025/26',fy:'FY2025/26',tenders:92, won:40, lost:10,revenue:336000, margin:32},
+  {person:'Courtney Keong',        periodType:'Annual',period:'FY2025/26',fy:'FY2025/26',tenders:93, won:45, lost:1, revenue:199000, margin:34},
+];
+
+// Personal bests (historical highs)
+const PERSONAL_BESTS = {
+  'Connor Gibbs-Patterson': {revenue:1460000, month:'April 2026'},
+  'Tom Land':               {revenue:681000,  month:'April 2026'},
+  'Andrew Smith':           {revenue:555000,  month:'March 2026'},
+  'Matt Salvesani':         {revenue:184000,  month:'April 2026'},
+  'Courtney Keong':         {revenue:87000,   month:'January 2026'},
+};
+
+const INSIGHTS = {
+  'January 2026':  'Services leads at 48% win rate. Courtney Keong top performer. January total: $170K won.',
+  'February 2026': 'Highest volume month — 100 submitted. Tom Land $266K, Connor GC $260K. Total: $604K.',
+  'March 2026':    'Andrew Smith tops Coatings with $555K. Matt Salvesani 26 won in Services. Total: $717K.',
+  'April 2026':    'Best ever month — $2.32M. Connor GC landmark: 6 won at $1.46M. Coatings avg deal $97K.',
+  'May 2026':      'Month in progress (to 14 May). No losses recorded. Connor GC $343K leads. Total: $484K.',
+  'FY2025/26':     'Jan–May 2026: Connor GC leads revenue $2.08M, avg deal $116K. Courtney leads win rate 40%. Tom Land $16.99M pipeline.',
+};
+
+let allData = [];
+let currentView = 'Monthly';
+
+function loadData() {
+  const saved = localStorage.getItem(DATA_KEY);
+  if (saved) { try { allData = JSON.parse(saved); return; } catch(e){} }
+  allData = SEED_DATA.map((d,i)=>({...d,id:i}));
+  localStorage.setItem(DATA_KEY, JSON.stringify(allData));
+}
+
+function fmtC(n) {
+  if (!n) return '—';
+  if (n>=1000000) return '$'+(n/1000000).toFixed(2)+'M';
+  if (n>=1000) return '$'+Math.round(n/1000)+'K';
+  return '$'+Math.round(n).toLocaleString();
+}
+
+function setView(v,el) {
+  currentView=v;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('targetCard').style.display=v==='Annual'?'block':'none';
+  document.getElementById('indTargets').style.display=v==='Annual'?'grid':'none';
+  document.getElementById('entitySection').style.display='block';
+  updatePeriodSelect();
+  render();
+}
+
+function onFYChange(){updatePeriodSelect();render();}
+
+function updatePeriodSelect() {
+  const sel=document.getElementById('periodSelect');
+  const fy=document.getElementById('fySelect').value;
+  const baseYr=parseInt(fy.slice(2,6));
+  let opts=[];
+  if(currentView==='Monthly'){
+    opts=['July','August','September','October','November','December','January','February','March','April','May','June'].map(m=>{
+      const yr=['January','February','March','April','May','June'].includes(m)?baseYr+1:baseYr;
+      return m+' '+yr;
+    });
+  } else {
+    opts=['FY2025/26','FY2026/27'];
+  }
+  const prev=sel.value;
+  sel.innerHTML=opts.map(o=>`<option>${o}</option>`).join('');
+  if(opts.includes(prev)) sel.value=prev;
+  else sel.value=currentView==='Monthly'?'May 2026':'FY2025/26';
+}
+
+// Calculate streak (consecutive months in top 3)
+function calcStreak(personName) {
+  const months=['January 2026','February 2026','March 2026','April 2026','May 2026'];
+  let streak=0;
+  for(let i=months.length-1;i>=0;i--){
+    const monthData=allData.filter(d=>d.periodType==='Monthly'&&d.period===months[i]);
+    const agg={};
+    PEOPLE.forEach(p=>{agg[p.name]={revenue:0};});
+    monthData.forEach(d=>{if(agg[d.person])agg[d.person].revenue+=+d.revenue||0;});
+    const sorted=Object.entries(agg).sort((a,b)=>b[1].revenue-a[1].revenue);
+    const top3=sorted.slice(0,3).map(x=>x[0]);
+    if(top3.includes(personName)) streak++;
+    else break;
+  }
+  return streak;
+}
+
+function render() {
+  const period=document.getElementById('periodSelect').value;
+  const fy=document.getElementById('fySelect').value;
+  document.getElementById('fyPill').textContent=fy;
+
+  const filtered=allData.filter(d=>{
+    if(currentView==='Annual') return d.periodType==='Annual'&&d.period===fy;
+    return d.periodType==='Monthly'&&d.period===period;
+  });
+
+  const agg={};
+  PEOPLE.forEach(p=>{agg[p.name]={...p,tenders:0,won:0,lost:0,revenue:0,margin:0,marginCount:0};});
+  filtered.forEach(d=>{
+    const key=d.person==='Matthew Salvesani'?'Matt Salvesani':d.person;
+    if(!agg[key])return;
+    agg[key].tenders+=+d.tenders||0;
+    agg[key].won+=+d.won||0;
+    agg[key].lost+=+d.lost||0;
+    agg[key].revenue+=+d.revenue||0;
+    if(d.margin>0){agg[key].margin+=+d.margin||0;agg[key].marginCount++;}
+  });
+
+  const rows=Object.values(agg).sort((a,b)=>b.revenue-a.revenue);
+  const maxRev=Math.max(...rows.map(r=>r.revenue),1);
+  const totT=rows.reduce((s,r)=>s+r.tenders,0);
+  const totW=rows.reduce((s,r)=>s+r.won,0);
+  const totL=rows.reduce((s,r)=>s+r.lost,0);
+  const totR=rows.reduce((s,r)=>s+r.revenue,0);
+
+  document.getElementById('sTenders').textContent=totT||'—';
+  document.getElementById('sWon').textContent=totW||'—';
+  document.getElementById('sLost').textContent=totL||'—';
+  document.getElementById('sRevenue').textContent=totR?fmtC(totR):'—';
+  document.getElementById('sRate').textContent=totT>0?(totW/totT*100).toFixed(1)+'%':'—';
+  document.getElementById('sAvg').textContent=totW>0?fmtC(totR/totW):'—';
+
+  // Winner banner
+  const leader=rows[0];
+  if(leader&&leader.revenue>0){
+    document.getElementById('winnerName').textContent=leader.name;
+    document.getElementById('winnerDetail').textContent=leader.role+' · '+leader.won+' jobs won · '+(leader.tenders>0?(leader.won/leader.tenders*100).toFixed(1)+'% win rate':'');
+    document.getElementById('winnerRev').textContent=fmtC(leader.revenue);
+  }
+
+  // Group target
+  if(currentView==='Annual'){
+    const pct=Math.min(100,totR/ANNUAL_TARGET*100);
+    document.getElementById('targetPct').textContent=pct.toFixed(1)+'%';
+    document.getElementById('trackFill').style.width=pct+'%';
+    document.getElementById('targetNums').textContent=fmtC(totR)+' of $10,000,000 Calendar Year target';
+
+    // Individual targets
+    const itDiv=document.getElementById('indTargets');
+    itDiv.innerHTML='<div class="section-title" style="grid-column:1/-1">Individual Targets</div>'+
+      rows.map(r=>{
+        const pct2=Math.min(100,r.revenue/(r.target||1)*100);
+        return `<div class="ind-target-card">
+          <div class="ind-name">${r.name}</div>
+          <div class="ind-nums"><span>${fmtC(r.revenue)}</span><span>${fmtC(r.target)}</span></div>
+          <div class="ind-track"><div class="ind-fill" style="width:${pct2}%"></div></div>
+        </div>`;
+      }).join('');
+  }
+
+  // Entity breakdown
+  const eKey=currentView==='Annual'?fy:period;
+  const entities=ENTITY_DATA[eKey];
+  const eSection=document.getElementById('entitySection');
+  if(entities){
+    eSection.style.display='block';
+    const maxER=Math.max(...entities.map(e=>e.revenue),1);
+    document.getElementById('entityGrid').innerHTML=entities.map(e=>`
+      <div class="entity-card">
+        <div class="entity-name">${e.name}</div>
+        <div class="entity-rev">${fmtC(e.revenue)}</div>
+        <div class="entity-stats">
+          <div class="entity-stat">Won <span>${e.won}</span></div>
+          <div class="entity-stat">Win Rate <span>${e.rate}%</span></div>
+          <div class="entity-stat">Margin <span>${e.margin}%</span></div>
+        </div>
+        <div class="entity-rate-bar"><div class="entity-rate-track"><div class="entity-rate-fill" style="width:${Math.round(e.revenue/maxER*100)}%"></div></div></div>
+      </div>`).join('');
+  } else {
+    eSection.style.display='none';
+  }
+
+  // Pending quotes
+  document.getElementById('pendingGrid').innerHTML=PENDING_QUOTES.map(q=>{
+    const isOver=q.days>=90;
+    const isWarn=q.days>=30&&q.days<90;
+    const dCls=isOver?'days-over':isWarn?'days-warn':'days-ok';
+    return `<div class="pending-card${isOver?' overdue':''}">
+      <div class="pending-left">
+        <div class="pending-project">${q.project}</div>
+        <div class="pending-client">${q.customer} · #${q.id}</div>
+        <div class="pending-person">${q.person}</div>
+      </div>
+      <div class="pending-right">
+        <div class="pending-value">${fmtC(q.value)}</div>
+        <div class="pending-days ${dCls}">${q.days}d pending${isOver?' ⚠':''}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Insight
+  const ib=document.getElementById('insightBar');
+  const insight=INSIGHTS[currentView==='Annual'?fy:period]||'';
+  if(insight){ib.textContent='📌  '+insight;ib.style.display='block';}
+  else ib.style.display='none';
+
+  // Leaderboard rows
+  const body=document.getElementById('lbBody');
+  if(rows.every(r=>r.revenue===0&&r.tenders===0)){
+    body.innerHTML='<div class="empty">No data for this period.</div>';return;
+  }
+
+  body.innerHTML=rows.map((r,i)=>{
+    const rank=i+1;
+    const cr=r.tenders>0?(r.won/r.tenders*100):0;
+    const crClass=cr===0?'cr-z':cr>=40?'cr-hi':cr>=25?'cr-mid':'cr-lo';
+    const avgJob=r.won>0?r.revenue/r.won:0;
+    const barW=Math.round(r.revenue/maxRev*100);
+    const bCls=rank===1?'b1':rank===2?'b2':rank===3?'b3':'bx';
+    const rCls=rank===1?'r1':rank===2?'r2':rank===3?'r3':'';
+    const pipe=PIPELINE[r.name]?fmtC(PIPELINE[r.name]):'—';
+    const avgMargin=r.marginCount>0?Math.round(r.margin/r.marginCount)+'%':'—';
+    const streak=calcStreak(r.name);
+    const pb=PERSONAL_BESTS[r.name];
+    const isPB=pb&&r.revenue>=pb.revenue&&currentView==='Monthly';
+    const streakTxt=streak>=2?`🔥 ${streak} month streak`:'';
+    const pbTxt=isPB?'⭐ Personal best!':'';
+    return `<div class="lb-row ${rCls}">
+      <div><div class="badge ${bCls}">${rank}</div></div>
+      <div>
+        <div class="pname">${r.name}</div>
+        <div class="prole">${r.role}</div>
+        ${streakTxt?'<div class="pstreak">'+streakTxt+'</div>':''}
+        ${pbTxt?'<div class="ppb">'+pbTxt+'</div>':''}
+      </div>
+      <div class="nc">${r.tenders||'—'}</div>
+      <div class="nc">${r.won||'—'}</div>
+      <div class="nc lost">${r.lost||'—'}</div>
+      <div class="nc rev">${r.revenue?fmtC(r.revenue):'—'}<div class="bar-bg"><div class="bar-f" style="width:${barW}%"></div></div></div>
+      <div class="cr ${crClass}">${r.tenders>0?cr.toFixed(1)+'%':'—'}</div>
+      <div class="nc">${avgJob?fmtC(avgJob):'—'}</div>
+      <div class="nc pipeline">${currentView==='Annual'?pipe:'—'}</div>
+      <div class="nc">${avgMargin}</div>
+    </div>`;
+  }).join('');
+}
+
+function updatePeriodOpts(){
+  const type=document.getElementById('mPeriodType').value;
+  const sel=document.getElementById('mPeriod');
+  const opts=type==='Monthly'
+    ?['January 2026','February 2026','March 2026','April 2026','May 2026','June 2026','July 2026','August 2026']
+    :['FY2025/26','FY2026/27'];
+  sel.innerHTML=opts.map(o=>`<option>${o}</option>`).join('');
+}
+
+function closeModal(){document.getElementById('entryModal').classList.remove('open');}
+
+function saveEntry(){
+  const person=document.getElementById('mPerson').value;
+  const entry={
+    id:Date.now(),
+    person:person==='Matthew Salvesani'?'Matt Salvesani':person,
+    periodType:document.getElementById('mPeriodType').value,
+    period:document.getElementById('mPeriod').value,
+    fy:document.getElementById('mFY').value,
+    tenders:parseInt(document.getElementById('mTenders').value)||0,
+    won:parseInt(document.getElementById('mWon').value)||0,
+    lost:parseInt(document.getElementById('mLost').value)||0,
+    revenue:parseFloat(document.getElementById('mRevenue').value)||0,
+    margin:parseFloat(document.getElementById('mMargin').value)||0,
+  };
+  allData=allData.filter(d=>!(d.person===entry.person&&d.periodType===entry.periodType&&d.period===entry.period&&d.fy===entry.fy));
+  allData.push(entry);
+  localStorage.setItem(DATA_KEY,JSON.stringify(allData));
+  document.getElementById('updatedTag').textContent='Updated: '+new Date().toLocaleString('en-AU',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+  closeModal();render();
+}
+
+loadData();updatePeriodOpts();updatePeriodSelect();
+document.getElementById('entitySection').style.display='block';
+document.getElementById('pendingSection').style.display='block';
+render();
+</script>
+</body>
+</html>
