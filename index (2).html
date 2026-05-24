@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fidato — Sales Intelligence Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0e1623;--bg2:#131d2e;--card:#1a2540;--card2:#1f2d4a;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.14);
+  --text:#c8d8ee;--muted:#7a90b0;--bright:#e8f0fc;
+  --teal:#2ec4b6;--blue:#4a9fdd;--blue2:#2a7fd4;
+  --gold:#f5a623;--green:#3ec97c;--red:#e05252;--orange:#e07832;
+  /* aliases for existing code */
+  --navy:#0e1623;--navy-mid:#131d2e;--navy-light:#1e2e4a;
+  --border-col:rgba(255,255,255,0.07);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:13px}
+
+/* ── TOPBAR (Lead Activity Dashboard style) ── */
+.header{background:linear-gradient(135deg,#c8ddf0 0%,#b8ceea 100%);border-bottom:1px solid rgba(140,180,220,.5);padding:0 28px;height:64px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 12px rgba(100,150,200,.15);position:sticky;top:0;z-index:100}
+.logo-wrap{display:flex;align-items:center;gap:12px;padding-right:20px;border-right:1px solid rgba(26,58,92,.2);margin-right:20px}
+.logo-icon{width:40px;height:40px;background:linear-gradient(135deg,#1a5fa8,#2a7fd4);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.logo-icon svg{width:22px;height:22px;fill:#fff}
+.logo-name{font-family:'DM Serif Display',serif;font-size:20px;color:#1a2f45;letter-spacing:.5px;display:block;line-height:1.1}
+.logo-sub{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:rgba(26,58,92,.5);display:block;margin-top:1px}
+.header-title h1{font-size:14px;font-weight:700;color:#1a2f45;letter-spacing:1.8px;text-transform:uppercase}
+.header-title p{font-size:11px;color:rgba(26,58,92,.5);margin-top:2px}
+.badge{background:rgba(26,95,168,.15);border:1px solid rgba(26,95,168,.3);color:#1a5fa8;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700}
+.date-badge{font-size:12px;color:rgba(26,58,92,.55)}
+
+/* ── NAV (dark, under the light topbar) ── */
+.nav{background:#111c30;border-bottom:1px solid rgba(255,255,255,.08);padding:0 28px;display:flex}
+.nav-tab{padding:13px 20px;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:#7a90b0;cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;transition:all .2s;font-family:'DM Sans',sans-serif}
+.nav-tab:hover{color:#e8f0fc}.nav-tab.active{color:var(--teal);border-bottom-color:var(--teal)}
+.main{padding:24px 28px;max-width:1600px;margin:0 auto}
+.kpi-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:22px}
+.kpi-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 18px;position:relative;overflow:hidden;transition:transform .15s}
+.kpi-card:hover{transform:translateY(-2px)}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.kc-t::before{background:var(--teal)}.kc-g::before{background:var(--gold)}.kc-gr::before{background:var(--green)}.kc-b::before{background:var(--blue)}.kc-r::before{background:var(--red)}
+.kpi-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+.kpi-v{font-size:24px;font-weight:700;letter-spacing:-1px}
+.kc-t .kpi-v{color:var(--teal)}.kc-g .kpi-v{color:var(--gold)}.kc-gr .kpi-v{color:var(--green)}.kc-b .kpi-v{color:var(--blue)}.kc-r .kpi-v{color:var(--red)}
+.kpi-s{font-size:11px;color:var(--muted);margin-top:3px}
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.st{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;display:flex;align-items:center;gap:8px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--teal);flex-shrink:0}
+.tg{display:flex;gap:3px;background:rgba(255,255,255,.05);border-radius:8px;padding:3px}
+.tb{padding:4px 12px;border-radius:6px;border:none;cursor:pointer;font-size:11px;font-weight:600;color:var(--muted);background:none;transition:all .15s;font-family:'DM Sans',sans-serif}
+.tb.active{background:var(--teal);color:#fff}
+.tw{overflow-x:auto;border-radius:10px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse}
+thead th{background:var(--navy-light);padding:8px 10px;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;white-space:nowrap;border-bottom:1px solid var(--border);text-align:left}
+thead th.r{text-align:right}
+thead th.grp{text-align:center;border-left:1px solid rgba(255,255,255,.1)}
+th.sub{font-size:9px;color:var(--muted);opacity:.75;text-align:right;border-top:1px solid rgba(255,255,255,.05)}
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:rgba(255,255,255,.03)}
+td{padding:8px 10px;white-space:nowrap;font-size:12px}
+td.r{text-align:right;font-family:'DM Mono',monospace;font-size:11px}
+td.r2{text-align:right;font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)}
+td.sep{border-left:1px solid rgba(255,255,255,.07)}
+.ep{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600}
+.ep.Coatings{background:rgba(78,154,241,.15);color:#4e9af1}
+.ep.Services{background:rgba(46,184,126,.15);color:#2eb87e}
+.ep.ServicesGC{background:rgba(240,165,0,.15);color:var(--gold)}
+.d{font-size:10px;font-weight:600;margin-left:3px}
+.d.up{color:var(--green)}.d.dn{color:var(--red)}.d.eq{color:var(--muted)}
+.wrb{display:flex;align-items:center;gap:5px;justify-content:flex-end}
+.wrt{flex:1;height:4px;background:rgba(255,255,255,.1);border-radius:2px;min-width:36px;max-width:55px}
+.wrf{height:100%;border-radius:2px}
+.wrtx{font-family:'DM Mono',monospace;font-size:11px;min-width:28px;text-align:right}
+.lc{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:all .2s;margin-bottom:9px}
+.lc:hover{border-color:rgba(14,165,160,.25)}
+.lh{display:grid;grid-template-columns:42px 1fr 110px 88px 88px 88px 88px 108px 108px;align-items:center;padding:12px 15px;cursor:pointer;gap:0}
+.lrk{font-size:20px;font-weight:700;color:var(--muted);font-family:'DM Mono',monospace}
+.lrk.r1{color:var(--gold)}.lrk.r2{color:#9ca3af}.lrk.r3{color:#c9916a}
+.ln{font-size:13px;font-weight:600}.lm{font-size:10px;color:var(--muted);margin-top:2px}
+.ls{text-align:right}.ls .v{font-size:13px;font-weight:600;font-family:'DM Mono',monospace}
+.ls .l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-top:1px}
+.wb{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:700;font-family:'DM Mono',monospace}
+.wb.hi{background:rgba(46,184,126,.15);color:var(--green)}.wb.mi{background:rgba(240,165,0,.15);color:var(--gold)}.wb.lo{background:rgba(224,85,85,.15);color:var(--red)}
+.xp{color:var(--muted);font-size:16px;display:flex;justify-content:flex-end;transition:transform .2s}
+.lc.open .xp{transform:rotate(180deg)}
+.ldd{display:none;border-top:1px solid var(--border);padding:0 15px 12px}
+.lc.open .ldd{display:block}
+.er{display:grid;grid-template-columns:108px 68px 100px 68px 100px 68px 62px 68px 104px;align-items:center;padding:6px 10px;background:rgba(255,255,255,.03);border-radius:6px;gap:0;font-size:11px;margin-top:4px}
+.er .r{text-align:right;font-family:'DM Mono',monospace}
+.eh{display:grid;grid-template-columns:108px 68px 100px 68px 100px 68px 62px 68px 104px;padding:5px 10px;gap:0;margin-top:9px}
+.eh span{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;text-align:right}
+.eh span:first-child{text-align:left}
+.pc{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 17px;display:grid;grid-template-columns:32px 1fr 95px 118px 78px 86px;align-items:center;gap:13px;transition:all .15s;margin-bottom:7px}
+.pc:hover{border-color:rgba(240,165,0,.3);transform:translateX(3px)}
+.prk{font-size:17px;font-weight:700;font-family:'DM Mono',monospace;color:var(--muted)}
+.pn{font-size:12px;font-weight:600}.pcu{font-size:10px;color:var(--muted);margin-top:2px}
+.pv{font-size:15px;font-weight:700;font-family:'DM Mono',monospace;color:var(--gold);text-align:right}
+.db{padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;font-family:'DM Mono',monospace;text-align:center}
+.db.fr{background:rgba(46,184,126,.15);color:var(--green)}.db.wa{background:rgba(240,165,0,.15);color:var(--gold)}.db.ur{background:rgba(224,85,85,.2);color:var(--red)}
+.panel{display:none}.panel.active{display:block}
+.fr2{display:flex;align-items:center;gap:7px;margin-bottom:13px;flex-wrap:wrap}
+.fl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.fb{padding:4px 12px;border-radius:20px;border:1px solid var(--border);background:none;color:var(--muted);font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif}
+.fb:hover{border-color:var(--teal);color:var(--teal)}.fb.active{background:var(--teal);border-color:var(--teal);color:#fff}
+.cw{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px 22px;margin-bottom:22px}
+.bc{display:flex;align-items:flex-end;gap:4px;height:100px;margin-top:10px}
+.bg{display:flex;align-items:flex-end;gap:2px;flex:1}
+.bar{flex:1;border-radius:3px 3px 0 0;min-width:8px;transition:opacity .2s;cursor:pointer}
+.bar:hover{opacity:.8}.bar.c1{background:#4e9af1}.bar.c2{background:#2eb87e}.bar.c3{background:var(--gold)}
+.bl{display:flex;gap:4px;margin-top:6px}
+.blg{flex:1;text-align:center;font-size:10px;color:var(--muted)}
+.lg{display:flex;gap:16px;margin-top:10px}
+.li{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted)}
+.ld2{width:8px;height:8px;border-radius:2px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.note{margin-top:9px;padding:9px 13px;background:rgba(255,255,255,.03);border-radius:7px;font-size:11px;color:var(--muted)}
+.ms{background:rgba(255,255,255,.06);border:1px solid var(--border);color:#fff;padding:5px 10px;border-radius:7px;font-size:12px;font-family:'DM Sans',sans-serif;cursor:pointer;outline:none}
+.ms option{background:#1a2744;color:#fff}
+#tt{position:fixed;background:var(--navy-light);border:1px solid var(--teal);border-radius:8px;padding:10px 13px;font-size:12px;pointer-events:none;display:none;z-index:999;min-width:148px;box-shadow:0 4px 20px rgba(0,0,0,.4)}
+#tt .ttt{font-weight:700;margin-bottom:5px;color:var(--teal)}
+#tt .ttr{display:flex;justify-content:space-between;gap:18px;color:var(--muted);margin-top:2px}
+#tt .ttr span{color:#fff;font-family:'DM Mono',monospace}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:3px}
+</style>
+</head>
+<body>
+<div id="tt"></div>
+<div class="header">
+  <div style="display:flex;align-items:center">
+    <div class="logo-wrap">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z" opacity=".3"/><path d="M5 5h4v4H5zM15 5h4v4h-4zM5 15h4v4H5zM15 15h4v4h-4z"/></svg>
+      </div>
+      <div><span class="logo-name">FIDATO</span><span class="logo-sub">Group</span></div>
+    </div>
+    <div class="header-title">
+      <h1>Sales Intelligence Dashboard</h1>
+      <p>Won by Month · Leaderboard · Pending Quotes · 2026 YTD</p>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <span class="badge">2026 YTD</span>
+    <span class="date-badge">As of 25 May 2026</span>
+  </div>
+</div>
+<div class="nav">
+  <button class="nav-tab active" onclick="showP('overview',this)">Overview</button>
+  <button class="nav-tab" onclick="showP('wbm',this)">Won by Month</button>
+  <button class="nav-tab" onclick="showP('leaderboard',this)">Leaderboard</button>
+  <button class="nav-tab" onclick="showP('monthly',this)">Monthly Leaderboard</button>
+  <button class="nav-tab" onclick="showP('pending',this)">Top 10 Pending</button>
+</div>
+<div class="main">
+
+<!-- OVERVIEW -->
+<div id="panel-overview" class="panel active">
+  <div class="kpi-strip">
+    <div class="kpi-card kc-t"><div class="kpi-lbl">Submitted (YTD)</div><div class="kpi-v" id="k-sub">—</div><div class="kpi-s">All entities 2026</div></div>
+    <div class="kpi-card kc-g"><div class="kpi-lbl">Won Value (YTD)</div><div class="kpi-v" id="k-wv">—</div><div class="kpi-s">By date won</div></div>
+    <div class="kpi-card kc-gr"><div class="kpi-lbl">Cohort Win Rate</div><div class="kpi-v" id="k-wr">—</div><div class="kpi-s">Cohort Won ÷ Submitted</div></div>
+    <div class="kpi-card kc-b"><div class="kpi-lbl">Pipeline (Pending)</div><div class="kpi-v" id="k-pipe">—</div><div class="kpi-s">Active pending value</div></div>
+    <div class="kpi-card kc-r"><div class="kpi-lbl">Quotes Lost (YTD)</div><div class="kpi-v" id="k-lost">—</div><div class="kpi-s">Lost count 2026</div></div>
+  </div>
+  <div class="cw">
+    <div class="st"><span class="dot"></span>Won Value by Month &amp; Entity</div>
+    <div class="bc" id="main-chart"></div>
+    <div class="bl" id="main-labels"></div>
+    <div class="lg">
+      <div class="li"><div class="ld2" style="background:#4e9af1"></div>Coatings</div>
+      <div class="li"><div class="ld2" style="background:#2eb87e"></div>Services</div>
+      <div class="li"><div class="ld2" style="background:var(--gold)"></div>Services GC</div>
+    </div>
+  </div>
+  <div class="two">
+    <div>
+      <div class="sh"><div class="st"><span class="dot"></span>YTD Leaderboard Snapshot</div></div>
+      <div class="tw"><table><thead><tr><th>#</th><th>Salesperson</th><th class="r">Won Value</th><th class="r">Cohort Won</th><th class="r">Win Rate</th></tr></thead><tbody id="mini-lb"></tbody></table></div>
+    </div>
+    <div>
+      <div class="sh"><div class="st"><span class="dot"></span>Top 5 Pending Quotes</div></div>
+      <div class="tw"><table><thead><tr><th>#</th><th>Quote</th><th>Entity</th><th class="r">Value</th><th class="r">Days</th></tr></thead><tbody id="mini-pend"></tbody></table></div>
+    </div>
+  </div>
+</div>
+
+<!-- WON BY MONTH -->
+<div id="panel-wbm" class="panel">
+  <div class="sh"><div class="st"><span class="dot"></span>Quotes Won by Month — By Entity</div></div>
+  <div class="fr2">
+    <span class="fl">Month:</span>
+    <button class="fb active" onclick="fWBM('all',this)">All</button>
+    <button class="fb" onclick="fWBM('2026-01',this)">Jan</button>
+    <button class="fb" onclick="fWBM('2026-02',this)">Feb</button>
+    <button class="fb" onclick="fWBM('2026-03',this)">Mar</button>
+    <button class="fb" onclick="fWBM('2026-04',this)">Apr</button>
+    <button class="fb" onclick="fWBM('2026-05',this)">May</button>
+  </div>
+  <div class="tw">
+    <table>
+      <thead>
+        <tr>
+          <th rowspan="2">Month</th><th rowspan="2">Entity</th>
+          <th colspan="2" class="grp" style="color:#4e9af1">SUBMITTED</th>
+          <th colspan="2" class="grp" style="color:var(--teal)">WON (COHORT)</th>
+          <th colspan="2" class="grp" style="color:var(--red)">LOST</th>
+          <th rowspan="2" class="r" style="color:var(--gold)">WIN RATE</th>
+          <th colspan="2" class="grp" style="color:var(--muted)">PENDING</th>
+        </tr>
+        <tr>
+          <th class="sub">Count</th><th class="sub">Value</th>
+          <th class="sub sep">Count</th><th class="sub">Value</th>
+          <th class="sub sep">Count</th><th class="sub">Value</th>
+          <th class="sub sep">Count</th><th class="sub">Value</th>
+        </tr>
+      </thead>
+      <tbody id="wbm-body"></tbody>
+    </table>
+  </div>
+  <div class="note"><span style="color:var(--green)">▲</span> / <span style="color:var(--red)">▼</span> changes vs 19 May 2026 &nbsp;·&nbsp; Lost now includes <em>Archived</em> + <em>Cancelled/Duplicate</em> &nbsp;·&nbsp; Pending = all active statuses &nbsp;·&nbsp; <strong style="color:var(--teal)">Formula: Submitted = Cohort Won + Lost + Pending ✓</strong></div>
+</div>
+
+<!-- LEADERBOARD -->
+<div id="panel-leaderboard" class="panel">
+  <div class="sh">
+    <div class="st"><span class="dot"></span>Salesperson Leaderboard</div>
+    <div class="tg">
+      <button class="tb active" onclick="swLB('ytd',this)">2026 YTD</button>
+      <button class="tb" onclick="swLB('alltime',this)">All Time</button>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:42px 1fr 110px 88px 88px 88px 88px 108px 108px;padding:4px 15px;gap:0;margin-bottom:3px">
+    <span style="font-size:9px;color:var(--muted);text-transform:uppercase">#</span>
+    <span style="font-size:9px;color:var(--muted);text-transform:uppercase">Salesperson</span>
+    <span style="font-size:9px;color:var(--muted);text-transform:uppercase;text-align:right">Won Value</span>
+    <span style="font-size:9px;color:var(--muted);text-transform:uppercase;text-align:right">Submitted</span>
+    <span style="font-size:9px;color:var(--muted);text-transform:uppercase;text-align:right">Cohort Won</span>
+    <span style="font-size:9px;color:var(--muted);text-transform:uppercase;text-align:right">Lost</span>
+    <span style="font-size:9px;color:var(--muted);text-transform:uppercase;text-align:right">Pending</span>
+    <span style="font-size:9px;color:var(--muted);text-transform:uppercase;text-align:right">Win Rate</span>
+    <span style="font-size:9px;color:var(--muted);text-transform:uppercase;text-align:right">Pipeline</span>
+  </div>
+  <div id="lb-grid"></div>
+  <div class="note">Win Rate = Cohort Won ÷ Submitted &nbsp;·&nbsp; Cohort Won = quotes submitted in same period now Won &nbsp;·&nbsp; Click row to expand entity breakdown</div>
+</div>
+
+<!-- MONTHLY LEADERBOARD -->
+<div id="panel-monthly" class="panel">
+  <div class="sh">
+    <div class="st"><span class="dot"></span>Monthly Leaderboard — By Salesperson</div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <div class="tg">
+        <button class="tb active" onclick="swMLBMode('monthly',this)">Monthly</button>
+        <button class="tb" onclick="swMLBMode('ytd',this)">2026 YTD</button>
+        <button class="tb" onclick="swMLBMode('alltime',this)">All Time</button>
+      </div>
+      <select class="ms" id="mlb-month-sel" onchange="swMLBMonth(this.value)">
+        <option value="2026-05">May 2026</option>
+        <option value="2026-04">Apr 2026</option>
+        <option value="2026-03">Mar 2026</option>
+        <option value="2026-02">Feb 2026</option>
+        <option value="2026-01">Jan 2026</option>
+      </select>
+    </div>
+  </div>
+  <div id="mlb-content"></div>
+</div>
+
+<!-- TOP 10 PENDING -->
+<div id="panel-pending" class="panel">
+  <div class="sh"><div class="st"><span class="dot"></span>Top 10 Highest Value Pending Quotes</div></div>
+  <div class="fr2">
+    <span class="fl">Entity:</span>
+    <button class="fb active" onclick="fPend('all',this)">All</button>
+    <button class="fb" onclick="fPend('Coatings',this)">Coatings</button>
+    <button class="fb" onclick="fPend('Services',this)">Services</button>
+    <button class="fb" onclick="fPend('Services GC',this)">Services GC</button>
+  </div>
+  <div id="pend-grid"></div>
+  <div class="note"><span style="color:var(--green)">●</span> Fresh &lt;30d &nbsp;·&nbsp; <span style="color:var(--gold)">●</span> Follow up 30–90d &nbsp;·&nbsp; <span style="color:var(--red)">●</span> Urgent &gt;90d</div>
+</div>
+
+</div>
+<script>
+const D={"wbm": [{"month": "2026-01", "entity": "Coatings", "sub_c": 29, "sub_v": 2067857.4000000001, "cw_c": 4, "cw_v": 25371.88, "lost_c": 6, "lost_v": 171437.0, "pend_c": 19, "pend_v": 1871048.52, "won_c": 6, "won_v": 75558.0, "wr": 14.0, "p_sub_c": 29, "p_cw_c": 4, "p_lost_c": 5, "p_pend_c": 20, "p_wr": 14.0}, {"month": "2026-01", "entity": "Services", "sub_c": 27, "sub_v": 352244.0, "cw_c": 13, "cw_v": 21035.0, "lost_c": 1, "lost_v": 6875.0, "pend_c": 13, "pend_v": 324334.0, "won_c": 15, "won_v": 87130.0, "wr": 48.0, "p_sub_c": 27, "p_cw_c": 13, "p_lost_c": 1, "p_pend_c": 13, "p_wr": 48.0}, {"month": "2026-01", "entity": "Services GC", "sub_c": 7, "sub_v": 1793809.0, "cw_c": 3, "cw_v": 64549.0, "lost_c": 1, "lost_v": 1960.0, "pend_c": 3, "pend_v": 1727300.0, "won_c": 3, "won_v": 7410.0, "wr": 43.0, "p_sub_c": 7, "p_cw_c": 3, "p_lost_c": 0, "p_pend_c": 4, "p_wr": 43.0}, {"month": "2026-02", "entity": "Coatings", "sub_c": 41, "sub_v": 2666473.59, "cw_c": 10, "cw_v": 533111.2, "lost_c": 3, "lost_v": 60316.0, "pend_c": 28, "pend_v": 2073046.39, "won_c": 9, "won_v": 266252.88, "wr": 24.0, "p_sub_c": 41, "p_cw_c": 9, "p_lost_c": 3, "p_pend_c": 29, "p_wr": 22.0}, {"month": "2026-02", "entity": "Services", "sub_c": 50, "sub_v": 655744.8, "cw_c": 20, "cw_v": 99315.0, "lost_c": 5, "lost_v": 12858.0, "pend_c": 25, "pend_v": 543571.8, "won_c": 21, "won_v": 77910.0, "wr": 40.0, "p_sub_c": 50, "p_cw_c": 20, "p_lost_c": 5, "p_pend_c": 25, "p_wr": 40.0}, {"month": "2026-02", "entity": "Services GC", "sub_c": 9, "sub_v": 521710.0, "cw_c": 0, "cw_v": 0.0, "lost_c": 4, "lost_v": 10560.0, "pend_c": 5, "pend_v": 511150.0, "won_c": 5, "won_v": 259609.0, "wr": 0.0, "p_sub_c": 9, "p_cw_c": 0, "p_lost_c": 0, "p_pend_c": 9, "p_wr": 0.0}, {"month": "2026-03", "entity": "Coatings", "sub_c": 44, "sub_v": 2694289.51, "cw_c": 6, "cw_v": 129000.9, "lost_c": 4, "lost_v": 223676.0, "pend_c": 34, "pend_v": 2341612.61, "won_c": 12, "won_v": 554529.8, "wr": 14.0, "p_sub_c": 44, "p_cw_c": 4, "p_lost_c": 1, "p_pend_c": 39, "p_wr": 9.0}, {"month": "2026-03", "entity": "Services", "sub_c": 55, "sub_v": 3355485.0, "cw_c": 17, "cw_v": 193084.0, "lost_c": 3, "lost_v": 1580970.0, "pend_c": 35, "pend_v": 1581431.0, "won_c": 26, "won_v": 151794.0, "wr": 31.0, "p_sub_c": 55, "p_cw_c": 17, "p_lost_c": 2, "p_pend_c": 36, "p_wr": 31.0}, {"month": "2026-03", "entity": "Services GC", "sub_c": 7, "sub_v": 2122454.6799999997, "cw_c": 2, "cw_v": 170634.2, "lost_c": 1, "lost_v": 1572000.0, "pend_c": 4, "pend_v": 379820.48, "won_c": 1, "won_v": 11040.0, "wr": 29.0, "p_sub_c": 7, "p_cw_c": 2, "p_lost_c": 1, "p_pend_c": 4, "p_wr": 29.0}, {"month": "2026-04", "entity": "Coatings", "sub_c": 46, "sub_v": 1304020.1, "cw_c": 8, "cw_v": 298134.0, "lost_c": 4, "lost_v": 35723.0, "pend_c": 34, "pend_v": 970163.1, "won_c": 7, "won_v": 680501.8, "wr": 17.0, "p_sub_c": 46, "p_cw_c": 8, "p_lost_c": 3, "p_pend_c": 35, "p_wr": 17.0}, {"month": "2026-04", "entity": "Services", "sub_c": 37, "sub_v": 2474229.3, "cw_c": 7, "cw_v": 21881.0, "lost_c": 3, "lost_v": 4040.0, "pend_c": 27, "pend_v": 2448308.3, "won_c": 14, "won_v": 183968.0, "wr": 19.0, "p_sub_c": 37, "p_cw_c": 7, "p_lost_c": 3, "p_pend_c": 27, "p_wr": 19.0}, {"month": "2026-04", "entity": "Services GC", "sub_c": 12, "sub_v": 2176694.5, "cw_c": 1, "cw_v": 4750.0, "lost_c": 0, "lost_v": 0.0, "pend_c": 11, "pend_v": 2171944.5, "won_c": 6, "won_v": 1458550.0, "wr": 8.0, "p_sub_c": 13, "p_cw_c": 1, "p_lost_c": 0, "p_pend_c": 12, "p_wr": 8.0}, {"month": "2026-05", "entity": "Coatings", "sub_c": 29, "sub_v": 1076353.3, "cw_c": 6, "cw_v": 38096.0, "lost_c": 0, "lost_v": 0.0, "pend_c": 23, "pend_v": 1038257.3, "won_c": 15, "won_v": 313612.2, "wr": 21.0, "p_sub_c": 19, "p_cw_c": 3, "p_lost_c": 0, "p_pend_c": 16, "p_wr": 16.0}, {"month": "2026-05", "entity": "Services", "sub_c": 33, "sub_v": 1303735.12, "cw_c": 4, "cw_v": 12329.0, "lost_c": 1, "lost_v": 520.0, "pend_c": 28, "pend_v": 1290886.12, "won_c": 11, "won_v": 173027.0, "wr": 12.0, "p_sub_c": 16, "p_cw_c": 4, "p_lost_c": 0, "p_pend_c": 12, "p_wr": 25.0}, {"month": "2026-05", "entity": "Services GC", "sub_c": 14, "sub_v": 2879309.56, "cw_c": 1, "cw_v": 1840.0, "lost_c": 0, "lost_v": 0.0, "pend_c": 13, "pend_v": 2877469.56, "won_c": 3, "won_v": 342754.2, "wr": 7.0, "p_sub_c": 7, "p_cw_c": 1, "p_lost_c": 0, "p_pend_c": 6, "p_wr": 14.0}], "leaderboard_ytd": [{"sp": "Connor Gibbs-Patterson", "entities": [{"entity": "Services GC", "sub_c": 37, "sub_v": 5726095.74, "cw_c": 6, "cw_v": 239453.2, "lost_c": 4, "lost_v": 10560.0, "pend_c": 27, "pend_v": 5476082.54, "won_c": 16, "won_v": 2070953.2, "wr": 16.0}], "sub_c": 37.0, "sub_v": 5726095.74, "cw_c": 6.0, "cw_v": 239453.2, "lost_c": 4.0, "lost_v": 10560.0, "pend_c": 27.0, "pend_v": 5476082.54, "won_c": 16.0, "won_v": 2070953.2, "wr": 16.0, "rank": 1}, {"sp": "Tom Land", "entities": [{"entity": "Coatings", "sub_c": 45, "sub_v": 4962416.989999999, "cw_c": 10, "cw_v": 677110.8, "lost_c": 0, "lost_v": 0.0, "pend_c": 35, "pend_v": 4285306.19, "won_c": 20, "won_v": 1520522.0, "wr": 22.0}], "sub_c": 45.0, "sub_v": 4962416.989999999, "cw_c": 10.0, "cw_v": 677110.8, "lost_c": 0.0, "lost_v": 0.0, "pend_c": 35.0, "pend_v": 4285306.19, "won_c": 20.0, "won_v": 1520522.0, "wr": 22.0, "rank": 2}, {"sp": "Courtney Keong", "entities": [{"entity": "Coatings", "sub_c": 23, "sub_v": 2139425.4, "cw_c": 5, "cw_v": 192558.0, "lost_c": 1, "lost_v": 0.0, "pend_c": 17, "pend_v": 1946867.4, "won_c": 5, "won_v": 192558.0, "wr": 22.0}, {"entity": "Services", "sub_c": 121, "sub_v": 4291266.72, "cw_c": 33, "cw_v": 106330.0, "lost_c": 10, "lost_v": 1604743.0, "pend_c": 78, "pend_v": 2580193.72, "won_c": 46, "won_v": 358940.0, "wr": 27.0}, {"entity": "Services GC", "sub_c": 2, "sub_v": 3302000.0, "cw_c": 0, "cw_v": 0.0, "lost_c": 1, "lost_v": 1572000.0, "pend_c": 1, "pend_v": 1730000.0, "won_c": 0, "won_v": 0.0, "wr": 0.0}], "sub_c": 146.0, "sub_v": 9732692.120000001, "cw_c": 38.0, "cw_v": 298888.0, "lost_c": 12.0, "lost_v": 3176743.0, "pend_c": 96.0, "pend_v": 6257061.12, "won_c": 51.0, "won_v": 551498.0, "wr": 26.0, "rank": 3}, {"sp": "Matthew Salvesani", "entities": [{"entity": "Coatings", "sub_c": 1, "sub_v": 22900.0, "cw_c": 0, "cw_v": 0.0, "lost_c": 0, "lost_v": 0.0, "pend_c": 1, "pend_v": 22900.0, "won_c": 0, "won_v": 0.0, "wr": 0.0}, {"entity": "Services", "sub_c": 81, "sub_v": 3850171.5, "cw_c": 28, "cw_v": 241314.0, "lost_c": 3, "lost_v": 520.0, "pend_c": 50, "pend_v": 3608337.5, "won_c": 40, "won_v": 312689.0, "wr": 35.0}, {"entity": "Services GC", "sub_c": 9, "sub_v": 447700.0, "cw_c": 1, "cw_v": 2320.0, "lost_c": 1, "lost_v": 1960.0, "pend_c": 7, "pend_v": 443420.0, "won_c": 2, "won_v": 8410.0, "wr": 11.0}], "sub_c": 91.0, "sub_v": 4320771.5, "cw_c": 29.0, "cw_v": 243634.0, "lost_c": 4.0, "lost_v": 2480.0, "pend_c": 58.0, "pend_v": 4074657.5, "won_c": 42.0, "won_v": 321099.0, "wr": 32.0, "rank": 4}, {"sp": "Andrew Smith", "entities": [{"entity": "Coatings", "sub_c": 119, "sub_v": 2575251.5100000002, "cw_c": 19, "cw_v": 154045.18, "lost_c": 16, "lost_v": 491152.0, "pend_c": 84, "pend_v": 1930054.33, "won_c": 24, "won_v": 177374.68, "wr": 16.0}], "sub_c": 119.0, "sub_v": 2575251.5100000002, "cw_c": 19.0, "cw_v": 154045.18, "lost_c": 16.0, "lost_v": 491152.0, "pend_c": 84.0, "pend_v": 1930054.33, "won_c": 24.0, "won_v": 177374.68, "wr": 16.0, "rank": 5}], "leaderboard_alltime": [{"sp": "Matthew Salvesani", "entities": [{"entity": "Coatings", "sub_c": 8, "sub_v": 2632052.0, "cw_c": 1, "cw_v": 897052.0, "lost_c": 0, "lost_v": 0.0, "pend_c": 7, "pend_v": 1735000.0, "won_c": 1, "won_v": 897052.0, "wr": 12.0}, {"entity": "Services", "sub_c": 598, "sub_v": 26500970.77, "cw_c": 233, "cw_v": 2929208.25, "lost_c": 284, "lost_v": 19328358.02, "pend_c": 81, "pend_v": 4243404.5, "won_c": 253, "won_v": 4400473.25, "wr": 39.0}, {"entity": "Services GC", "sub_c": 32, "sub_v": 2500129.0, "cw_c": 7, "cw_v": 56555.0, "lost_c": 12, "lost_v": 875660.0, "pend_c": 13, "pend_v": 1567914.0, "won_c": 10, "won_v": 794120.0, "wr": 22.0}], "sub_c": 638.0, "sub_v": 31633151.77, "cw_c": 241.0, "cw_v": 3882815.25, "lost_c": 296.0, "lost_v": 20204018.02, "pend_c": 101.0, "pend_v": 7546318.5, "won_c": 264.0, "won_v": 6091645.25, "wr": 38.0, "rank": 1}, {"sp": "Tom Land", "entities": [{"entity": "Coatings", "sub_c": 340, "sub_v": 22372591.380000003, "cw_c": 110, "cw_v": 3534223.55, "lost_c": 30, "lost_v": 1604650.0, "pend_c": 200, "pend_v": 17233717.83, "won_c": 122, "won_v": 3625629.25, "wr": 32.0}], "sub_c": 340.0, "sub_v": 22372591.380000003, "cw_c": 110.0, "cw_v": 3534223.55, "lost_c": 30.0, "lost_v": 1604650.0, "pend_c": 200.0, "pend_v": 17233717.83, "won_c": 122.0, "won_v": 3625629.25, "wr": 32.0, "rank": 2}, {"sp": "Connor Gibbs-Patterson", "entities": [{"entity": "Services GC", "sub_c": 60, "sub_v": 10563158.830000002, "cw_c": 10, "cw_v": 441003.2, "lost_c": 9, "lost_v": 3181840.0, "pend_c": 41, "pend_v": 6940315.63, "won_c": 23, "won_v": 2669326.2, "wr": 17.0}], "sub_c": 60.0, "sub_v": 10563158.830000002, "cw_c": 10.0, "cw_v": 441003.2, "lost_c": 9.0, "lost_v": 3181840.0, "pend_c": 41.0, "pend_v": 6940315.63, "won_c": 23.0, "won_v": 2669326.2, "wr": 17.0, "rank": 3}, {"sp": "Courtney Keong", "entities": [{"entity": "Coatings", "sub_c": 29, "sub_v": 2680552.92, "cw_c": 7, "cw_v": 216005.52000000002, "lost_c": 1, "lost_v": 0.0, "pend_c": 21, "pend_v": 2464547.4, "won_c": 7, "won_v": 216005.52000000002, "wr": 24.0}, {"entity": "Services", "sub_c": 185, "sub_v": 7033130.41, "cw_c": 58, "cw_v": 423805.58999999997, "lost_c": 22, "lost_v": 2187838.6, "pend_c": 105, "pend_v": 4421486.22, "won_c": 58, "won_v": 423805.58999999997, "wr": 31.0}, {"entity": "Services GC", "sub_c": 2, "sub_v": 3302000.0, "cw_c": 0, "cw_v": 0.0, "lost_c": 1, "lost_v": 1572000.0, "pend_c": 1, "pend_v": 1730000.0, "won_c": 0, "won_v": 0.0, "wr": 0.0}], "sub_c": 216.0, "sub_v": 13015683.33, "cw_c": 65.0, "cw_v": 639811.11, "lost_c": 24.0, "lost_v": 3759838.6, "pend_c": 127.0, "pend_v": 8616033.620000001, "won_c": 65.0, "won_v": 639811.11, "wr": 30.0, "rank": 4}, {"sp": "Andrew Smith", "entities": [{"entity": "Coatings", "sub_c": 119, "sub_v": 2575251.5100000002, "cw_c": 19, "cw_v": 154045.18, "lost_c": 16, "lost_v": 491152.0, "pend_c": 84, "pend_v": 1930054.33, "won_c": 24, "won_v": 177374.68, "wr": 16.0}], "sub_c": 119.0, "sub_v": 2575251.5100000002, "cw_c": 19.0, "cw_v": 154045.18, "lost_c": 16.0, "lost_v": 491152.0, "pend_c": 84.0, "pend_v": 1930054.33, "won_c": 24.0, "won_v": 177374.68, "wr": 16.0, "rank": 5}], "monthly_lb_2026": {"2026-01": [{"sp": "Courtney Keong", "entity": "Services", "won_c": 11, "won_v": 66610.0, "sub_c": 26, "sub_v": 349144.0, "cw_c": 13, "cw_v": 21035.0, "lost_c": 1, "lost_v": 6875.0, "pend_c": 12, "pend_v": 321234.0, "wr": 50.0, "rank": 1}, {"sp": "Tom Land", "entity": "Coatings", "won_c": 4, "won_v": 61781.0, "sub_c": 14, "sub_v": 1800259.0999999999, "cw_c": 1, "cw_v": 3550.0, "lost_c": 0, "lost_v": 0.0, "pend_c": 13, "pend_v": 1796709.0999999999, "wr": 7.0, "rank": 2}, {"sp": "Matthew Salvesani", "entity": "Services, Services GC", "won_c": 5, "won_v": 22840.0, "sub_c": 3, "sub_v": 7380.0, "cw_c": 1, "cw_v": 2320.0, "lost_c": 1, "lost_v": 1960.0, "pend_c": 1, "pend_v": 3100.0, "wr": 33.0, "rank": 3}, {"sp": "Andrew Smith", "entity": "Coatings", "won_c": 2, "won_v": 13777.0, "sub_c": 15, "sub_v": 267598.30000000005, "cw_c": 3, "cw_v": 21821.88, "lost_c": 6, "lost_v": 171437.0, "pend_c": 6, "pend_v": 74339.42, "wr": 20.0, "rank": 4}, {"sp": "Connor Gibbs-Patterson", "entity": "Services GC", "won_c": 2, "won_v": 5090.0, "sub_c": 5, "sub_v": 1789529.0, "cw_c": 2, "cw_v": 62229.0, "lost_c": 0, "lost_v": 0.0, "pend_c": 3, "pend_v": 1727300.0, "wr": 40.0, "rank": 5}], "2026-02": [{"sp": "Connor Gibbs-Patterson", "entity": "Services GC", "won_c": 5, "won_v": 259609.0, "sub_c": 9, "sub_v": 521710.0, "cw_c": 0, "cw_v": 0.0, "lost_c": 4, "lost_v": 10560.0, "pend_c": 5, "pend_v": 511150.0, "wr": 0.0, "rank": 1}, {"sp": "Tom Land", "entity": "Coatings", "won_c": 5, "won_v": 242687.0, "sub_c": 9, "sub_v": 992047.99, "cw_c": 5, "cw_v": 406984.8, "lost_c": 0, "lost_v": 0.0, "pend_c": 4, "pend_v": 585063.19, "wr": 56.0, "rank": 2}, {"sp": "Matthew Salvesani", "entity": "Services", "won_c": 7, "won_v": 43695.0, "sub_c": 20, "sub_v": 133925.0, "cw_c": 12, "cw_v": 69765.0, "lost_c": 0, "lost_v": 0.0, "pend_c": 8, "pend_v": 64160.0, "wr": 60.0, "rank": 3}, {"sp": "Courtney Keong", "entity": "Coatings, Services", "won_c": 14, "won_v": 34215.0, "sub_c": 36, "sub_v": 1666371.8, "cw_c": 9, "cw_v": 127290.0, "lost_c": 5, "lost_v": 12858.0, "pend_c": 22, "pend_v": 1526223.8, "wr": 25.0, "rank": 4}, {"sp": "Andrew Smith", "entity": "Coatings", "won_c": 4, "won_v": 23565.88, "sub_c": 26, "sub_v": 529873.6, "cw_c": 4, "cw_v": 28386.4, "lost_c": 3, "lost_v": 60316.0, "pend_c": 19, "pend_v": 441171.2, "wr": 15.0, "rank": 5}], "2026-03": [{"sp": "Tom Land", "entity": "Coatings", "won_c": 5, "won_v": 501445.0, "sub_c": 8, "sub_v": 1204732.4, "cw_c": 1, "cw_v": 12795.0, "lost_c": 0, "lost_v": 0.0, "pend_c": 7, "pend_v": 1191937.4, "wr": 12.0, "rank": 1}, {"sp": "Courtney Keong", "entity": "Coatings, Services, Services GC", "won_c": 13, "won_v": 93688.0, "sub_c": 39, "sub_v": 5008220.0, "cw_c": 11, "cw_v": 134530.0, "lost_c": 4, "lost_v": 3152970.0, "pend_c": 24, "pend_v": 1720720.0, "wr": 28.0, "rank": 2}, {"sp": "Matthew Salvesani", "entity": "Coatings, Services, Services GC", "won_c": 13, "won_v": 56746.0, "sub_c": 27, "sub_v": 564665.0, "cw_c": 9, "cw_v": 151914.0, "lost_c": 1, "lost_v": 0.0, "pend_c": 17, "pend_v": 412751.0, "wr": 33.0, "rank": 3}, {"sp": "Andrew Smith", "entity": "Coatings", "won_c": 6, "won_v": 52244.8, "sub_c": 27, "sub_v": 815197.11, "cw_c": 2, "cw_v": 22845.9, "lost_c": 3, "lost_v": 223676.0, "pend_c": 22, "pend_v": 568675.21, "wr": 7.0, "rank": 4}, {"sp": "Connor Gibbs-Patterson", "entity": "Services GC", "won_c": 1, "won_v": 11040.0, "sub_c": 4, "sub_v": 470414.68, "cw_c": 2, "cw_v": 170634.2, "lost_c": 0, "lost_v": 0.0, "pend_c": 2, "pend_v": 299780.48, "wr": 50.0, "rank": 5}], "2026-04": [{"sp": "Connor Gibbs-Patterson", "entity": "Services GC", "won_c": 5, "won_v": 1452460.0, "sub_c": 6, "sub_v": 71432.5, "cw_c": 1, "cw_v": 4750.0, "lost_c": 0, "lost_v": 0.0, "pend_c": 5, "pend_v": 66682.5, "wr": 17.0, "rank": 1}, {"sp": "Tom Land", "entity": "Coatings", "won_c": 3, "won_v": 638433.8, "sub_c": 5, "sub_v": 305221.0, "cw_c": 2, "cw_v": 250481.0, "lost_c": 0, "lost_v": 0.0, "pend_c": 3, "pend_v": 54740.0, "wr": 40.0, "rank": 2}, {"sp": "Matthew Salvesani", "entity": "Services, Services GC", "won_c": 14, "won_v": 186078.0, "sub_c": 23, "sub_v": 2416556.5, "cw_c": 6, "cw_v": 18135.0, "lost_c": 1, "lost_v": 0.0, "pend_c": 16, "pend_v": 2398421.5, "wr": 26.0, "rank": 3}, {"sp": "Andrew Smith", "entity": "Coatings", "won_c": 3, "won_v": 40610.0, "sub_c": 34, "sub_v": 735859.7, "cw_c": 5, "cw_v": 46195.0, "lost_c": 4, "lost_v": 35723.0, "pend_c": 25, "pend_v": 653941.7, "wr": 15.0, "rank": 4}, {"sp": "Courtney Keong", "entity": "Coatings, Services, Services GC", "won_c": 2, "won_v": 5438.0, "sub_c": 26, "sub_v": 2407692.2, "cw_c": 2, "cw_v": 5204.0, "lost_c": 2, "lost_v": 4040.0, "pend_c": 22, "pend_v": 2398448.1999999997, "wr": 8.0, "rank": 5}], "2026-05": [{"sp": "Courtney Keong", "entity": "Coatings, Services", "won_c": 11, "won_v": 351547.0, "sub_c": 19, "sub_v": 301264.12, "cw_c": 3, "cw_v": 10829.0, "lost_c": 0, "lost_v": 0.0, "pend_c": 16, "pend_v": 290435.12, "wr": 16.0, "rank": 1}, {"sp": "Connor Gibbs-Patterson", "entity": "Services GC", "won_c": 3, "won_v": 342754.2, "sub_c": 13, "sub_v": 2873009.56, "cw_c": 1, "cw_v": 1840.0, "lost_c": 0, "lost_v": 0.0, "pend_c": 12, "pend_v": 2871169.56, "wr": 8.0, "rank": 2}, {"sp": "Tom Land", "entity": "Coatings", "won_c": 3, "won_v": 76175.2, "sub_c": 9, "sub_v": 660156.5, "cw_c": 1, "cw_v": 3300.0, "lost_c": 0, "lost_v": 0.0, "pend_c": 8, "pend_v": 656856.5, "wr": 11.0, "rank": 3}, {"sp": "Andrew Smith", "entity": "Coatings", "won_c": 9, "won_v": 47177.0, "sub_c": 17, "sub_v": 226722.8, "cw_c": 5, "cw_v": 34796.0, "lost_c": 0, "lost_v": 0.0, "pend_c": 12, "pend_v": 191926.8, "wr": 29.0, "rank": 4}, {"sp": "Matthew Salvesani", "entity": "Services, Services GC", "won_c": 3, "won_v": 11740.0, "sub_c": 18, "sub_v": 1198245.0, "cw_c": 1, "cw_v": 1500.0, "lost_c": 1, "lost_v": 520.0, "pend_c": 16, "pend_v": 1196225.0, "wr": 6.0, "rank": 5}]}, "top10": [{"quote_no": 260368, "name": "Window Remediation Works", "customer": "Aperi", "salesperson": "Matthew Salvesani", "days": 26, "value": 1796480.0, "margin": "28.5%", "entity": "Services", "status": "Quote : Sent Awaiting Customer Response"}, {"quote_no": 260310, "name": "     Nick BNE: Rooftop Waterproofing and Skip Bins", "customer": "PASG Projects ", "salesperson": "Courtney Keong", "days": 41, "value": 1730000.0, "margin": "28.4%", "entity": "Services GC", "status": "Quote : Sent Awaiting Customer Response"}, {"quote_no": 250651, "name": "External Repair & Repaint Tender \u2014 Kelvin Grove", "customer": "The Village - Kelvin Grove", "salesperson": "Courtney Keong", "days": 201, "value": 1333880.0, "margin": "47.1%", "entity": "Services", "status": "Quote : Sent Awaiting Customer Response"}, {"quote_no": 260023, "name": "External Repaint \u2014 THIS", "customer": "THIS", "salesperson": "Connor Gibbs-Patterson", "days": 123, "value": 1212250.0, "margin": "29.7%", "entity": "Services GC", "status": "Job : In Progress"}, {"quote_no": 260407, "name": "2/3/4 Tower Waterproofing", "customer": "safer buildings", "salesperson": "Connor Gibbs-Patterson", "days": 14, "value": 1171287.5, "margin": "20.1%", "entity": "Services GC", "status": "Quote : Sent Awaiting Customer Response"}, {"quote_no": 250640, "name": "External Repair & Repaint Tender \u2014 Coolum", "customer": "Coolum at the Beach CTS 38562", "salesperson": "Tom Land", "days": 207, "value": 1135929.0, "margin": "35.2%", "entity": "Coatings", "status": "Quote : Sent Awaiting Customer Response"}, {"quote_no": 260378, "name": "Roof Waterproofing \u2014 Arbour on Grey North", "customer": "The Arbour on Grey", "salesperson": "Matthew Salvesani", "days": 24, "value": 996000.0, "margin": "21.6%", "entity": "Services", "status": "Quote : Sent Awaiting Customer Response"}, {"quote_no": 260380, "name": "Waterproofing Tower 2 & 3 \u2014 Ephraim Island", "customer": "Ephraim Island SBC 105 CTS 35246", "salesperson": "Connor Gibbs-Patterson", "days": 24, "value": 853969.6, "margin": "18.4%", "entity": "Services GC", "status": "Quote : Sent Awaiting Customer Response"}, {"quote_no": 250594, "name": "Roof Top Waterproofing \u2014 Arbour on Grey", "customer": "The Arbour on Grey", "salesperson": "Matthew Salvesani", "days": 225, "value": 764400.0, "margin": "16.7%", "entity": "Coatings", "status": "Quote : Sent Awaiting Customer Response"}, {"quote_no": 250458, "name": "External Repaint \u2014 Freshwater Apartments", "customer": "Freshwater Apartments", "salesperson": "Tom Land", "days": 285, "value": 691860.0, "margin": "29.1%", "entity": "Coatings", "status": "Quote : Sent Awaiting Customer Response"}], "generated": "25 May 2026"};
+
+const fmt=v=>v>=1e6?'$'+(v/1e6).toFixed(2)+'M':v>=1e3?'$'+(v/1e3).toFixed(0)+'K':'$'+Math.round(v).toLocaleString();
+const fmtF=v=>'$'+Math.round(v).toLocaleString();
+const ML={'2026-01':'Jan','2026-02':'Feb','2026-03':'Mar','2026-04':'Apr','2026-05':'May'};
+const wrc=w=>w>=40?'hi':w>=20?'mi':'lo';
+const ep=e=>`<span class="ep ${e.replace(/\s+/g,'')}">${e}</span>`;
+function dlt(c,p,inv=false){if(c===p)return`<span class="d eq">—</span>`;const up=c>p,g=inv?!up:up;return`<span class="d ${g?'up':'dn'}">${up?'▲':'▼'}${Math.abs(c-p)}</span>`;}
+function dltV(c,p){if(Math.abs(c-p)<1)return`<span class="d eq">—</span>`;const up=c>p;return`<span class="d ${up?'up':'dn'}">${up?'▲':'▼'}${fmt(Math.abs(c-p))}</span>`;}
+function dltP(c,p){if(c===p)return`<span class="d eq">—</span>`;const up=c>p;return`<span class="d ${up?'up':'dn'}">${up?'▲':'▼'}${Math.abs(c-p)}%</span>`;}
+
+function showP(id,btn){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.getElementById('panel-'+id).classList.add('active');btn.classList.add('active');}
+
+(function(){
+  const ld=D.leaderboard_ytd;
+  document.getElementById('k-sub').textContent=ld.reduce((a,r)=>a+r.sub_c,0);
+  document.getElementById('k-wv').textContent=fmt(ld.reduce((a,r)=>a+r.won_v,0));
+  const cw=ld.reduce((a,r)=>a+r.cw_c,0),sub=ld.reduce((a,r)=>a+r.sub_c,0);
+  document.getElementById('k-wr').textContent=Math.round(cw/sub*100)+'%';
+  document.getElementById('k-pipe').textContent=fmt(ld.reduce((a,r)=>a+r.pend_v,0));
+  document.getElementById('k-lost').textContent=ld.reduce((a,r)=>a+r.lost_c,0);
+})();
+
+(function(){
+  const ents=['Coatings','Services','Services GC'];
+  const idx={};D.wbm.forEach(r=>idx[r.month+'|'+r.entity]=r);
+  const maxV=Math.max(...D.wbm.map(r=>r.won_v));
+  const ch=document.getElementById('main-chart'),lbs=document.getElementById('main-labels');
+  ['2026-01','2026-02','2026-03','2026-04','2026-05'].forEach(m=>{
+    const g=document.createElement('div');g.className='bg';
+    ents.forEach((e,i)=>{
+      const r=idx[m+'|'+e];const val=r?r.won_v:0;
+      const bar=document.createElement('div');bar.className='bar c'+(i+1);
+      bar.style.height=Math.max(maxV>0?(val/maxV*100):0,val>0?2:0)+'%';
+      if(r){bar.addEventListener('mouseenter',ev=>showTT(ev,r,e,m));bar.addEventListener('mouseleave',hideTT);}
+      g.appendChild(bar);
+    });
+    ch.appendChild(g);
+    const l=document.createElement('div');l.className='blg';l.textContent=ML[m];lbs.appendChild(l);
+  });
+})();
+
+const tt=document.getElementById('tt');
+function showTT(ev,r,e,m){tt.innerHTML=`<div class="ttt">${ML[m]} — ${e}</div><div class="ttr">Won Value<span>${fmtF(r.won_v)}</span></div><div class="ttr">Won Count<span>${r.won_c}</span></div><div class="ttr">Submitted<span>${r.sub_c}</span></div><div class="ttr">Win Rate<span>${r.wr}%</span></div>`;tt.style.display='block';moveTT(ev);}
+function moveTT(ev){tt.style.left=(ev.clientX+12)+'px';tt.style.top=(ev.clientY-8)+'px';}
+function hideTT(){tt.style.display='none';}
+document.addEventListener('mousemove',e=>{if(tt.style.display==='block')moveTT(e);});
+
+(function(){
+  const b=document.getElementById('mini-lb');
+  D.leaderboard_ytd.forEach(r=>{
+    const ents=[...new Set(r.entities.map(e=>e.entity))].join(', ');
+    b.innerHTML+=`<tr><td><strong>${r.rank}</strong></td><td><div style="font-weight:600">${r.sp}</div><div style="font-size:10px;color:var(--muted)">${ents}</div></td><td class="r" style="color:var(--gold);font-weight:600">${fmt(r.won_v)}</td><td class="r" style="color:var(--teal)">${r.cw_c}</td><td class="r"><span class="wb ${wrc(r.wr)}">${r.wr}%</span></td></tr>`;
+  });
+})();
+
+(function(){
+  const b=document.getElementById('mini-pend');
+  D.top10.slice(0,5).forEach((r,i)=>{
+    const dc=r.days>90?'ur':r.days>30?'wa':'fr';
+    b.innerHTML+=`<tr><td><strong>${i+1}</strong></td><td><div style="font-size:11px;font-weight:500">${r.name.substring(0,26)}${r.name.length>26?'…':''}</div><div style="font-size:10px;color:var(--muted)">${r.salesperson}</div></td><td>${ep(r.entity)}</td><td class="r" style="color:var(--gold);font-weight:600">${fmt(r.value)}</td><td class="r"><span class="db ${dc}">${r.days}d</span></td></tr>`;
+  });
+})();
+
+let wbmF='all';
+function renderWBM(){
+  const rows=wbmF==='all'?D.wbm:D.wbm.filter(r=>r.month===wbmF);
+  let last='',html='';
+  rows.forEach(r=>{
+    const isNew=r.month!==last;last=r.month;
+    const wc=r.wr>=40?'var(--green)':r.wr>=20?'var(--gold)':'var(--red)';
+    html+=`<tr>
+      <td>${isNew?`<span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--teal)">${ML[r.month]}</span>`:''}</td>
+      <td>${ep(r.entity)}</td>
+      <td class="r">${r.sub_c}${dlt(r.sub_c,r.p_sub_c)}</td>
+      <td class="r2">${fmt(r.sub_v)}</td>
+      <td class="r sep" style="color:var(--teal)">${r.cw_c}${dlt(r.cw_c,r.p_cw_c)}</td>
+      <td class="r2">${fmt(r.cw_v)}</td>
+      <td class="r sep" style="color:var(--red)">${r.lost_c}${dlt(r.lost_c,r.p_lost_c,true)}</td>
+      <td class="r2">${r.lost_v>0?fmt(r.lost_v):'—'}</td>
+      <td class="r"><div class="wrb"><div class="wrt"><div class="wrf" style="width:${r.wr}%;background:${wc}"></div></div><span class="wrtx" style="color:${wc}">${r.wr}%</span>${dltP(r.wr,r.p_wr)}</div></td>
+      <td class="r sep">${r.pend_c}${dlt(r.pend_c,r.p_pend_c,true)}</td>
+      <td class="r2">${fmt(r.pend_v)}</td>
+    </tr>`;
+  });
+  document.getElementById('wbm-body').innerHTML=html;
+}
+function fWBM(v,btn){wbmF=v;document.querySelectorAll('#panel-wbm .fb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderWBM();}
+renderWBM();
+
+let lbMode='ytd';
+function renderLB(){
+  const data=lbMode==='ytd'?D.leaderboard_ytd:D.leaderboard_alltime;
+  let html='';
+  data.forEach(r=>{
+    const ents=r.entities.map(e=>e.entity).join(' · ');
+    html+=`<div class="lc" id="lc${r.rank}">
+      <div class="lh" onclick="togLC(${r.rank})">
+        <div class="lrk r${r.rank}">${r.rank}</div>
+        <div><div class="ln">${r.sp}</div><div class="lm">${ents}</div></div>
+        <div class="ls"><div class="v" style="color:var(--gold)">${fmt(r.won_v)}</div><div class="l">Won Value</div></div>
+        <div class="ls"><div class="v">${r.sub_c}</div><div class="l">Submitted</div></div>
+        <div class="ls"><div class="v" style="color:var(--teal)">${r.cw_c}</div><div class="l">Cohort Won</div></div>
+        <div class="ls"><div class="v" style="color:var(--red)">${r.lost_c}</div><div class="l">Lost</div></div>
+        <div class="ls"><div class="v">${r.pend_c}</div><div class="l">Pending</div></div>
+        <div class="ls"><span class="wb ${wrc(r.wr)}">${r.wr}%</span><div class="l" style="margin-top:5px">Win Rate</div></div>
+        <div class="ls"><div class="v" style="color:var(--blue)">${fmt(r.pend_v)}</div><div class="l">Pipeline</div></div>
+      </div>
+      <div class="ldd">
+        <div class="eh"><span style="text-align:left">Entity</span><span>Sub</span><span>Sub Value</span><span>Cohort Won</span><span>Won Value</span><span>Lost</span><span>Win Rate</span><span>Pending</span><span>Pipeline</span></div>
+        ${r.entities.map(e=>`<div class="er">${ep(e.entity)}<div class="r">${e.sub_c}</div><div class="r">${fmt(e.sub_v)}</div><div class="r" style="color:var(--teal)">${e.cw_c}</div><div class="r" style="color:var(--gold)">${fmt(e.won_v)}</div><div class="r" style="color:var(--red)">${e.lost_c}</div><div class="r"><span class="wb ${wrc(e.wr)}" style="font-size:10px;padding:1px 6px">${e.wr}%</span></div><div class="r">${e.pend_c}</div><div class="r" style="color:var(--blue)">${fmt(e.pend_v)}</div></div>`).join('')}
+      </div>
+    </div>`;
+  });
+  document.getElementById('lb-grid').innerHTML=html;
+}
+function togLC(rank){document.getElementById('lc'+rank).classList.toggle('open');}
+function swLB(m,btn){lbMode=m;document.querySelectorAll('#panel-leaderboard .tb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderLB();}
+renderLB();
+
+let mlbMode='monthly',mlbMonth='2026-05';
+function renderMLB(){
+  const sel=document.getElementById('mlb-month-sel');
+  sel.style.display=mlbMode==='monthly'?'':'none';
+  let rows,note;
+  if(mlbMode==='monthly'){
+    rows=D.monthly_lb_2026[mlbMonth]||[];
+    note=`Ranked by Won Value for ${ML[mlbMonth]} 2026 &nbsp;·&nbsp; Cohort Won = quotes submitted in ${ML[mlbMonth]} now Won &nbsp;·&nbsp; Win Rate = Cohort Won ÷ Submitted`;
+  } else if(mlbMode==='ytd'){
+    rows=D.leaderboard_ytd.map(r=>({sp:r.sp,entity:r.entities.map(e=>e.entity).join(', '),won_c:r.won_c,won_v:r.won_v,sub_c:r.sub_c,sub_v:r.sub_v,cw_c:r.cw_c,cw_v:r.cw_v,lost_c:r.lost_c,lost_v:r.lost_v,pend_c:r.pend_c,pend_v:r.pend_v,wr:r.wr,rank:r.rank}));
+    note='2026 YTD Jan–May cumulative &nbsp;·&nbsp; Win Rate = Cohort Won ÷ Submitted';
+  } else {
+    rows=D.leaderboard_alltime.map(r=>({sp:r.sp,entity:r.entities.map(e=>e.entity).join(', '),won_c:r.won_c,won_v:r.won_v,sub_c:r.sub_c,sub_v:r.sub_v,cw_c:r.cw_c,cw_v:r.cw_v,lost_c:r.lost_c,lost_v:r.lost_v,pend_c:r.pend_c,pend_v:r.pend_v,wr:r.wr,rank:r.rank}));
+    note='All Time since inception &nbsp;·&nbsp; Win Rate = Cohort Won ÷ Submitted';
+  }
+  const rc=rk=>rk===1?'var(--gold)':rk===2?'#9ca3af':rk===3?'#c9916a':'var(--muted)';
+  let html=`<div class="tw"><table><thead><tr>
+    <th rowspan="2">#</th><th rowspan="2">Salesperson</th><th rowspan="2">Entity</th>
+    <th colspan="2" class="grp" style="color:#4e9af1">SUBMITTED</th>
+    <th colspan="2" class="grp" style="color:var(--teal)">WON (COHORT)</th>
+    <th colspan="2" class="grp" style="color:var(--red)">LOST</th>
+    <th rowspan="2" class="r" style="color:var(--gold)">WIN RATE</th>
+    <th colspan="2" class="grp" style="color:var(--muted)">PENDING</th>
+  </tr><tr>
+    <th class="sub">Count</th><th class="sub">Value</th>
+    <th class="sub sep">Count</th><th class="sub">Value</th>
+    <th class="sub sep">Count</th><th class="sub">Value</th>
+    <th class="sub sep">Count</th><th class="sub">Value</th>
+  </tr></thead><tbody>`;
+  rows.forEach(r=>{
+    const wc=r.wr>=40?'var(--green)':r.wr>=20?'var(--gold)':'var(--red)';
+    const ents=r.entity.split(', ').map(e=>ep(e.trim())).join(' ');
+    html+=`<tr>
+      <td><strong style="font-size:15px;color:${rc(r.rank)}">${r.rank}</strong></td>
+      <td style="font-weight:600">${r.sp}</td>
+      <td>${ents}</td>
+      <td class="r">${r.sub_c}</td><td class="r2">${fmt(r.sub_v)}</td>
+      <td class="r sep" style="color:var(--teal)">${r.cw_c}</td><td class="r2">${fmt(r.cw_v)}</td>
+      <td class="r sep" style="color:var(--red)">${r.lost_c}</td><td class="r2">${r.lost_v>0?fmt(r.lost_v):'—'}</td>
+      <td class="r"><div class="wrb"><div class="wrt"><div class="wrf" style="width:${r.wr}%;background:${wc}"></div></div><span class="wrtx" style="color:${wc}">${r.wr}%</span></div></td>
+      <td class="r sep">${r.pend_c}</td><td class="r2">${fmt(r.pend_v)}</td>
+    </tr>`;
+  });
+  html+=`</tbody></table></div><div class="note">${note}</div>`;
+  document.getElementById('mlb-content').innerHTML=html;
+}
+function swMLBMode(mode,btn){mlbMode=mode;document.querySelectorAll('#panel-monthly .tb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderMLB();}
+function swMLBMonth(val){mlbMonth=val;renderMLB();}
+renderMLB();
+
+let pendF='all';
+function renderPend(){
+  const rows=pendF==='all'?D.top10:D.top10.filter(r=>r.entity===pendF);
+  let html='';
+  rows.forEach((r,i)=>{
+    const dc=r.days>90?'ur':r.days>30?'wa':'fr';
+    const urg=r.days>90?`<span style="font-size:10px;color:var(--red);margin-left:6px">⚠ Follow up</span>`:'';
+    html+=`<div class="pc"><div class="prk">${i+1}</div><div><div class="pn">${r.name}${urg}</div><div class="pcu">${r.customer} · ${r.salesperson} · Q${r.quote_no}</div><div style="font-size:10px;color:var(--muted);margin-top:1px;font-style:italic">${r.status||''}</div></div><div>${ep(r.entity)}</div><div class="pv">${fmtF(r.value)}</div><div style="text-align:center"><div class="db ${dc}">${r.days}d</div><div style="font-size:10px;color:var(--muted);margin-top:2px">pending</div></div><div style="text-align:right"><div style="font-size:12px;font-weight:600;color:var(--muted)">${r.margin}</div><div style="font-size:10px;color:var(--muted)">margin</div></div></div>`;
+  });
+  document.getElementById('pend-grid').innerHTML=html;
+}
+function fPend(v,btn){pendF=v;document.querySelectorAll('#panel-pending .fb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderPend();}
+renderPend();
+</script>
+</body>
+</html>
