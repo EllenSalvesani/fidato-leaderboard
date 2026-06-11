@@ -98,7 +98,7 @@ body{font-family:'Roboto',sans-serif;background:var(--page-bg);color:var(--body)
 .filter-bar{
   background:#fff;border-bottom:0.5px solid #E2E8F0;
   position:sticky;top:116px;z-index:195;
-  padding:5px 16px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;
+  padding:5px 16px;display:none;align-items:center;gap:7px;flex-wrap:wrap;
 }
 .filter-btn{
   display:inline-flex;align-items:center;gap:7px;padding:6px 13px;
@@ -1475,7 +1475,7 @@ function setTab(t,btn){
   document.querySelectorAll('.tnav').forEach(x=>x.classList.remove('active'));
   $('tab-'+t).classList.add('active');btn.classList.add('active');
   const fb=$('filter-bar');
-  if(fb) fb.style.display=(t==='hours'||t==='leaderboard'||t==='leads')?'none':'';
+  if(fb) fb.style.display=(t==='quotes'||t==='jobs'||t==='invoiced')?'flex':'none';
   renderTab();
 }
 function renderTab(){
