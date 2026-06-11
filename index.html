@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Fidato Services Group — Sales Report Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700;800&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
   --navy:    #0F2245;
@@ -35,7 +35,7 @@
 }
 
 *{margin:0;padding:0;box-sizing:border-box;}
-body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--body);font-size:14px;line-height:1.5;}
+body{font-family:'Roboto',sans-serif;background:var(--page-bg);color:var(--body);font-size:14px;line-height:1.5;min-height:100vh;display:flex;flex-direction:column;}
 
 /* ── TOPBAR ── */
 .topbar{
@@ -47,64 +47,188 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--body);
 .tb-logo-wrap{
   height:100%;padding:8px 24px;
   display:flex;align-items:center;
-  border-right:1px solid rgba(255,255,255,.10);
   flex-shrink:0;background:transparent;
 }
 .tb-logo{height:54px;width:auto;display:block;}
 .tb-center{flex:1;padding:0 24px;}
-.tb-brand{font-size:25px;font-weight:700;color:#fff;letter-spacing:.2px;font-family:'Inter',sans-serif;}
-.tb-sub{font-size:8px;color:rgba(255,255,255,.50);margin-top:3px;font-style:italic;font-family:'Inter',sans-serif;}
+.tb-brand{font-size:25px;font-weight:700;color:#fff;letter-spacing:.2px;font-family:'Roboto',sans-serif;}
+.tb-sub{font-size:11px;color:rgba(255,255,255,.55);margin-top:3px;font-style:italic;font-family:'Roboto',sans-serif;letter-spacing:.3px;}
 .tb-right{
   padding:0 24px;display:flex;align-items:center;gap:16px;flex-shrink:0;
-  border-left:1px solid rgba(255,255,255,.10);text-align:right;
+  text-align:right;
 }
-.tb-label{font-size:25px;font-weight:700;color:#fff;letter-spacing:.2px;font-family:'Inter',sans-serif;white-space:nowrap;}
+.tb-label{font-size:25px;font-weight:700;color:#fff;letter-spacing:.2px;font-family:'Roboto',sans-serif;white-space:nowrap;}
 .pillars{display:flex;gap:10px;margin-top:3px;justify-content:flex-end;}
-.pillar{font-size:8px;color:rgba(255,255,255,.50);letter-spacing:.5px;text-transform:uppercase;font-style:italic;font-family:'Inter',sans-serif;}
+.pillar{font-size:8px;color:rgba(255,255,255,.50);letter-spacing:.5px;text-transform:uppercase;font-style:italic;font-family:'Roboto',sans-serif;}
 .pillar::before{content:'·';color:var(--red);margin-right:4px;font-weight:700;}
 
 /* ── ENTITY BAR ── */
-.entity-bar{
-  background:var(--navy2);
-  padding:0;display:flex;align-items:center;justify-content:space-between;gap:20vw;
+/* ── DARK TAB NAV ── */
+.tab-nav{
+  background:#162D50;
   position:sticky;top:74px;z-index:200;
+  display:flex;align-items:center;
+  padding:0;border-bottom:1px solid rgba(255,255,255,.07);
 }
-.entity-tabs{display:flex;flex:1;align-items:center;}
-.entity-btn{
-  flex:1;padding:13px 8px;font-size:13px;font-weight:500;
-  cursor:pointer;border:none;background:transparent;
-  color:rgba(255,255,255,.55);border-bottom:3px solid transparent;
-  transition:all .18s;font-family:'Inter',sans-serif;
-  white-space:nowrap;display:flex;align-items:center;justify-content:center;gap:7px;
+.tab-nav-tabs{display:flex;align-items:center;width:100%;}
+.tnav{
+  padding:11px 13px;font-size:13px;font-weight:500;cursor:pointer;
+  flex:1;justify-content:center;
+  color:rgba(255,255,255,.45);border-bottom:2px solid transparent;
+  transition:all .15s;white-space:nowrap;font-family:'Roboto',sans-serif;
+  background:transparent;border-top:none;border-left:none;border-right:none;
+  display:flex;align-items:center;gap:6px;
 }
-.entity-btn:hover{color:rgba(255,255,255,.85);background:rgba(255,255,255,.05);}
-.entity-btn.active{color:#fff;border-bottom-color:var(--accent);font-weight:600;}
-.entity-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;box-shadow:0 0 0 2px rgba(255,255,255,.3);}
-.entity-sep{width:1px;height:18px;background:rgba(255,255,255,.12);align-self:center;}
-.entity-date-filter{
-  display:flex;align-items:center;gap:6px;padding:0 18px;
-  border-left:1px solid rgba(255,255,255,.12);flex-shrink:0;
+.tnav:hover{color:rgba(255,255,255,.78);background:rgba(255,255,255,.05);}
+.tnav.active{color:#fff;border-bottom-color:#60A5FA;font-weight:600;}
+.nav-search-wrap{display:flex;align-items:center;gap:6px;}
+.nav-search{
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);
+  border-radius:6px;padding:5px 10px 5px 28px;font-size:12px;
+  font-family:'Roboto',sans-serif;color:#fff;outline:none;width:180px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,.35)' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:8px center;transition:all .15s;
 }
-.entity-date-filter label{font-size:10px;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.8px;white-space:nowrap;font-family:'JetBrains Mono',monospace;}
-.edate-btn{
-  padding:5px 11px;font-size:11px;font-weight:500;border:1px solid rgba(255,255,255,.18);
-  border-radius:5px;background:transparent;color:rgba(255,255,255,.6);cursor:pointer;
-  font-family:'Inter',sans-serif;transition:all .15s;white-space:nowrap;
+.nav-search::placeholder{color:rgba(255,255,255,.3);}
+.nav-search:focus{background-color:rgba(255,255,255,.13);border-color:rgba(255,255,255,.3);}
+.nav-search-clear{background:none;border:none;color:rgba(255,255,255,.35);cursor:pointer;font-size:14px;padding:0 2px;display:none;}
+.nav-search-clear.visible{display:block;}
+
+/* ── FILTER BAR ── */
+.filter-bar{
+  background:#fff;border-bottom:0.5px solid #E2E8F0;
+  position:sticky;top:122px;z-index:195;
+  padding:5px 16px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;
 }
-.edate-btn:hover{background:rgba(255,255,255,.10);color:#fff;}
-.edate-btn.active{background:rgba(255,255,255,.18);color:#fff;border-color:rgba(255,255,255,.4);font-weight:600;}
-.edate-range{display:none;align-items:center;gap:4px;padding:0 6px;}
-.edate-range.visible{display:flex;}
-.edate-input{
-  background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);border-radius:4px;
-  color:#fff;font-size:11px;padding:4px 7px;font-family:'Inter',sans-serif;outline:none;width:108px;
+.filter-btn{
+  display:inline-flex;align-items:center;gap:7px;padding:6px 13px;
+  border-radius:7px;font-size:12px;font-weight:500;
+  border:0.5px solid #CBD5E1;background:#fff;color:#334155;cursor:pointer;
+  font-family:'Roboto',sans-serif;transition:all .12s;white-space:nowrap;
 }
+.filter-btn:hover,.filter-btn.panel-open{background:#F1F5F9;border-color:#94A3B8;}
+.filter-btn-icon{font-size:14px;}
+.fbar-sep{width:0.5px;height:20px;background:#E2E8F0;margin:0 2px;flex-shrink:0;}
+.entity-chip{
+  display:inline-flex;align-items:center;gap:5px;padding:5px 11px;
+  border-radius:6px;font-size:12px;font-weight:500;
+  border:0.5px solid #E2E8F0;background:#fff;color:#475569;
+  cursor:pointer;font-family:'Roboto',sans-serif;transition:all .12s;
+  white-space:nowrap;
+}
+.entity-chip:hover{border-color:#94A3B8;color:#1E293B;}
+.entity-chip.active{background:#0C1E3D;color:#fff;border-color:#0C1E3D;}
+.entity-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.fchip-curr{
+  display:inline-flex;align-items:center;gap:5px;padding:5px 10px;
+  border-radius:6px;font-size:11px;font-weight:500;
+  background:#EFF6FF;color:#1D4ED8;border:0.5px solid #BFDBFE;
+}
+.fchip-comp{
+  display:inline-flex;align-items:center;gap:5px;padding:5px 10px;
+  border-radius:6px;font-size:11px;font-weight:500;
+  background:#F0FDF4;color:#166534;border:0.5px solid #BBF7D0;
+}
+.fchip-x{opacity:.55;cursor:pointer;font-size:11px;margin-left:1px;}
+.fchip-x:hover{opacity:1;}
+
+/* ── FILTER PANEL ── */
+.filter-panel{
+  background:#fff;border-bottom:0.5px solid #E2E8F0;
+  max-height:0;overflow:hidden;
+  transition:max-height .25s ease;
+  position:sticky;top:161px;z-index:190;
+  box-shadow:0 4px 16px rgba(0,0,0,.08);
+}
+.filter-panel.open{max-height:200px;}
+.fp-entity{
+  padding:10px 20px;border-bottom:0.5px solid #F1F5F9;
+  background:#FAFBFC;display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+}
+.fp-entity-label{font-size:9px;font-weight:600;color:#94A3B8;text-transform:uppercase;letter-spacing:1px;white-space:nowrap;}
+.fp-body{display:flex;overflow:hidden;}
+.fp-qp{width:148px;flex-shrink:0;border-right:0.5px solid #F1F5F9;background:#FAFBFC;padding:10px 0;}
+.fp-qp-head{font-size:9px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:1px;padding:0 16px 6px;}
+.fp-qp-item{display:block;width:100%;padding:7px 16px;font-size:12px;color:#475569;background:none;border:none;text-align:left;cursor:pointer;border-left:2px solid transparent;font-family:'Roboto',sans-serif;transition:all .1s;}
+.fp-qp-item:hover{background:#F1F5F9;color:#1E293B;}
+.fp-qp-item.sel{color:#1D4ED8;font-weight:600;background:#EFF6FF;border-left-color:#3B82F6;}
+.fp-qp-div{height:0.5px;background:#E2E8F0;margin:5px 0;}
+.fp-sections{flex:1;display:flex;flex-direction:column;}
+.fp-period-row{display:flex;align-items:center;padding:10px 16px;gap:14px;border-bottom:0.5px solid #F1F5F9;}
+.fp-period-row:last-child{border-bottom:none;}
+.fp-period-label{width:96px;flex-shrink:0;display:flex;flex-direction:column;gap:3px;}
+.fp-period-dot-row{display:flex;align-items:center;gap:5px;}
+.fp-period-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.fp-period-dot.curr{background:#3B82F6;}
+.fp-period-dot.comp{background:#22C55E;}
+.fp-period-name{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;}
+.fp-period-name.curr{color:#1D4ED8;}
+.fp-period-name.comp{color:#166534;}
+.fp-period-summary{font-size:11px;color:#64748B;font-weight:500;min-height:15px;}
+.fp-vdiv{width:0.5px;height:38px;background:#E2E8F0;flex-shrink:0;}
+.fp-seg{display:flex;flex-direction:column;gap:5px;}
+.fp-seg-head{font-size:9px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:.9px;}
+.fp-seg-pills{display:flex;gap:4px;flex-wrap:wrap;}
+.fp-pill{font-size:11px;padding:4px 9px;border-radius:5px;border:0.5px solid #E2E8F0;color:#64748B;cursor:pointer;background:#fff;white-space:nowrap;font-family:'Roboto',sans-serif;transition:all .1s;}
+.fp-pill:hover{background:#F1F5F9;border-color:#CBD5E1;color:#1E293B;}
+.fp-pill.curr-on{background:#EFF6FF;color:#1D4ED8;border-color:#BFDBFE;font-weight:600;}
+.fp-pill.comp-on{background:#F0FDF4;color:#166534;border-color:#86EFAC;font-weight:600;}
+.fp-yr-list,.fp-q-list{display:flex;gap:4px;flex-wrap:wrap;}
+.mo-grid{display:flex;gap:4px;flex-wrap:wrap;}
+.mo-cell{font-size:11px;font-weight:500;color:#64748B;padding:4px 7px;border-radius:5px;cursor:pointer;border:0.5px solid #E2E8F0;background:#fff;font-family:'Roboto',sans-serif;transition:all .1s;}
+.mo-cell:hover{background:#F1F5F9;border-color:#CBD5E1;color:#1E293B;}
+.mo-cell.curr-on{background:#EFF6FF;color:#1D4ED8;font-weight:700;border-color:#BFDBFE;}
+.mo-cell.comp-on{background:#F0FDF4;color:#166534;font-weight:700;border-color:#86EFAC;}
+.fp-footer{
+  border-top:0.5px solid #F1F5F9;padding:9px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:#FAFBFC;
+}
+.fp-clear{font-size:11px;color:#94A3B8;cursor:pointer;background:none;border:none;font-family:'Roboto',sans-serif;}
+.fp-clear:hover{color:#475569;}
+.fp-apply{
+  padding:7px 22px;border-radius:7px;font-size:12px;font-weight:600;
+  background:#0C1E3D;color:#fff;border:none;cursor:pointer;font-family:'Roboto',sans-serif;
+}
+.fp-apply:hover{background:#1a3460;}
+
+/* ── SPLIT TILES ── */
+.thalf-c{margin-bottom:6px;}
+.thalf-p{display:none;border-top:0.5px solid rgba(0,0,0,.08);padding-top:8px;margin-top:0;}
+body.has-comp .thalf-p{display:block;}
+.thalf-tag{font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--dim);margin-bottom:4px;}
+.t-cval{font-size:20px;font-weight:700;color:var(--dim);line-height:1;margin-bottom:2px;display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;}
+.t-csub{font-size:11px;color:var(--xdim);margin-bottom:4px;display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;}
+.t-cdelta{display:none;}
+.cdelta-up{display:inline-flex;align-items:center;gap:2px;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:600;background:rgba(16,120,60,.1);color:#166534;}
+.cdelta-down{display:inline-flex;align-items:center;gap:2px;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:600;background:rgba(163,45,45,.1);color:#A32D2D;}
+.cdelta-flat{display:inline-flex;align-items:center;gap:2px;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:600;background:rgba(100,116,139,.1);color:#64748B;}
+/* ── STACKED TABLE CELLS ── */
+.pv-row{display:none;align-items:center;gap:4px;margin-top:3px;}
+body.has-comp .pv-row{display:flex;}
+.pval{font-size:12px;color:var(--dim);}
+.dinl{display:inline-flex;align-items:center;gap:1px;font-size:11px;font-weight:600;padding:1px 4px;border-radius:3px;}
+.dinl-up{background:rgba(16,120,60,.1);color:#166534;}
+.dinl-down{background:rgba(163,45,45,.1);color:#A32D2D;}
+.dinl-flat{background:rgba(100,116,139,.1);color:#64748B;}
+/* ── DELTA BADGES (tile dark mode, kept for compat) ── */
+.tile-delta{margin-top:4px;min-height:18px;}
+.delta-badge{
+  display:inline-flex;align-items:center;gap:3px;
+  font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;
+  font-family:'Roboto Mono',monospace;letter-spacing:.2px;
+}
+.delta-up{background:rgba(16,120,60,.18);color:#4ADE80;}
+.delta-down{background:rgba(200,30,30,.15);color:#FF8080;}
+.delta-flat{background:rgba(150,170,190,.12);color:rgba(255,255,255,.5);}
+
+
 
 /* ── FILTER ROW ── */
 /* ── COLUMN HEADER FILTERS ── */
 .fsel{
   background:#fff;border:1.5px solid var(--border2);border-radius:5px;
-  color:var(--text);font-family:'Inter',sans-serif;font-size:11px;
+  color:var(--text);font-family:'Roboto',sans-serif;font-size:11px;
   font-weight:500;padding:4px 8px;outline:none;cursor:pointer;
   min-width:110px;width:100%;margin-top:4px;transition:border-color .15s;
   box-shadow:var(--sh);
@@ -120,58 +244,50 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--body);
 .dt th.sort-desc .sort-icon::after{content:' ▼';}
 .dt th .sort-icon::after{content:' ⇅';}
 
-/* ── TAB NAV ── */
-.tab-nav{
-  display:flex;align-items:center;border-bottom:1px solid var(--border);justify-content:space-between;gap:31vw;
-  padding:0;background:#fff;
-  box-shadow:0 1px 0 var(--border);
-}
-.tab-nav-tabs{display:flex;flex:1;}
-.tnav{
-  flex:1;font-size:13px;font-weight:500;padding:11px 8px;cursor:pointer;
-  color:var(--dim);border-bottom:3px solid transparent;margin-bottom:-1px;
-  transition:all .15s;letter-spacing:.1px;display:flex;align-items:center;
-  justify-content:center;gap:6px;white-space:nowrap;font-family:'Inter',sans-serif;
-}
-.tnav:hover{color:var(--navy);background:#fafcff;}
-.tnav.active{color:var(--navy);border-bottom-color:var(--accent);font-weight:600;}
-.tab-search-wrap{
-  display:flex;align-items:center;padding:6px 16px;border-left:1px solid var(--border);
-  flex-shrink:0;gap:6px;
-}
-.tab-search{
-  border:1.5px solid var(--border2);border-radius:6px;padding:5px 10px 5px 28px;
-  font-size:12px;font-family:'Inter',sans-serif;color:var(--text);outline:none;
-  width:200px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='13' height='13' viewBox='0 0 24 24' fill='none' stroke='%237A98B0' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat 8px center;
-  transition:border-color .15s;
-}
-.tab-search:focus{border-color:var(--navy);}
-.tab-search-clear{
-  font-size:14px;color:var(--xdim);cursor:pointer;line-height:1;
-  background:none;border:none;padding:0 2px;display:none;
-}
-.tab-search-clear.visible{display:block;}
+/* tab-nav styles moved above */
+
 
 /* ── LAYOUT ── */
-.wrap{max-width:1560px;margin:0 auto;padding:20px 96px 60px;}
+.wrap{max-width:1560px;margin:0 auto;padding:6px 4px 16px;flex:1;width:100%;}
 
 /* ── TILE ROW HIGHLIGHT ── */
 .dt tr.row-highlight td{background:rgba(15,34,69,.05)!important;transition:background .15s;}
 .dt tr.row-highlight:hover td{background:rgba(15,34,69,.09)!important;}
 .tile.tile-active{border-color:var(--navy);box-shadow:0 0 0 2px var(--navy),var(--sh2);transform:translateY(-2px);}
-.tile.tile-clicked{border-color:var(--red);box-shadow:0 0 0 2px var(--red),var(--sh2);transform:translateY(-2px);}
+.tile.tile-clicked{border-width:2px;border-style:solid;box-shadow:0 0 0 3px rgba(0,0,0,.08),var(--sh2);transform:translateY(-2px);}
+tr.hl-navy td{background:rgba(15,34,69,.05);}
+tr.hl-green td{background:rgba(59,109,17,.05);}
+tr.hl-red td{background:rgba(163,45,45,.05);}
+tr.hl-gold td{background:rgba(133,79,11,.05);}
+tr.hl-mid td{background:rgba(24,95,165,.05);}
+tr.hl-orange td{background:rgba(194,65,12,.05);}
+tr.hl-teal td{background:rgba(15,110,86,.05);}
+tr.dim td{opacity:.28;}
+/* Cell-level highlight classes for tiles (quotes/jobs/invoiced) */
+td.cell-hl-navy  {background:rgba(15,34,69,.13)!important;font-weight:700!important;}
+td.cell-hl-green {background:rgba(59,109,17,.11)!important;font-weight:700!important;}
+td.cell-hl-red   {background:rgba(163,45,45,.11)!important;font-weight:700!important;}
+td.cell-hl-gold  {background:rgba(133,79,11,.11)!important;font-weight:700!important;}
+td.cell-hl-mid   {background:rgba(24,95,165,.11)!important;font-weight:700!important;}
+td.cell-hl-orange{background:rgba(194,65,12,.11)!important;font-weight:700!important;}
+td.cell-hl-teal  {background:rgba(15,110,86,.11)!important;font-weight:700!important;}
+/* Selected tile half indicator */
+.thalf-c.half-selected,.thalf-p.half-selected{outline:2px solid rgba(0,0,0,.25);border-radius:4px;}
+tr.comp-row td{display:none;}
+tr.comp-period-row td{background:rgba(15,34,69,.035);border-bottom:1px solid var(--border);}
+tr.comp-period-row td:first-child{border-left:3px solid #94A3B8;}
+.period-vs{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.5px;background:#E2E8F0;color:#64748B;border-radius:3px;padding:1px 4px;margin-right:5px;vertical-align:middle;}
+tr.comp-row .dinl{font-size:10px;padding:1px 3px;}
 .tile{cursor:pointer;}
 .tab-panel{display:none;}
 .tab-panel.active{display:block;}
 
 /* ── TILES ── */
-.tiles{display:grid;gap:10px;margin-bottom:16px;}
-.t6{grid-template-columns:repeat(6,1fr);}
-.t5{grid-template-columns:repeat(5,1fr);}
-.t4{grid-template-columns:repeat(4,1fr);}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:8px;margin-bottom:8px;}
+.t8,.t7,.t6,.t5,.t4{grid-template-columns:repeat(auto-fit,minmax(100px,1fr));}
 .tile{
   background:var(--card-bg);border:1px solid var(--border);
-  border-radius:10px;padding:16px 14px;position:relative;overflow:hidden;
+  border-radius:10px;padding:12px 12px 10px;position:relative;overflow:hidden;
   transition:box-shadow .2s,transform .18s;box-shadow:var(--sh);
 }
 .tile:hover{transform:translateY(-2px);box-shadow:var(--sh2);}
@@ -183,8 +299,8 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--body);
 .tile.torange::before{background:var(--orange);}
 .tile.tgold::before{background:var(--gold);}
 .tile.tteal::before{background:var(--teal);}
-.tile .lbl{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--xdim);margin-bottom:7px;font-weight:600;}
-.tile .val{font-size:28px;font-weight:800;line-height:1;margin-bottom:3px;letter-spacing:-.5px;}
+.tile .lbl{font-family:'Roboto Mono',monospace;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--xdim);margin-bottom:5px;font-weight:600;}
+.tile .val{font-size:32px;font-weight:800;line-height:1;margin-bottom:3px;letter-spacing:-.5px;}
 .tile.tnavy .val{color:var(--navy);}
 .tile.tred .val{color:var(--red2);}
 .tile.tmid .val{color:var(--mid);}
@@ -192,36 +308,78 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--body);
 .tile.torange .val{color:var(--orange);}
 .tile.tgold .val{color:var(--gold);}
 .tile.tteal .val{color:var(--teal);}
-.tile .sub{font-size:11px;color:var(--xdim);}
+.tile .sub{font-size:12px;color:var(--xdim);margin-bottom:0;}
 
 /* ── CARD ── */
 .card{
   background:var(--card-bg);border:1px solid var(--border);
-  border-radius:10px;padding:18px;box-shadow:var(--sh);
+  border-radius:10px;padding:14px;box-shadow:var(--sh);
   transition:border-color .2s;
 }
 .card:hover{border-color:var(--border2);}
-.ct{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;}
-.ct-sub{font-size:11px;color:var(--dim);font-weight:400;}
+.ct{font-size:15px;font-weight:700;color:var(--navy);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;}
+.ct-sub{font-size:12px;color:var(--dim);font-weight:400;}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
 
 /* ── TABLE ── */
-.dt{width:100%;border-collapse:collapse;font-size:13px;table-layout:fixed;}
+.dt{width:100%;border-collapse:collapse;font-size:15px;table-layout:auto;}
 .dt th{
-  font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;
+  font-family:'Roboto Mono',monospace;font-size:11px;letter-spacing:.8px;
   text-transform:uppercase;color:var(--xdim);text-align:left;
-  padding:9px 12px;border-bottom:1px solid var(--border);
+  padding:6px 10px;border-bottom:1px solid var(--border);
   white-space:nowrap;font-weight:600;background:#F8FAFD;
-  overflow:hidden;text-overflow:ellipsis;
 }
 .dt td{
-  padding:9px 12px;border-bottom:1px solid #EEF3F8;
+  padding:6px 10px;border-bottom:1px solid #EEF3F8;
   color:var(--body);vertical-align:middle;text-align:left;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
+.cn{font-weight:700;}
+.cv{font-size:11px;color:var(--xdim);margin-left:3px;font-weight:400;}
+.cv-wr{font-size:11px;color:var(--xdim);margin-left:2px;font-weight:400;}
+/* Combo column headers */
+.th-combo-hdr{display:flex;flex-direction:column;align-items:stretch;}
+.thc-lbl{font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;padding:4px 6px 3px;display:block;}
+.thc-sub{display:flex;border-top:0.5px solid rgba(0,0,0,.1);margin-top:1px;}
+.thc-sub span{flex:1;font-size:8px;font-weight:700;padding:2px 6px 3px;text-transform:uppercase;letter-spacing:.4px;}
+.thc-sub span:first-child{text-align:right;border-right:0.5px dashed rgba(0,0,0,.12);}
+.thc-sub span:last-child{text-align:right;color:var(--dim);}
+/* Two-level column headers */
+.th-main2{font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;padding:5px 6px 3px;text-align:center;display:block;}
+.th-sub2{display:flex;border-top:0.5px solid rgba(0,0,0,.06);}
+.th-sub2 span{flex:1;font-size:9px;font-weight:600;padding:2px 6px 3px;text-align:right;color:var(--dim);}
+.th-sub2 span:first-child{border-right:0.5px dashed rgba(0,0,0,.12);}
+.th-fixed2{font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--xdim);padding:6px 8px;display:flex;align-items:center;height:100%;}
+/* Column group borders */
+.td-sub,.td-won,.td-lost,.td-pend,.td-wr,.td-dir{border-left:2px solid #1A3460 !important;}
+.td-dir{border-right:2px solid #1A3460 !important;}
+.td-rev2{border-left:2px solid #1A3460 !important;}
+/* Column tints on td */
+.td-sub{background:rgba(15,34,69,.035)!important;}
+.td-won{background:rgba(59,109,17,.035)!important;}
+.td-lost{background:rgba(163,45,45,.035)!important;}
+.td-pend{background:rgba(133,79,11,.035)!important;}
+.td-wr{background:rgba(24,95,165,.035)!important;}
+.td-dir{background:rgba(15,110,86,.035)!important;}
+.td-rev2{background:rgba(194,65,12,.035)!important;border-left:1px solid var(--border)!important;text-align:right;}
+.td-fixed2{border-right:1px solid var(--border)!important;}
+/* td-pair layout */
+.td-pair{display:flex;justify-content:space-between;align-items:baseline;gap:2px;}
+.td-cnt2{font-weight:700;font-size:11px;text-align:right;flex:1;}
+.td-val2{font-size:10px;color:var(--dim);text-align:right;flex:1;}
+.td-sep2{width:0.5px;background:rgba(0,0,0,.12);align-self:stretch;flex:0 0 auto;margin:0 3px;}
+/* Row hover respects column tints */
+.dt tr:hover .td-sub{background:rgba(15,34,69,.07)!important;}
+.dt tr:hover .td-won{background:rgba(59,109,17,.07)!important;}
+.dt tr:hover .td-lost{background:rgba(163,45,45,.07)!important;}
+.dt tr:hover .td-pend{background:rgba(133,79,11,.07)!important;}
+.dt tr:hover .td-wr{background:rgba(24,95,165,.07)!important;}
+.dt tr:hover .td-dir{background:rgba(15,110,86,.07)!important;}
+.dt tr:hover .td-rev2{background:rgba(194,65,12,.07)!important;}
+.dt td:hover{overflow:visible;position:relative;z-index:5;white-space:normal;word-break:break-word;}
 .dt tr:last-child td{border-bottom:none;}
 .dt tr:hover td{background:#F5F9FD;}
-.dt td.mono{font-family:'JetBrains Mono',monospace;font-size:12px;}
+.dt td.mono{font-family:'Roboto Mono',monospace;font-size:12px;}
 .ln{font-weight:600;color:var(--text);font-size:13px;line-height:1.3;}
 .ls{font-size:11px;color:var(--dim);margin-top:2px;}
 
@@ -241,7 +399,7 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--body);
 .col-flag   {width:65px;}
 
 /* ── BADGES ── */
-.bdg{font-family:'JetBrains Mono',monospace;font-size:10px;padding:2px 8px;border-radius:4px;display:inline-block;font-weight:600;white-space:nowrap;vertical-align:middle;letter-spacing:.1px;border:1px solid transparent;}
+.bdg{font-family:'Roboto Mono',monospace;font-size:10px;padding:2px 8px;border-radius:4px;display:inline-block;font-weight:600;white-space:nowrap;vertical-align:middle;letter-spacing:.1px;border:1px solid transparent;}
 .bdg-coat{background:rgba(139,82,0,.10);color:var(--coat);border-color:rgba(139,82,0,.24);}
 .bdg-svc{background:rgba(10,92,48,.10);color:var(--svc);border-color:rgba(10,92,48,.24);}
 .bdg-gc{background:rgba(11,63,138,.10);color:var(--gc);border-color:rgba(11,63,138,.22);}
@@ -254,7 +412,7 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--body);
 .days-crit{background:rgba(168,0,32,.09);color:var(--red2);border:1px solid rgba(168,0,32,.20);font-weight:700;}
 
 /* ── RANK ── */
-.rank{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;font-size:11px;font-weight:700;font-family:'JetBrains Mono',monospace;}
+.rank{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:50%;font-size:11px;font-weight:700;font-family:'Roboto Mono',monospace;}
 .rank-1{background:linear-gradient(135deg,#E8C500,#B88500);color:#2A1600;}
 .rank-2{background:linear-gradient(135deg,#B8B8B8,#848484);color:#161616;}
 .rank-3{background:linear-gradient(135deg,#C07850,#904830);color:#fff;}
@@ -264,13 +422,13 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--body);
 .brow{display:flex;align-items:center;gap:10px;margin-bottom:9px;}
 .blbl{font-size:12px;color:var(--body);width:140px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500;}
 .btrack{flex:1;height:22px;background:var(--page-bg);border-radius:4px;overflow:hidden;border:1px solid var(--border);}
-.bfill{height:100%;border-radius:3px;display:flex;align-items:center;padding-left:7px;font-size:10px;font-weight:700;font-family:'JetBrains Mono',monospace;white-space:nowrap;transition:width .6s ease;}
+.bfill{height:100%;border-radius:3px;display:flex;align-items:center;padding-left:7px;font-size:10px;font-weight:700;font-family:'Roboto Mono',monospace;white-space:nowrap;transition:width .6s ease;}
 .bfill.coat{background:linear-gradient(90deg,rgba(139,82,0,.75),rgba(139,82,0,.22));color:#1A0800;}
 .bfill.svc{background:linear-gradient(90deg,rgba(10,92,48,.75),rgba(10,92,48,.22));color:#021209;}
 .bfill.gc{background:linear-gradient(90deg,rgba(11,63,138,.75),rgba(11,63,138,.22));color:#fff;}
 .bfill.pm{background:linear-gradient(90deg,rgba(122,48,16,.75),rgba(122,48,16,.22));color:#fff;}
 .bfill.navy{background:linear-gradient(90deg,rgba(15,34,69,.75),rgba(15,34,69,.22));color:#fff;}
-.bnum{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--dim);width:75px;text-align:left;flex-shrink:0;}
+.bnum{font-family:'Roboto Mono',monospace;font-size:11px;color:var(--dim);width:75px;text-align:left;flex-shrink:0;}
 
 /* ── HOURS ── */
 .flag-card{border-radius:8px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;border:1.5px solid transparent;}
@@ -345,30 +503,30 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--body);
 .upload-drop-sub{font-size:11px;color:var(--xdim);}
 .upload-sheet-map{display:none;margin-bottom:18px;}
 .upload-sheet-map.visible{display:block;}
-.sheet-map-title{font-size:12px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;font-family:'JetBrains Mono',monospace;}
+.sheet-map-title{font-size:12px;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px;font-family:'Roboto Mono',monospace;}
 .sheet-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:12px;}
-.sheet-row-label{color:var(--dim);width:130px;flex-shrink:0;font-family:'JetBrains Mono',monospace;font-size:11px;}
+.sheet-row-label{color:var(--dim);width:130px;flex-shrink:0;font-family:'Roboto Mono',monospace;font-size:11px;}
 .sheet-sel{
   flex:1;border:1.5px solid var(--border2);border-radius:6px;padding:5px 8px;
-  font-size:12px;font-family:'Inter',sans-serif;color:var(--text);outline:none;
+  font-size:12px;font-family:'Roboto',sans-serif;color:var(--text);outline:none;
   background:#fff;
 }
 .sheet-status{
   font-size:11px;padding:3px 9px;border-radius:4px;white-space:nowrap;
-  font-family:'JetBrains Mono',monospace;font-weight:600;
+  font-family:'Roboto Mono',monospace;font-weight:600;
 }
 .sheet-ok{background:#D1FAE5;color:#065F46;}
 .sheet-warn{background:#FEF3C7;color:#92400E;}
 .upload-actions{display:flex;gap:10px;justify-content:flex-end;}
 .upload-cancel{
   background:none;border:1.5px solid var(--border2);border-radius:7px;
-  padding:8px 18px;font-size:13px;font-family:'Inter',sans-serif;
+  padding:8px 18px;font-size:13px;font-family:'Roboto',sans-serif;
   color:var(--dim);cursor:pointer;transition:all .15s;
 }
 .upload-cancel:hover{border-color:var(--dim);color:var(--body);}
 .upload-confirm{
   background:var(--navy);color:#fff;border:none;border-radius:7px;
-  padding:8px 22px;font-size:13px;font-weight:600;font-family:'Inter',sans-serif;
+  padding:8px 22px;font-size:13px;font-weight:600;font-family:'Roboto',sans-serif;
   cursor:pointer;transition:all .15s;
 }
 .upload-confirm:hover{background:var(--mid);}
@@ -387,13 +545,24 @@ body{font-family:'Inter',sans-serif;background:var(--page-bg);color:var(--body);
 
 .no-data{text-align:center;padding:32px;color:var(--xdim);font-size:13px;background:var(--page-bg);border-radius:7px;border:1px dashed var(--border);}
 .div{height:1px;background:var(--border);margin:14px 0 12px;}
-footer{text-align:center;padding:18px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--xdim);border-top:1px solid var(--border);margin-top:20px;background:#fff;letter-spacing:.3px;}
+footer{text-align:center;padding:18px;font-family:'Roboto Mono',monospace;font-size:10px;color:var(--xdim);border-top:1px solid var(--border);background:#fff;letter-spacing:.3px;margin-top:auto;}
 footer span{color:var(--navy);font-weight:700;}
 
-@media(max-width:1200px){.t6{grid-template-columns:repeat(3,1fr);}.t4{grid-template-columns:repeat(2,1fr);}}
-@media(max-width:900px){.g2{grid-template-columns:1fr;}.t6,.t5{grid-template-columns:repeat(2,1fr);}.tab-nav,.entity-bar{overflow-x:auto;}}
+@media(max-width:1200px){.t7{grid-template-columns:repeat(4,1fr);}.t6{grid-template-columns:repeat(3,1fr);}.t4{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:900px){.g2{grid-template-columns:1fr;}.t7,.t6,.t5{grid-template-columns:repeat(2,1fr);}.tab-nav,.entity-bar{overflow-x:auto;}}
+
+/* ── TOAST ── */
+#data-toast{
+  position:fixed;bottom:80px;right:24px;z-index:9999;
+  padding:11px 18px;border-radius:8px;font-size:13px;
+  font-family:'Roboto',sans-serif;font-weight:500;
+  box-shadow:0 4px 20px rgba(0,0,0,.22);
+  transition:opacity .4s,transform .3s;
+  pointer-events:none;white-space:nowrap;
+}
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
 // ══════════════════════════════════════════════════════════════════
 // EXCEL UPLOAD SYSTEM
 // ══════════════════════════════════════════════════════════════════
@@ -641,6 +810,7 @@ function applyUpload(){
 
       // Re-init and re-render
       populateHeaderDropdowns();
+      populatePeriodDropdowns();
       renderTab();
       setupTileHighlights();
 
@@ -684,41 +854,16 @@ document.getElementById('upload-overlay').addEventListener('click',function(e){
     <div class="tb-sub">From rooftop to ground level, and everything in between</div>
   </div>
   <div class="tb-update" style="padding:0 20px;border-left:1px solid rgba(255,255,255,.10);display:flex;flex-direction:column;align-items:flex-end;gap:5px;flex-shrink:0;">
-    <div id="topbar-date" style="font-size:10px;color:rgba(255,255,255,.50);text-transform:uppercase;letter-spacing:.8px;font-family:'JetBrains Mono',monospace;white-space:nowrap;"></div>
-    <button onclick="openUpload()" style="background:var(--red);color:#fff;border:none;border-radius:6px;padding:7px 16px;font-size:12px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;white-space:nowrap;transition:background .15s;" onmouseover="this.style.background='#a00020'" onmouseout="this.style.background='var(--red)'">📊 Update Data</button>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <button onclick="updateDataDirect()" title="Auto-syncs from your saved Excel file. First click asks you to pick the file; after that it syncs with one click." style="background:var(--red);color:#fff;border:none;border-radius:6px;padding:7px 16px;font-size:12px;font-weight:600;font-family:'Roboto',sans-serif;cursor:pointer;white-space:nowrap;transition:background .15s;" onmouseover="this.style.background='#a00020'" onmouseout="this.style.background='var(--red)'">📊 Sync Data</button>
+      <button onclick="openUpload()" title="Manually upload and map a different Excel file" style="background:transparent;color:rgba(255,255,255,.55);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:6px 10px;font-size:11px;font-family:'Roboto',sans-serif;cursor:pointer;white-space:nowrap;transition:all .15s;" onmouseover="this.style.color='#fff';this.style.borderColor='rgba(255,255,255,.5)'" onmouseout="this.style.color='rgba(255,255,255,.55)';this.style.borderColor='rgba(255,255,255,.2)'">⚙ Re-map</button>
+    </div>
+    <div id="topbar-date" style="font-size:11px;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.8px;font-family:'Roboto Mono',monospace;white-space:nowrap;"></div>
   </div>
 </div>
 
 <!-- ENTITY FILTER BAR -->
-<div class="entity-bar">
-  <div class="entity-tabs">
-    <button class="entity-btn active" onclick="setEntity('all',this)">Fidato Group (All)</button>
-    <div class="entity-sep"></div>
-    <button class="entity-btn" onclick="setEntity('Services',this)"><div class="entity-dot" style="background:#4ADE80"></div>Services Brisbane</button>
-    <div class="entity-sep"></div>
-    <button class="entity-btn" onclick="setEntity('Coatings',this)"><div class="entity-dot" style="background:#FBBF24"></div>Coatings</button>
-    <div class="entity-sep"></div>
-    <button class="entity-btn" onclick="setEntity('Services GC',this)"><div class="entity-dot" style="background:#60A5FA"></div>Gold Coast</button>
-    <div class="entity-sep"></div>
-    <button class="entity-btn" onclick="setEntity('Property Maintenance',this)"><div class="entity-dot" style="background:#F97316"></div>Property Maintenance</button>
-  </div>
-  <div class="entity-date-filter">
-    <label>Period</label>
-    <button class="edate-btn active" onclick="setDateFilter('all',this)">All Time</button>
-    <button class="edate-btn" onclick="setDateFilter('ytd',this)">YTD</button>
-    <button class="edate-btn" onclick="setDateFilter('fy',this)">FY</button>
-    <button class="edate-btn" onclick="setDateFilter('monthly',this)">Monthly</button>
-    <button class="edate-btn" onclick="setDateFilter('range',this)">Range</button>
-    <div class="edate-range" id="edate-range-wrap">
-      <input class="edate-input" type="date" id="edate-from" onchange="applyDateRange()">
-      <span style="color:rgba(255,255,255,.4);font-size:11px">→</span>
-      <input class="edate-input" type="date" id="edate-to" onchange="applyDateRange()">
-    </div>
-  </div>
-</div>
-
-
-<!-- TAB NAV -->
+<!-- DARK TAB NAV -->
 <div class="tab-nav">
   <div class="tab-nav-tabs">
     <div class="tnav active" onclick="setTab('leads',this)">🎯 Open Leads</div>
@@ -728,9 +873,129 @@ document.getElementById('upload-overlay').addEventListener('click',function(e){
     <div class="tnav" onclick="setTab('hours',this)">⏱ Hours</div>
     <div class="tnav" onclick="setTab('leaderboard',this)">🏆 Leaderboard</div>
   </div>
-  <div class="tab-search-wrap">
-    <input class="tab-search" type="text" placeholder="Search all data…" id="global-search" oninput="globalSearch(this.value)">
-    <button class="tab-search-clear" id="search-clear" onclick="clearGlobalSearch()">✕</button>
+
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar" id="filter-bar">
+  <button class="filter-btn" id="filter-panel-btn" onclick="toggleFilterPanel()">
+    <span class="filter-btn-icon" id="filter-btn-icon">⚙</span> <span id="filter-btn-lbl">Filter</span>
+    <span id="filter-active-count" style="display:none;background:#1D4ED8;color:#fff;border-radius:10px;font-size:10px;padding:1px 6px;margin-left:2px;"></span>
+    ▾
+  </button>
+  <div class="fbar-sep"></div>
+  <button class="entity-chip active" id="ec-all" onclick="setEntityChip('all',this)">Fidato (All)</button>
+  <button class="entity-chip" id="ec-svc" onclick="setEntityChip('Services',this)"><span class="entity-dot" style="background:#4ADE80"></span>Services Brisbane</button>
+  <button class="entity-chip" id="ec-coat" onclick="setEntityChip('Coatings',this)"><span class="entity-dot" style="background:#FBBF24"></span>Coatings</button>
+  <button class="entity-chip" id="ec-gc" onclick="setEntityChip('Services GC',this)"><span class="entity-dot" style="background:#60A5FA"></span>Gold Coast</button>
+  <button class="entity-chip" id="ec-pm" onclick="setEntityChip('Property Maintenance',this)"><span class="entity-dot" style="background:#F97316"></span>Prop. Maintenance</button>
+  <div class="fbar-sep"></div>
+  <div id="active-filter-chips" style="display:flex;align-items:center;gap:6px;"></div>
+  <div style="flex:1"></div>
+  <button class="fp-clear" id="fbar-clear-btn" onclick="clearAllFilters()" style="margin-right:8px">Clear all filters</button>
+</div>
+
+<!-- FILTER PANEL -->
+<div class="filter-panel" id="filter-panel">
+  <div class="fp-body">
+    <!-- Quick Pick -->
+    <div class="fp-qp">
+      <div class="fp-qp-head">Quick pick</div>
+      <button class="fp-qp-item sel" id="qp-all" onclick="applyQuickPick('all',this)">All time</button>
+      <div class="fp-qp-div"></div>
+      <button class="fp-qp-item" id="qp-ytd" onclick="applyQuickPick('ytd',this)">YTD <span id="qp-ytd-yr" style="opacity:.6;font-size:11px"></span></button>
+      <button class="fp-qp-item" id="qp-ytd1" onclick="applyQuickPick('ytd1',this)">YTD <span id="qp-ytd1-yr" style="opacity:.6;font-size:11px"></span></button>
+      <div class="fp-qp-div"></div>
+      <button class="fp-qp-item" id="qp-fy" onclick="applyQuickPick('fy',this)">FY <span id="qp-fy-lbl" style="opacity:.6;font-size:11px"></span></button>
+      <button class="fp-qp-item" id="qp-fy1" onclick="applyQuickPick('fy1',this)">FY <span id="qp-fy1-lbl" style="opacity:.6;font-size:11px"></span></button>
+      <button class="fp-qp-item" id="qp-fy2" onclick="applyQuickPick('fy2',this)">FY <span id="qp-fy2-lbl" style="opacity:.6;font-size:11px"></span></button>
+      <div class="fp-qp-div"></div>
+      <button class="fp-qp-item" id="qp-thisq" onclick="applyQuickPick('thisq',this)">This quarter</button>
+      <button class="fp-qp-item" id="qp-thismo" onclick="applyQuickPick('thismo',this)">This month</button>
+    </div>
+    <!-- Period rows -->
+    <div class="fp-sections">
+      <!-- Current -->
+      <div class="fp-period-row">
+        <div class="fp-period-label">
+          <div class="fp-period-dot-row"><div class="fp-period-dot curr"></div><span class="fp-period-name curr">Current</span></div>
+          <div class="fp-period-summary" id="fp-curr-summary"></div>
+        </div>
+        <div class="fp-vdiv"></div>
+        <div class="fp-seg">
+          <div class="fp-seg-head">Year</div>
+          <div class="fp-yr-list" id="fp-curr-yr-list"></div>
+        </div>
+        <div class="fp-vdiv"></div>
+        <div class="fp-seg">
+          <div class="fp-seg-head">Quarter</div>
+          <div class="fp-q-list" id="fp-curr-q-list">
+            <div class="fp-pill" data-grp="curr" data-q="1" onclick="toggleFpQ('curr',1,this)">Q1</div>
+            <div class="fp-pill" data-grp="curr" data-q="2" onclick="toggleFpQ('curr',2,this)">Q2</div>
+            <div class="fp-pill" data-grp="curr" data-q="3" onclick="toggleFpQ('curr',3,this)">Q3</div>
+            <div class="fp-pill" data-grp="curr" data-q="4" onclick="toggleFpQ('curr',4,this)">Q4</div>
+          </div>
+        </div>
+        <div class="fp-vdiv"></div>
+        <div class="fp-seg">
+          <div class="fp-seg-head">Month</div>
+          <div class="mo-grid" id="fp-curr-mo-grid">
+            <div class="mo-cell" data-grp="curr" data-mo="1" onclick="toggleFpMo('curr',1,this)">Jan</div>
+            <div class="mo-cell" data-grp="curr" data-mo="2" onclick="toggleFpMo('curr',2,this)">Feb</div>
+            <div class="mo-cell" data-grp="curr" data-mo="3" onclick="toggleFpMo('curr',3,this)">Mar</div>
+            <div class="mo-cell" data-grp="curr" data-mo="4" onclick="toggleFpMo('curr',4,this)">Apr</div>
+            <div class="mo-cell" data-grp="curr" data-mo="5" onclick="toggleFpMo('curr',5,this)">May</div>
+            <div class="mo-cell" data-grp="curr" data-mo="6" onclick="toggleFpMo('curr',6,this)">Jun</div>
+            <div class="mo-cell" data-grp="curr" data-mo="7" onclick="toggleFpMo('curr',7,this)">Jul</div>
+            <div class="mo-cell" data-grp="curr" data-mo="8" onclick="toggleFpMo('curr',8,this)">Aug</div>
+            <div class="mo-cell" data-grp="curr" data-mo="9" onclick="toggleFpMo('curr',9,this)">Sep</div>
+            <div class="mo-cell" data-grp="curr" data-mo="10" onclick="toggleFpMo('curr',10,this)">Oct</div>
+            <div class="mo-cell" data-grp="curr" data-mo="11" onclick="toggleFpMo('curr',11,this)">Nov</div>
+            <div class="mo-cell" data-grp="curr" data-mo="12" onclick="toggleFpMo('curr',12,this)">Dec</div>
+          </div>
+        </div>
+      </div>
+      <!-- Comparative -->
+      <div class="fp-period-row">
+        <div class="fp-period-label">
+          <div class="fp-period-dot-row"><div class="fp-period-dot comp"></div><span class="fp-period-name comp">Compare</span></div>
+          <div class="fp-period-summary" id="fp-comp-summary"></div>
+        </div>
+        <div class="fp-vdiv"></div>
+        <div class="fp-seg">
+          <div class="fp-seg-head">Year</div>
+          <div class="fp-yr-list" id="fp-comp-yr-list"></div>
+        </div>
+        <div class="fp-vdiv"></div>
+        <div class="fp-seg">
+          <div class="fp-seg-head">Quarter</div>
+          <div class="fp-q-list" id="fp-comp-q-list">
+            <div class="fp-pill" data-grp="comp" data-q="1" onclick="toggleFpQ('comp',1,this)">Q1</div>
+            <div class="fp-pill" data-grp="comp" data-q="2" onclick="toggleFpQ('comp',2,this)">Q2</div>
+            <div class="fp-pill" data-grp="comp" data-q="3" onclick="toggleFpQ('comp',3,this)">Q3</div>
+            <div class="fp-pill" data-grp="comp" data-q="4" onclick="toggleFpQ('comp',4,this)">Q4</div>
+          </div>
+        </div>
+        <div class="fp-vdiv"></div>
+        <div class="fp-seg">
+          <div class="fp-seg-head">Month</div>
+          <div class="mo-grid" id="fp-comp-mo-grid">
+            <div class="mo-cell" data-grp="comp" data-mo="1" onclick="toggleFpMo('comp',1,this)">Jan</div>
+            <div class="mo-cell" data-grp="comp" data-mo="2" onclick="toggleFpMo('comp',2,this)">Feb</div>
+            <div class="mo-cell" data-grp="comp" data-mo="3" onclick="toggleFpMo('comp',3,this)">Mar</div>
+            <div class="mo-cell" data-grp="comp" data-mo="4" onclick="toggleFpMo('comp',4,this)">Apr</div>
+            <div class="mo-cell" data-grp="comp" data-mo="5" onclick="toggleFpMo('comp',5,this)">May</div>
+            <div class="mo-cell" data-grp="comp" data-mo="6" onclick="toggleFpMo('comp',6,this)">Jun</div>
+            <div class="mo-cell" data-grp="comp" data-mo="7" onclick="toggleFpMo('comp',7,this)">Jul</div>
+            <div class="mo-cell" data-grp="comp" data-mo="8" onclick="toggleFpMo('comp',8,this)">Aug</div>
+            <div class="mo-cell" data-grp="comp" data-mo="9" onclick="toggleFpMo('comp',9,this)">Sep</div>
+            <div class="mo-cell" data-grp="comp" data-mo="10" onclick="toggleFpMo('comp',10,this)">Oct</div>
+            <div class="mo-cell" data-grp="comp" data-mo="11" onclick="toggleFpMo('comp',11,this)">Nov</div>
+            <div class="mo-cell" data-grp="comp" data-mo="12" onclick="toggleFpMo('comp',12,this)">Dec</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -747,113 +1012,141 @@ document.getElementById('upload-overlay').addEventListener('click',function(e){
   </div>
   <div class="card">
     <div class="ct">Open Lead Register <span class="ct-sub" id="leads-sub">All entities</span></div>
-    <table class="dt">
-      <colgroup><col class="col-id"><col class="col-name"><col class="col-entity"><col class="col-sp"><col class="col-status"><col class="col-date"><col class="col-days"></colgroup>
+    <div style="overflow-x:auto;border:2px solid #1A3460;border-radius:0 0 6px 6px;"><table class="dt" id="leads-table">
+      <colgroup id="leads-colgroup"><col style="width:55px"><col style="width:200px"><col style="width:155px"><col style="width:130px"><col style="width:130px"><col style="width:110px"><col style="width:90px"></colgroup>
       <thead>
-<tr>
-  <th class="sortable" onclick="sortTable('leads','id',this)"><span class="th-lbl"># <span class="sort-icon"></span></span></th>
-  <th><span class="th-lbl">Lead / Customer</span></th>
-  <th><span class="th-lbl">Entity</span></th>
-  <th><span class="th-lbl">Salesperson</span></th>
-  <th><span class="th-lbl">Status</span></th>
-  <th><span class="th-lbl">Date Created</span></th>
-  <th class="sortable" onclick="sortTable('leads','days',this)"><span class="th-lbl">Days Open <span class="sort-icon"></span></span></th>
+<tr id="leads-thead-row">
+  <th class="sortable" onclick="sortTable('leads','id',this)" style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);cursor:pointer;width:55px;">#</th>
+  <th style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;">Lead / Customer</th>
+  <th style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;min-width:155px;">Entity</th>
+  <th style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;">Salesperson</th>
+  <th style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;">Status</th>
+  <th class="sortable" onclick="sortTable('leads','date',this)" style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);cursor:pointer;border-right:2px solid #1A3460;width:110px;">Date Created</th>
+  <th class="sortable" onclick="sortTable('leads','days',this)" style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);cursor:pointer;border-right:2px solid #1A3460;width:90px;">Days Open</th>
 </tr>
 </thead>
       <tbody id="leads-tbody"></tbody>
-    </table>
+    </table></div>
   </div>
 </div>
 
 <!-- ══ QUOTES ═════════════════════════════════════════════ -->
 <div id="tab-quotes" class="tab-panel">
-  <div class="tiles t6">
-    <div class="tile tnavy"><div class="lbl">Submitted</div><div class="val" id="q-sub">—</div><div class="sub" id="q-sub-val">—</div></div>
-    <div class="tile tgreen"><div class="lbl">Won</div><div class="val" id="q-won">—</div><div class="sub" id="q-won-val">—</div></div>
-    <div class="tile tred"><div class="lbl">Lost</div><div class="val" id="q-lost">—</div><div class="sub">filtered period</div></div>
-    <div class="tile tgold"><div class="lbl">Pending</div><div class="val" id="q-pend">—</div><div class="sub" id="q-pend-val">—</div></div>
-    <div class="tile tmid"><div class="lbl">Win Rate</div><div class="val" id="q-wr">—</div><div class="sub">won ÷ submitted</div></div>
-    <div class="tile torange"><div class="lbl">Total Revenue</div><div class="val" id="q-rev">—</div><div class="sub">won + direct</div></div>
+  <div class="tiles t8">
+    <div class="tile tnavy"><div class="lbl">Submitted</div><div class="thalf thalf-c"><div class="val" id="q-sub">—</div><div class="sub" id="q-sub-val">—</div></div><div class="thalf thalf-p"><div class="thalf-tag" id="cpl-q-sub-delta">Comparative</div><div class="t-cval" id="q-sub-cv">—</div><div class="t-csub" id="q-sub-cs"></div><div class="t-cdelta" id="q-sub-delta"></div></div></div>
+    <div class="tile tgreen"><div class="lbl">Won</div><div class="thalf thalf-c"><div class="val" id="q-won">—</div><div class="sub" id="q-won-val">—</div></div><div class="thalf thalf-p"><div class="thalf-tag" id="cpl-q-won-delta">Comparative</div><div class="t-cval" id="q-won-cv">—</div><div class="t-csub" id="q-won-cs"></div><div class="t-cdelta" id="q-won-delta"></div></div></div>
+    <div class="tile tred"><div class="lbl">Lost</div><div class="thalf thalf-c"><div class="val" id="q-lost">—</div><div class="sub" id="q-lost-val">—</div></div><div class="thalf thalf-p"><div class="thalf-tag" id="cpl-q-lost-delta">Comparative</div><div class="t-cval" id="q-lost-cv">—</div><div class="t-csub" id="q-lost-cs"></div><div class="t-cdelta" id="q-lost-delta"></div></div></div>
+    <div class="tile tgold"><div class="lbl">Pending</div><div class="thalf thalf-c"><div class="val" id="q-pend">—</div><div class="sub" id="q-pend-val">—</div></div><div class="thalf thalf-p"><div class="thalf-tag" id="cpl-q-pend-delta">Comparative</div><div class="t-cval" id="q-pend-cv">—</div><div class="t-csub" id="q-pend-cs"></div><div class="t-cdelta" id="q-pend-delta"></div></div></div>
+    <div class="tile tmid"><div class="lbl">Win Rate (Count)</div><div class="thalf thalf-c"><div class="val" id="q-wr">—</div><div class="sub">won ÷ submitted</div></div><div class="thalf thalf-p"><div class="thalf-tag" id="cpl-q-wr-delta">Comparative</div><div class="t-cval" id="q-wr-cv">—</div><div class="t-csub" id="q-wr-cs"></div><div class="t-cdelta" id="q-wr-delta"></div></div></div><div class="tile tmid"><div class="lbl">Win Rate (Value)</div><div class="thalf thalf-c"><div class="val" id="q-wrv">—</div><div class="sub">won val ÷ sub val</div></div><div class="thalf thalf-p"><div class="thalf-tag" id="cpl-q-wrv-delta">Comparative</div><div class="t-cval" id="q-wrv-cv">—</div><div class="t-csub" id="q-wrv-cs"></div><div class="t-cdelta" id="q-wrv-delta"></div></div></div>
+    <div class="tile tteal"><div class="lbl">Direct</div><div class="thalf thalf-c"><div class="val" id="q-direct">—</div><div class="sub" id="q-direct-val">—</div></div><div class="thalf thalf-p"><div class="thalf-tag" id="cpl-q-direct-delta">Comparative</div><div class="t-cval" id="q-direct-cv">—</div><div class="t-csub" id="q-direct-cs"></div><div class="t-cdelta" id="q-direct-delta"></div></div></div>
+    <div class="tile torange"><div class="lbl">Total Revenue</div><div class="thalf thalf-c"><div class="val" id="q-rev">—</div><div class="sub">won + direct</div></div><div class="thalf thalf-p"><div class="thalf-tag" id="cpl-q-rev-delta">Comparative</div><div class="t-cval" id="q-rev-cv">—</div><div class="t-csub" id="q-rev-cs"></div><div class="t-cdelta" id="q-rev-delta"></div></div></div>
   </div>
   <div class="card">
     <div class="ct">Quote History <span class="ct-sub" id="q-sub2">Most recent first</span></div>
-    <table class="dt">
-      <colgroup><col class="col-month"><col class="col-entity"><col class="col-num"><col class="col-val"><col class="col-num"><col class="col-val"><col class="col-num"><col class="col-num"><col class="col-wr"><col class="col-num"><col class="col-val"></colgroup>
+    <div style="overflow-x:auto;border:2px solid #1A3460;border-radius:0 0 6px 6px;">
+<table class="dt">
+      <colgroup><col style="width:90px"><col style="width:155px"><col style="width:70px"><col style="width:90px"><col style="width:70px"><col style="width:90px"><col style="width:70px"><col style="width:90px"><col style="width:70px"><col style="width:90px"><col style="width:70px"><col style="width:90px"><col style="width:70px"><col style="width:90px"><col style="width:90px"></colgroup>
       <thead>
 <tr>
-  <th><span class="th-lbl">Month</span></th>
-  <th><span class="th-lbl">Entity</span></th>
-  <th class="sortable" onclick="sortTable('quotes','sub',this)"><span class="th-lbl">Submitted <span class="sort-icon"></span></span></th>
-  <th class="sortable" onclick="sortTable('quotes','sub_val',this)"><span class="th-lbl">Sub Value <span class="sort-icon"></span></span></th>
-  <th class="sortable" onclick="sortTable('quotes','won',this)"><span class="th-lbl">Won <span class="sort-icon"></span></span></th>
-  <th class="sortable" onclick="sortTable('quotes','won_val',this)"><span class="th-lbl">Won Value <span class="sort-icon"></span></span></th>
-  <th class="sortable" onclick="sortTable('quotes','lost',this)"><span class="th-lbl">Lost <span class="sort-icon"></span></span></th>
-  <th class="sortable" onclick="sortTable('quotes','pending',this)"><span class="th-lbl">Pending <span class="sort-icon"></span></span></th>
-  <th class="sortable" onclick="sortTable('quotes','wr',this)"><span class="th-lbl">Win Rate <span class="sort-icon"></span></span></th>
-  <th class="sortable" onclick="sortTable('quotes','direct',this)"><span class="th-lbl">Direct <span class="sort-icon"></span></span></th>
-  <th class="sortable" onclick="sortTable('quotes','total_rev',this)"><span class="th-lbl">Total Revenue <span class="sort-icon"></span></span></th>
+  <th rowspan="2" class="sortable" onclick="sortTable('quotes','month',this)" style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;white-space:nowrap;">Month <span class="sort-icon"></span></th>
+  <th rowspan="2" style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;">Entity</th>
+  <th colspan="2" class="sortable" onclick="sortTable('quotes','sub',this)" style="background:#0F2245;text-align:center;padding:5px 6px 3px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;border-bottom:1px solid rgba(255,255,255,.15);"><span style="color:#90B8E0;font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;">Submitted <span class="sort-icon"></span></span></th>
+  <th colspan="2" class="sortable" onclick="sortTable('quotes','won',this)" style="background:#0F2245;text-align:center;padding:5px 6px 3px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;border-bottom:1px solid rgba(255,255,255,.15);"><span style="color:#8BCF70;font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;">Won <span class="sort-icon"></span></span></th>
+  <th colspan="2" class="sortable" onclick="sortTable('quotes','lost',this)" style="background:#0F2245;text-align:center;padding:5px 6px 3px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;border-bottom:1px solid rgba(255,255,255,.15);"><span style="color:#E08080;font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;">Lost <span class="sort-icon"></span></span></th>
+  <th colspan="2" class="sortable" onclick="sortTable('quotes','pending',this)" style="background:#0F2245;text-align:center;padding:5px 6px 3px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;border-bottom:1px solid rgba(255,255,255,.15);"><span style="color:#D4B060;font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;">Pending <span class="sort-icon"></span></span></th>
+  <th colspan="2" class="sortable" onclick="sortTable('quotes','wr',this)" style="background:#0F2245;text-align:center;padding:5px 6px 3px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;border-bottom:1px solid rgba(255,255,255,.15);"><span style="color:#70B0E8;font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;">Win Rate <span class="sort-icon"></span></span></th>
+  <th colspan="2" class="sortable" onclick="sortTable('quotes','direct',this)" style="background:#0F2245;text-align:center;padding:5px 6px 3px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;border-right:2px solid #1A3460;border-bottom:1px solid rgba(255,255,255,.15);"><span style="color:#50C8B8;font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;">Direct <span class="sort-icon"></span></span></th>
+  <th rowspan="2" class="sortable" onclick="sortTable('quotes','total_rev',this)" style="background:#0F2245;color:#F09060;font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;text-align:right;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;white-space:nowrap;">Total Revenue <span class="sort-icon"></span></th>
+</tr>
+<tr>
+  <th style="background:#0F2245;color:#90B8E0;font-size:9px;font-weight:700;text-align:right;padding:2px 6px 3px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;">#</th>
+  <th style="background:#0F2245;color:rgba(255,255,255,.45);font-size:9px;font-weight:700;text-align:right;padding:2px 6px 3px;border:1px solid rgba(255,255,255,.1);">$</th>
+  <th style="background:#0F2245;color:#8BCF70;font-size:9px;font-weight:700;text-align:right;padding:2px 6px 3px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;">#</th>
+  <th style="background:#0F2245;color:rgba(255,255,255,.45);font-size:9px;font-weight:700;text-align:right;padding:2px 6px 3px;border:1px solid rgba(255,255,255,.1);">$</th>
+  <th style="background:#0F2245;color:#E08080;font-size:9px;font-weight:700;text-align:right;padding:2px 6px 3px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;">#</th>
+  <th style="background:#0F2245;color:rgba(255,255,255,.45);font-size:9px;font-weight:700;text-align:right;padding:2px 6px 3px;border:1px solid rgba(255,255,255,.1);">$</th>
+  <th style="background:#0F2245;color:#D4B060;font-size:9px;font-weight:700;text-align:right;padding:2px 6px 3px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;">#</th>
+  <th style="background:#0F2245;color:rgba(255,255,255,.45);font-size:9px;font-weight:700;text-align:right;padding:2px 6px 3px;border:1px solid rgba(255,255,255,.1);">$</th>
+  <th style="background:#0F2245;color:#70B0E8;font-size:9px;font-weight:700;text-align:right;padding:2px 6px 3px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;">%#</th>
+  <th style="background:#0F2245;color:rgba(255,255,255,.45);font-size:9px;font-weight:700;text-align:right;padding:2px 6px 3px;border:1px solid rgba(255,255,255,.1);">%$</th>
+  <th style="background:#0F2245;color:#50C8B8;font-size:9px;font-weight:700;text-align:right;padding:2px 6px 3px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;">#</th>
+  <th style="background:#0F2245;color:rgba(255,255,255,.45);font-size:9px;font-weight:700;text-align:right;padding:2px 6px 3px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;">$</th>
 </tr>
 </thead>
       <tbody id="q-tbody"></tbody>
-    </table>
+    </table></table>
+</div>
   </div>
 </div>
 
 <!-- ══ JOBS ════════════════════════════════════════════════ -->
 <div id="tab-jobs" class="tab-panel">
   <div class="tiles t4">
-    <div class="tile tnavy"><div class="lbl">Jobs Created</div><div class="val" id="j-created">—</div><div class="sub" id="j-tval">—</div></div>
-    <div class="tile torange"><div class="lbl">Active</div><div class="val" id="j-active">—</div><div class="sub" id="j-aval">—</div></div>
-    <div class="tile tgreen"><div class="lbl">Completed</div><div class="val" id="j-comp">—</div><div class="sub" id="j-cval">—</div></div>
-    <div class="tile tgold"><div class="lbl">Active Value</div><div class="val" id="j-active-val">—</div><div class="sub">in progress</div></div>
+    <div class="tile tnavy"><div class="lbl">Jobs Created</div><div class="thalf thalf-c"><div class="val" id="j-created">—</div><div class="sub" id="j-tval">—</div></div><div class="thalf thalf-p"><div class="thalf-tag" id="cpl-j-created-delta">Comparative</div><div class="t-cval" id="j-created-cv">—</div><div class="t-csub" id="j-created-cs"></div><div class="t-cdelta" id="j-created-delta"></div></div></div>
+    <div class="tile torange"><div class="lbl">Active</div><div class="thalf thalf-c"><div class="val" id="j-active">—</div><div class="sub" id="j-aval">—</div></div><div class="thalf thalf-p"><div class="thalf-tag" id="cpl-j-active-delta">Comparative</div><div class="t-cval" id="j-active-cv">—</div><div class="t-csub" id="j-active-cs"></div><div class="t-cdelta" id="j-active-delta"></div></div></div>
+    <div class="tile tgreen"><div class="lbl">Completed</div><div class="thalf thalf-c"><div class="val" id="j-comp">—</div><div class="sub" id="j-cval">—</div></div><div class="thalf thalf-p"><div class="thalf-tag" id="cpl-j-comp-delta">Comparative</div><div class="t-cval" id="j-comp-cv">—</div><div class="t-csub" id="j-comp-cs"></div><div class="t-cdelta" id="j-comp-delta"></div></div></div>
+    <div class="tile tgold"><div class="lbl">Active Value</div><div class="thalf thalf-c"><div class="val" id="j-active-val">—</div><div class="sub">in progress</div></div><div class="thalf thalf-p"><div class="thalf-tag" id="cpl-j-active-val-delta">Comparative</div><div class="t-cval" id="j-aval-cv">—</div><div class="t-csub" id="j-aval-cs"></div><div class="t-cdelta" id="j-active-val-delta"></div></div></div>
   </div>
   <div class="card">
     <div class="ct">Job History <span class="ct-sub" id="j-sub">Most recent first</span></div>
-    <table class="dt">
-      <colgroup><col class="col-month"><col class="col-entity"><col class="col-num"><col class="col-val"><col class="col-num"><col class="col-val"><col class="col-num"><col class="col-val"></colgroup>
+    <div style="overflow-x:auto;border:2px solid #1A3460;border-radius:0 0 6px 6px;">
+<table class="dt">
+      <colgroup><col style="width:90px"><col style="width:155px"><col style="width:70px"><col style="width:90px"><col style="width:70px"><col style="width:90px"><col style="width:70px"><col style="width:90px"></colgroup>
       <thead>
 <tr>
-  <th><span class="th-lbl">Month</span></th>
-  <th><span class="th-lbl">Entity</span></th>
-  <th class="sortable" onclick="sortTable('jobs','created',this)"><span class="th-lbl">Created <span class="sort-icon"></span></span></th>
-  <th class="sortable" onclick="sortTable('jobs','total_val',this)"><span class="th-lbl">Total Value <span class="sort-icon"></span></span></th>
-  <th class="sortable" onclick="sortTable('jobs','active',this)"><span class="th-lbl">Active <span class="sort-icon"></span></span></th>
-  <th class="sortable" onclick="sortTable('jobs','active_val',this)"><span class="th-lbl">Active Value <span class="sort-icon"></span></span></th>
-  <th class="sortable" onclick="sortTable('jobs','completed',this)"><span class="th-lbl">Completed <span class="sort-icon"></span></span></th>
-  <th class="sortable" onclick="sortTable('jobs','completed_val',this)"><span class="th-lbl">Completed Value <span class="sort-icon"></span></span></th>
+  <th rowspan="2" class="sortable" onclick="sortTable('jobs','month',this)" style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;white-space:nowrap;">Month <span class="sort-icon"></span></th>
+  <th rowspan="2" style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;">Entity</th>
+  <th colspan="2" class="sortable" onclick="sortTable('jobs','created',this)" style="background:#0F2245;text-align:center;padding:5px 6px 3px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;border-bottom:1px solid rgba(255,255,255,.15);"><span style="color:#90B8E0;font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;">Created <span class="sort-icon"></span></span></th>
+  <th colspan="2" class="sortable" onclick="sortTable('jobs','active',this)" style="background:#0F2245;text-align:center;padding:5px 6px 3px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;border-bottom:1px solid rgba(255,255,255,.15);"><span style="color:#F09060;font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;">Active <span class="sort-icon"></span></span></th>
+  <th colspan="2" class="sortable" onclick="sortTable('jobs','completed',this)" style="background:#0F2245;text-align:center;padding:5px 6px 3px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;border-right:2px solid #1A3460;border-bottom:1px solid rgba(255,255,255,.15);"><span style="color:#8BCF70;font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;">Completed <span class="sort-icon"></span></span></th>
+</tr>
+<tr>
+  <th style="background:#0F2245;color:#90B8E0;font-size:9px;font-weight:700;text-align:right;padding:2px 6px 3px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;">#</th>
+  <th style="background:#0F2245;color:rgba(255,255,255,.45);font-size:9px;font-weight:700;text-align:right;padding:2px 6px 3px;border:1px solid rgba(255,255,255,.1);">$</th>
+  <th style="background:#0F2245;color:#F09060;font-size:9px;font-weight:700;text-align:right;padding:2px 6px 3px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;">#</th>
+  <th style="background:#0F2245;color:rgba(255,255,255,.45);font-size:9px;font-weight:700;text-align:right;padding:2px 6px 3px;border:1px solid rgba(255,255,255,.1);">$</th>
+  <th style="background:#0F2245;color:#8BCF70;font-size:9px;font-weight:700;text-align:right;padding:2px 6px 3px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;">#</th>
+  <th style="background:#0F2245;color:rgba(255,255,255,.45);font-size:9px;font-weight:700;text-align:right;padding:2px 6px 3px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;">$</th>
 </tr>
 </thead>
       <tbody id="j-tbody"></tbody>
     </table>
+</div>
   </div>
 </div>
 
 <!-- ══ INVOICED ════════════════════════════════════════════ -->
 <div id="tab-invoiced" class="tab-panel">
   <div class="tiles t4">
-    <div class="tile tgreen"><div class="lbl">Jobs Invoiced</div><div class="val" id="i-comp">—</div><div class="sub">filtered period</div></div>
-    <div class="tile tnavy"><div class="lbl">Total Invoiced</div><div class="val" id="i-val">—</div><div class="sub">revenue recognised</div></div>
-    <div class="tile tmid"><div class="lbl">Est. Hours</div><div class="val" id="i-est">—</div><div class="sub">labour hours</div></div>
-    <div class="tile tteal"><div class="lbl">Actual Hours</div><div class="val" id="i-act">—</div><div class="sub">hours worked</div></div>
+    <div class="tile tgreen"><div class="lbl">Jobs Invoiced</div><div class="thalf thalf-c"><div class="val" id="i-comp">—</div><div class="sub">filtered period</div></div><div class="thalf thalf-p"><div class="thalf-tag" id="cpl-i-comp-delta">Comparative</div><div class="t-cval" id="i-comp-cv">—</div><div class="t-csub" id="i-comp-cs"></div><div class="t-cdelta" id="i-comp-delta"></div></div></div>
+    <div class="tile tnavy"><div class="lbl">Total Invoiced</div><div class="thalf thalf-c"><div class="val" id="i-val">—</div><div class="sub">revenue recognised</div></div><div class="thalf thalf-p"><div class="thalf-tag" id="cpl-i-val-delta">Comparative</div><div class="t-cval" id="i-val-cv">—</div><div class="t-csub" id="i-val-cs"></div><div class="t-cdelta" id="i-val-delta"></div></div></div>
+    <div class="tile tmid"><div class="lbl">Est. Hours</div><div class="thalf thalf-c"><div class="val" id="i-est">—</div><div class="sub">labour hours</div></div><div class="thalf thalf-p"><div class="thalf-tag" id="cpl-i-est-delta">Comparative</div><div class="t-cval" id="i-est-cv">—</div><div class="t-csub" id="i-est-cs"></div><div class="t-cdelta" id="i-est-delta"></div></div></div>
+    <div class="tile tteal"><div class="lbl">Actual Hours</div><div class="thalf thalf-c"><div class="val" id="i-act">—</div><div class="sub">hours worked</div></div><div class="thalf thalf-p"><div class="thalf-tag" id="cpl-i-act-delta">Comparative</div><div class="t-cval" id="i-act-cv">—</div><div class="t-csub" id="i-act-cs"></div><div class="t-cdelta" id="i-act-delta"></div></div></div>
   </div>
   <div class="card">
     <div class="ct">Invoiced History <span class="ct-sub" id="i-sub">Most recent first</span></div>
-    <table class="dt">
-      <colgroup><col class="col-month"><col class="col-entity"><col class="col-num"><col class="col-val"><col class="col-hrs"><col class="col-hrs"><col class="col-wr"><col class="col-sp"></colgroup>
+    <div style="overflow-x:auto;border:2px solid #1A3460;border-radius:0 0 6px 6px;">
+<table class="dt">
+      <colgroup><col style="width:90px"><col style="width:155px"><col style="width:70px"><col style="width:90px"><col style="width:70px"><col style="width:70px"><col style="width:80px"></colgroup>
       <thead>
 <tr>
-  <th><span class="th-lbl">Month</span></th>
-  <th><span class="th-lbl">Entity</span></th>
-  <th class="sortable" onclick="sortTable('invoiced','completed',this)"><span class="th-lbl">Jobs <span class="sort-icon"></span></span></th>
-  <th class="sortable" onclick="sortTable('invoiced','total_val',this)"><span class="th-lbl">Invoiced Value <span class="sort-icon"></span></span></th>
-  <th class="sortable" onclick="sortTable('invoiced','est_hrs',this)"><span class="th-lbl">Est. Hrs <span class="sort-icon"></span></span></th>
-  <th class="sortable" onclick="sortTable('invoiced','act_hrs',this)"><span class="th-lbl">Actual Hrs <span class="sort-icon"></span></span></th>
-  <th class="sortable" onclick="sortTable('invoiced','eff',this)"><span class="th-lbl">Efficiency <span class="sort-icon"></span></span></th>
-  <th><span class="th-lbl">Top Salesperson</span></th>
+  <th rowspan="2" class="sortable" onclick="sortTable('invoiced','month',this)" style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;white-space:nowrap;">Month <span class="sort-icon"></span></th>
+  <th rowspan="2" style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;">Entity</th>
+  <th colspan="2" class="sortable" onclick="sortTable('invoiced','completed',this)" style="background:#0F2245;text-align:center;padding:5px 6px 3px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;border-bottom:1px solid rgba(255,255,255,.15);"><span style="color:#8BCF70;font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;">Jobs <span class="sort-icon"></span></span></th>
+  <th colspan="2" class="sortable" onclick="sortTable('invoiced','est_hrs',this)" style="background:#0F2245;text-align:center;padding:5px 6px 3px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;border-bottom:1px solid rgba(255,255,255,.15);"><span style="color:#70B0E8;font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;">Hours <span class="sort-icon"></span></span></th>
+  <th rowspan="2" class="sortable" onclick="sortTable('invoiced','eff',this)" style="background:#0F2245;color:#50C8B8;font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;text-align:center;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;border-right:2px solid #1A3460;">Efficiency <span class="sort-icon"></span></th>
+
+</tr>
+<tr>
+  <th style="background:#0F2245;color:#8BCF70;font-size:9px;font-weight:700;text-align:right;padding:2px 6px 3px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;">#</th>
+  <th style="background:#0F2245;color:rgba(255,255,255,.45);font-size:9px;font-weight:700;text-align:right;padding:2px 6px 3px;border:1px solid rgba(255,255,255,.1);">$</th>
+  <th style="background:#0F2245;color:#70B0E8;font-size:9px;font-weight:700;text-align:right;padding:2px 6px 3px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;">Est</th>
+  <th style="background:#0F2245;color:rgba(255,255,255,.45);font-size:9px;font-weight:700;text-align:right;padding:2px 6px 3px;border:1px solid rgba(255,255,255,.1);">Act</th>
 </tr>
 </thead>
       <tbody id="i-tbody"></tbody>
     </table>
+</div>
   </div>
 </div>
 
@@ -877,25 +1170,25 @@ document.getElementById('upload-overlay').addEventListener('click',function(e){
         <span style="color:var(--green);font-weight:700">✓</span> = healthy
       </span>
     </div>
-    <table class="dt">
+    <div style="overflow-x:auto;border:2px solid #1A3460;border-radius:0 0 6px 6px;"><table class="dt">
       <colgroup><col class="col-id"><col class="col-name"><col class="col-entity"><col class="col-sp"><col class="col-val"><col class="col-hrs"><col class="col-hrs"><col class="col-hrs"><col class="col-hrs"><col class="col-wr"><col class="col-flag"></colgroup>
       <thead>
 <tr>
-  <th class="sortable" onclick="sortTable('hours','id',this)"><span class="th-lbl"># <span class="sort-icon"></span></span></th>
-  <th><span class="th-lbl">Job / Customer</span></th>
-  <th><span class="th-lbl">Entity</span></th>
-  <th><span class="th-lbl">Salesperson</span></th>
-  <th class="sortable" onclick="sortTable('hours','value',this)"><span class="th-lbl">Value <span class="sort-icon"></span></span></th>
-  <th class="sortable" onclick="sortTable('hours','est_hrs',this)"><span class="th-lbl">Est Hrs <span class="sort-icon"></span></span></th>
-  <th class="sortable" onclick="sortTable('hours','act_hrs',this)"><span class="th-lbl">Actual <span class="sort-icon"></span></span></th>
-  <th class="sortable" onclick="sortTable('hours','comm_hrs',this)"><span class="th-lbl">Committed <span class="sort-icon"></span></span></th>
-  <th class="sortable" onclick="sortTable('hours','unalloc',this)"><span class="th-lbl">Unalloc <span class="sort-icon"></span></span></th>
-  <th class="sortable" onclick="sortTable('hours','pct_rem',this)"><span class="th-lbl">% Left <span class="sort-icon"></span></span></th>
-  <th><span class="th-lbl">Flag</span></th>
+  <th class="sortable" onclick="sortTable('hours','id',this)" style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;width:55px;cursor:pointer">#</th>
+  <th style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;">Job / Customer</th>
+  <th style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;min-width:155px;">Entity</th>
+  <th style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;">Salesperson</th>
+  <th class="sortable" onclick="sortTable('hours','value',this)" style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;width:80px;text-align:right;cursor:pointer">Value</th>
+  <th class="sortable" onclick="sortTable('hours','est_hrs',this)" style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;width:75px;text-align:right;cursor:pointer">Est Hrs</th>
+  <th class="sortable" onclick="sortTable('hours','act_hrs',this)" style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;width:75px;text-align:right;cursor:pointer">Actual</th>
+  <th class="sortable" onclick="sortTable('hours','comm_hrs',this)" style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;width:80px;text-align:right;cursor:pointer">Committed</th>
+  <th class="sortable" onclick="sortTable('hours','unalloc',this)" style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;width:70px;text-align:right;cursor:pointer">Unalloc</th>
+  <th class="sortable" onclick="sortTable('hours','pct_rem',this)" style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;width:65px;text-align:right;cursor:pointer">% Left</th>
+  <th style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;width:50px;text-align:center;">Flag</th>
 </tr>
 </thead>
       <tbody id="h-tbody"></tbody>
-    </table>
+    </table></div>
   </div>
 </div>
 
@@ -905,25 +1198,29 @@ document.getElementById('upload-overlay').addEventListener('click',function(e){
     <div class="card">
       <div class="ct">🏆 Top Performers <span class="ct-sub" id="lb-sub">Ranked by Won Value per month</span></div>
       <div id="podium" class="podium"></div>
-      <table class="dt">
+      <div style="overflow-x:auto;border:2px solid #1A3460;border-radius:0 0 6px 6px;"><table class="dt">
         <colgroup><col class="col-flag"><col class="col-sp"><col class="col-entity"><col class="col-month"><col class="col-num"><col class="col-val"><col class="col-num"><col class="col-val"><col class="col-num"><col class="col-num"><col class="col-wr"></colgroup>
         <thead>
 <tr>
-  <th><span class="th-lbl">Rank</span></th>
-  <th><span class="th-lbl">Salesperson</span></th>
-  <th><span class="th-lbl">Entity</span></th>
-  <th><span class="th-lbl">Month</span></th>
-  <th class="sortable" onclick="sortTable('lb','sub',this)"><span class="th-lbl">Submitted <span class="sort-icon"></span></span></th>
-  <th class="sortable" onclick="sortTable('lb','sub_val',this)"><span class="th-lbl">Sub Value <span class="sort-icon"></span></span></th>
-  <th class="sortable" onclick="sortTable('lb','won',this)"><span class="th-lbl">Won # <span class="sort-icon"></span></span></th>
-  <th class="sortable" onclick="sortTable('lb','won_val',this)"><span class="th-lbl">Won $ <span class="sort-icon"></span></span></th>
-  <th class="sortable" onclick="sortTable('lb','lost',this)"><span class="th-lbl">Lost <span class="sort-icon"></span></span></th>
-  <th class="sortable" onclick="sortTable('lb','pending',this)"><span class="th-lbl">Pending <span class="sort-icon"></span></span></th>
-  <th class="sortable" onclick="sortTable('lb','wr',this)"><span class="th-lbl">Win Rate <span class="sort-icon"></span></span></th>
+  <th rowspan="2" style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;width:50px;text-align:center;">Rank</th>
+  <th rowspan="2" style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;">Salesperson</th>
+  <th rowspan="2" style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;min-width:155px;">Entity</th>
+  <th rowspan="2" style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;width:90px;">Month</th>
+  <th colspan="2" class="sortable" onclick="sortTable('lb','sub_val',this)" style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;text-align:center;cursor:pointer"><span style="color:#90B8E0;font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;">Submitted</span></th>
+  <th colspan="2" class="sortable" onclick="sortTable('lb','won_val',this)" style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;text-align:center;cursor:pointer"><span style="color:#8BCF70;font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;">Won</span></th>
+  <th rowspan="2" class="sortable" onclick="sortTable('lb','lost',this)" style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;border-right:2px solid #1A3460;width:65px;text-align:right;cursor:pointer"><span style="color:#E08080;">Lost</span></th>
+  <th rowspan="2" class="sortable" onclick="sortTable('lb','pending',this)" style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;border-right:2px solid #1A3460;width:70px;text-align:right;cursor:pointer"><span style="color:#D4B060;">Pending</span></th>
+  <th rowspan="2" class="sortable" onclick="sortTable('lb','wr',this)" style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;border-right:2px solid #1A3460;width:70px;text-align:right;cursor:pointer"><span style="color:#70B0E8;">Win Rate</span></th>
+</tr>
+<tr>
+  <th style="background:#0F2245;color:#90B8E0;font-size:9px;font-weight:700;text-align:right;padding:2px 6px 3px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;">#</th>
+  <th style="background:#0F2245;color:rgba(255,255,255,.45);font-size:9px;font-weight:700;text-align:right;padding:2px 6px 3px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;">$</th>
+  <th style="background:#0F2245;color:#8BCF70;font-size:9px;font-weight:700;text-align:right;padding:2px 6px 3px;border:1px solid rgba(255,255,255,.1);border-left:2px solid #1A3460;">#</th>
+  <th style="background:#0F2245;color:rgba(255,255,255,.45);font-size:9px;font-weight:700;text-align:right;padding:2px 6px 3px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;">$</th>
 </tr>
 </thead>
         <tbody id="lb-tbody"></tbody>
-      </table>
+      </table></div>
     </div>
     <div class="card">
       <div class="ct">Win Rate by Salesperson <span class="ct-sub">Count-based</span></div>
@@ -1063,14 +1360,7 @@ function matchPerson(sp){return !STATE.person||sp===STATE.person;}
 
 
 /* ENTITY */
-function setEntity(e,btn){
-  STATE.entity=e;
-  ACTIVE_TILE=null;
-  document.querySelectorAll('.tile.tile-clicked').forEach(t=>t.classList.remove('tile-clicked'));
-  document.querySelectorAll('.entity-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  renderTab();
-}
+function setEntity(e,btn){ setEntityChip(e,btn); }
 
 /* TAB */
 function setTab(t,btn){
@@ -1095,27 +1385,37 @@ function renderTab(){
 
 /* ── LEADS ── */
 function renderLeads(){
+  const allLeads=ALL_LEADS;
+  const tileBC={'Services':0,'Coatings':0,'Services GC':0,'Property Maintenance':0};
+  allLeads.forEach(l=>{if(tileBC[l.company]!==undefined)tileBC[l.company]++;});
+  set('l-total',allLeads.length);
+  set('l-svc',tileBC.Services);set('l-coat',tileBC.Coatings);
+  set('l-gc',tileBC['Services GC']);set('l-pm',tileBC['Property Maintenance']);
   let rows=ALL_LEADS.filter(l=>matchEntity(l.company)&&matchGlobal(l));
   rows=applyColFilters('leads',rows);
   rows=applyTileFilter('leads',rows);
   rows=applySort('leads',rows);
-  const bc={'Services':0,'Coatings':0,'Services GC':0,'Property Maintenance':0};
-  rows.forEach(l=>{if(bc[l.company]!==undefined)bc[l.company]++;});
-  set('l-total',rows.length);
-  set('l-svc',bc.Services);set('l-coat',bc.Coatings);
-  set('l-gc',bc['Services GC']);set('l-pm',bc['Property Maintenance']);
   set('leads-sub',(STATE.entity==='all'?'All entities':entityDisplay(STATE.entity))+(STATE.person?` · ${STATE.person}`:''));
-  $('leads-tbody').innerHTML=rows.length?rows.map(l=>`<tr>
-    <td class="mono" style="color:var(--xdim)">${l.id}</td>
-    <td><div class="ln">${l.name&&l.name!=='-'?l.name:'(unnamed)'}</div><div class="ls">${l.customer}</div></td>
-    <td>${coBdg(l.company)}</td>
-    <td style="font-weight:500">${l.sp}</td>
-    <td style="color:var(--dim)">${l.status.replace(/^Lead\s*[:\-]+\s*/i,'').trim()}</td>
-    <td class="mono" style="color:var(--dim)">${l.date}</td>
-    <td>${daysBdg(l.days)}</td>
+  // Restore standard thead (in case grouped mode left it changed)
+  const thr=document.getElementById('leads-thead-row');
+  if(thr) thr.innerHTML=
+    `<th class="sortable" onclick="sortTable('leads','id',this)" style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);cursor:pointer;width:55px;">#</th>`+
+    `<th style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;">Lead / Customer</th>`+
+    `<th style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;min-width:155px;">Entity</th>`+
+    `<th style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;">Salesperson</th>`+
+    `<th style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);border-right:2px solid #1A3460;">Status</th>`+
+    `<th class="sortable" onclick="sortTable('leads','date',this)" style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);cursor:pointer;border-right:2px solid #1A3460;width:110px;">Date Created</th>`+
+    `<th class="sortable" onclick="sortTable('leads','days',this)" style="background:#0F2245;color:rgba(255,255,255,.7);font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle;padding:6px 8px;border:1px solid rgba(255,255,255,.1);cursor:pointer;border-right:2px solid #1A3460;width:90px;">Days Open</th>`;
+  $('leads-tbody').innerHTML=rows.length?rows.map(l=>`<tr class="${getRowHl('leads',l)}">
+    <td class="mono" style="color:#6B7A8D;text-align:right;padding:5px 8px;border-right:2px solid #1A3460">${l.id}</td>
+    <td style="border-right:2px solid #1A3460;padding:5px 8px"><div class="ln">${l.name&&l.name!=='-'?l.name:'(unnamed)'}</div><div class="ls">${l.customer}</div></td>
+    <td style="border-right:2px solid #1A3460;min-width:155px;padding:5px 8px">${coBdg(l.company)}</td>
+    <td style="font-weight:600;color:#0D1B2E;border-right:2px solid #1A3460;padding:5px 8px">${l.sp}</td>
+    <td style="color:#4A5568;border-right:2px solid #1A3460;padding:5px 8px">${l.status.replace(/^Lead\s*[:\-]+\s*/i,'').trim()}</td>
+    <td class="mono" style="color:#6B7A8D;border-right:2px solid #1A3460;padding:5px 8px">${l.date}</td>
+    <td style="border-right:2px solid #1A3460;padding:5px 8px">${daysBdg(l.days)}</td>
   </tr>`).join(''):noData();
 }
-
 /* ── QUOTES ── */
 function renderQuotes(){
   let rows=[...RAW_Q].filter(q=>matchEntity(q.company)&&matchMonth(q.month)&&matchGlobal(q));
@@ -1123,26 +1423,65 @@ function renderQuotes(){
   rows=applyTileFilter('quotes',rows);
   if(!SORT_STATE.quotes) rows.sort((a,b)=>b.month.localeCompare(a.month));
   else rows=applySort('quotes',rows);
-  const tot={sub:0,sub_val:0,won:0,won_val:0,lost:0,pending:0,pending_val:0,total_rev:0};
-  rows.forEach(r=>{tot.sub+=r.sub||0;tot.sub_val+=r.sub_val||0;tot.won+=r.won||0;tot.won_val+=r.won_val||0;tot.lost+=r.lost||0;tot.pending+=r.pending||0;tot.pending_val+=r.pending_val||0;tot.total_rev+=r.total_rev||0;});
+  const tot={sub:0,sub_val:0,won:0,won_val:0,lost:0,lost_val:0,pending:0,pending_val:0,direct:0,direct_val:0,total_rev:0,wrv:0};
+  rows.forEach(r=>{tot.sub+=r.sub||0;tot.sub_val+=r.sub_val||0;tot.won+=r.won||0;tot.won_val+=r.won_val||0;tot.lost+=r.lost||0;tot.lost_val+=r.lost_val||0;tot.pending+=r.pending||0;tot.pending_val+=r.pending_val||0;tot.direct+=r.direct||0;tot.direct_val+=r.direct_val||0;tot.total_rev+=r.total_rev||0;});
+  // Delta vs previous period
+  const prevQ=RAW_Q.filter(q=>matchEntity(q.company)&&dateInPrevFilter(q.month));
+  const prev={sub:0,sub_val:0,won:0,won_val:0,lost:0,lost_val:0,pending:0,pending_val:0,direct:0,direct_val:0,total_rev:0};
+  prevQ.forEach(r=>{prev.sub+=r.sub||0;prev.sub_val+=r.sub_val||0;prev.won+=r.won||0;prev.won_val+=r.won_val||0;prev.lost+=r.lost||0;prev.lost_val+=r.lost_val||0;prev.pending+=r.pending||0;prev.pending_val+=r.pending_val||0;prev.direct+=r.direct||0;prev.direct_val+=r.direct_val||0;prev.total_rev+=r.total_rev||0;});
   set('q-sub',fmtN(tot.sub));set('q-sub-val',fmtK(tot.sub_val));
   set('q-won',fmtN(tot.won));set('q-won-val',fmtK(tot.won_val));
-  set('q-lost',fmtN(tot.lost));set('q-pend',fmtN(tot.pending));set('q-pend-val',fmtK(tot.pending_val));
-  set('q-wr',tot.sub>0?pct(tot.won/tot.sub):'—');set('q-rev',fmtK(tot.total_rev));
+  set('q-lost',fmtN(tot.lost));set('q-lost-val',fmtK(tot.lost_val||0));set('q-pend',fmtN(tot.pending));set('q-pend-val',fmtK(tot.pending_val));set('q-direct',tot.direct>0?fmtN(tot.direct):'—');set('q-direct-val',tot.direct_val>0?fmtK(tot.direct_val):'—');
+  const wr=tot.sub>0?pct(tot.won/tot.sub):'—';
+  const wrv=tot.sub_val>0?pct(tot.won_val/tot.sub_val):'—';
+  const prevWr=prev.sub>0?prev.won/prev.sub*100:0;
+  const curWr=tot.sub>0?tot.won/tot.sub*100:0;
+  const prevWrv=prev.sub_val>0?prev.won_val/prev.sub_val*100:0;
+  const curWrv=tot.sub_val>0?tot.won_val/tot.sub_val*100:0;
+  set('q-wr',wr);set('q-wrv',wrv);set('q-rev',fmtK(tot.total_rev));
+  updateHasComp();
+  setCT('q-sub-cv','q-sub-cs','q-sub-delta',fmtN(prev.sub),fmtK(prev.sub_val||0),tot.sub,prev.sub,tot.sub_val,prev.sub_val);
+  setCT('q-won-cv','q-won-cs','q-won-delta',fmtN(prev.won),fmtK(prev.won_val||0),tot.won,prev.won,tot.won_val,prev.won_val);
+  setCT('q-lost-cv','q-lost-cs','q-lost-delta',fmtN(prev.lost),fmtK(prev.lost_val||0),tot.lost,prev.lost,tot.lost_val,prev.lost_val);
+  setCT('q-pend-cv','q-pend-cs','q-pend-delta',fmtN(prev.pending),fmtK(prev.pending_val||0),tot.pending,prev.pending,tot.pending_val,prev.pending_val);
+  const prevWrPct=prev.sub>0?pct(prev.won/prev.sub):'—';
+  const prevWrvPct=prev.sub_val>0?pct(prev.won_val/prev.sub_val):'—';
+  setCT('q-wr-cv','q-wr-cs','q-wr-delta',prevWrPct,'won ÷ submitted',Math.round(curWr),Math.round(prevWr));
+  setCT('q-wrv-cv','q-wrv-cs','q-wrv-delta',prevWrvPct,'won val ÷ sub val',Math.round(curWrv),Math.round(prevWrv));
+  setCT('q-rev-cv','q-rev-cs','q-rev-delta',fmtK(prev.total_rev||0),'won + direct',tot.total_rev,prev.total_rev);
+  setCT('q-direct-cv','q-direct-cs','q-direct-delta',fmtN(prev.direct),fmtK(prev.direct_val||0),tot.direct,prev.direct,tot.direct_val,prev.direct_val);
   set('q-sub2',`${rows.length} rows · most recent first`);
-  $('q-tbody').innerHTML=rows.length?rows.map(q=>`<tr>
-    <td style="font-weight:600;white-space:nowrap">${ML[q.month]||q.month}</td>
-    <td>${coBdg(q.company)}</td>
-    <td class="mono">${q.sub||0}</td>
-    <td class="mono">${fmtK(q.sub_val)}</td>
-    <td class="mono" style="color:var(--green);font-weight:700">${q.won||0}</td>
-    <td class="mono" style="color:var(--green)">${fmtK(q.won_val)}</td>
-    <td class="mono" style="color:var(--red2)">${q.lost||0}</td>
-    <td class="mono" style="color:var(--gold)">${q.pending||0}</td>
-    <td class="mono" style="font-weight:700;color:var(--navy)">${q.sub>0?pct(q.won/q.sub):'—'}</td>
-    <td class="mono">${q.direct||0}</td>
-    <td class="mono" style="font-weight:700">${fmtK(q.total_rev)}</td>
-  </tr>`).join(''):noData();
+  const qRowHtml=(q,isComp=false)=>{
+  const ri=getRowInfo('quotes',q,isComp);
+  const fixedBr='border-right:2px solid #1A3460';
+  const lBdr='border-left:2px solid #1A3460';
+  const pair=(colIdx,cnt,val,cntColor,valColor)=>{
+    const hlCls=ri.hlCols.includes(colIdx)?` ${ri.colorCls}`:'';
+    return `<td class="mono${hlCls}" style="${lBdr};text-align:right;padding:5px 7px;"><span style="font-weight:700;font-size:12px;color:${cntColor}">${cnt}</span></td><td class="mono${hlCls}" style="text-align:right;padding:5px 7px;"><span style="font-size:11px;color:${valColor}">${val}</span></td>`;
+  };
+  const wr=q.sub>0?pct(q.won/q.sub):'—';
+  const wrv=q.sub_val>0?pct(q.won_val/q.sub_val):'—';
+  const hlCls8=ri.hlCols.includes(8)?` ${ri.colorCls}`:'';
+  const compOp=isComp?' opacity:.88':'';
+  return`<tr class="${ri.rowCls}${isComp?' comp-period-row':''}" style="${compOp}">
+  <td style="font-weight:600;white-space:nowrap;color:#0D1B2E;${fixedBr}">${isComp?'<span class="period-vs">VS</span>':''}${ML[q.month]||q.month}</td>
+  <td style="min-width:155px;${fixedBr}">${coBdg(q.company)}</td>
+  ${pair(2,fmtN(q.sub||0),fmtK(q.sub_val||0),'#0F2245','#3B5A80')}
+  ${pair(3,fmtN(q.won||0),fmtK(q.won_val||0),'#2A5A0A','#4A7E1A')}
+  ${pair(4,fmtN(q.lost||0),fmtK(q.lost_val||0),'#8B1A1A','#B04040')}
+  ${pair(5,fmtN(q.pending||0),fmtK(q.pending_val||0),'#6B3E08','#9A5E18')}
+  <td class="mono${ri.hlCols.includes(6)?` ${ri.colorCls}`:''}" style="${lBdr};text-align:right;padding:5px 7px;"><span style="font-weight:700;font-size:12px;color:#0F4A8A">${wr}</span></td>
+  <td class="mono${ri.hlCols.includes(6)?` ${ri.colorCls}`:''}" style="text-align:right;padding:5px 7px;"><span style="font-size:11px;color:#2A78B8">${wrv}</span></td>
+  ${pair(7,fmtN(q.direct||0),fmtK(q.direct_val||0),'#085A46','#1A8060')}
+  <td class="mono td-rev2${hlCls8}" style="font-weight:700;color:#7A2E12;font-size:12px;${lBdr};text-align:right;padding:5px 8px;">${fmtK(q.total_rev||0)}</td>
+</tr>`;
+};
+  let compRowsQ=hasComp()?[...RAW_Q].filter(q=>matchEntity(q.company)&&dateInPrevFilter(q.month)&&matchGlobal(q)):[];
+  if(!SORT_STATE.quotes) compRowsQ.sort((a,b)=>b.month.localeCompare(a.month));
+  else compRowsQ=applySort('quotes',compRowsQ);
+  set('q-sub2',`${rows.length} current · ${compRowsQ.length} comparative rows`);
+  const allQRows=[...rows.map(q=>qRowHtml(q,false)),...compRowsQ.map(q=>qRowHtml(q,true))].join('');
+  $('q-tbody').innerHTML=allQRows||noData();
 }
 
 /* ── JOBS ── */
@@ -1154,21 +1493,45 @@ function renderJobs(){
   else rows=applySort('jobs',rows);
   const tot={created:0,total_val:0,active:0,active_val:0,completed:0,completed_val:0};
   rows.forEach(r=>{tot.created+=r.created||0;tot.total_val+=r.total_val||0;tot.active+=r.active||0;tot.active_val+=r.active_val||0;tot.completed+=r.completed||0;tot.completed_val+=r.completed_val||0;});
+  // Delta vs previous period
+  const prevJ=RAW_J.filter(j=>matchEntity(j.company)&&dateInPrevFilter(j.month));
+  const prev={created:0,total_val:0,active:0,active_val:0,completed:0,completed_val:0};
+  prevJ.forEach(r=>{prev.created+=r.created||0;prev.total_val+=r.total_val||0;prev.active+=r.active||0;prev.active_val+=r.active_val||0;prev.completed+=r.completed||0;prev.completed_val+=r.completed_val||0;});
   set('j-created',fmtN(tot.created));set('j-tval',fmtK(tot.total_val));
   set('j-active',fmtN(tot.active));set('j-aval',fmtK(tot.active_val));
   set('j-comp',fmtN(tot.completed));set('j-cval',fmtK(tot.completed_val));
   set('j-active-val',fmtK(tot.active_val));
+  updateHasComp();
+  setCT('j-created-cv','j-created-cs','j-created-delta',fmtN(prev.created),fmtK(prev.total_val||0),tot.created,prev.created,tot.total_val,prev.total_val);
+  setCT('j-active-cv','j-active-cs','j-active-delta',fmtN(prev.active),fmtK(prev.active_val||0),tot.active,prev.active,tot.active_val,prev.active_val);
+  setCT('j-comp-cv','j-comp-cs','j-comp-delta',fmtN(prev.completed),fmtK(prev.completed_val||0),tot.completed,prev.completed,tot.completed_val,prev.completed_val);
+  setCT('j-aval-cv','j-aval-cs','j-active-val-delta',fmtK(prev.active_val||0),'in progress',tot.active_val,prev.active_val);
   set('j-sub',`${rows.length} rows · most recent first`);
-  $('j-tbody').innerHTML=rows.length?rows.map(j=>`<tr>
-    <td style="font-weight:600;white-space:nowrap">${ML[j.month]||j.month}</td>
-    <td>${coBdg(j.company)}</td>
-    <td class="mono">${j.created||0}</td>
-    <td class="mono">${fmtK(j.total_val)}</td>
-    <td class="mono" style="color:var(--orange);font-weight:600">${j.active||0}</td>
-    <td class="mono">${fmtK(j.active_val)}</td>
-    <td class="mono" style="color:var(--green);font-weight:600">${j.completed||0}</td>
-    <td class="mono" style="color:var(--green)">${fmtK(j.completed_val)}</td>
-  </tr>`).join(''):noData();
+  const jcm=buildCompMap(RAW_J);
+  $('j-tbody').innerHTML=rows.length||hasComp()?( ()=>{
+  const jRowHtml=(j,isComp=false)=>{
+  const ri=getRowInfo('jobs',j,isComp);
+  const fixedBr='border-right:2px solid #1A3460';
+  const lBdr='border-left:2px solid #1A3460';
+  const rBdr='border-right:2px solid #1A3460';
+  const pair=(colIdx,cnt,val,cntColor,valColor)=>{
+    const hlCls=ri.hlCols.includes(colIdx)?` ${ri.colorCls}`:'';
+    return `<td class="mono${hlCls}" style="${lBdr};text-align:right;padding:5px 7px;"><span style="font-weight:700;font-size:12px;color:${cntColor}">${cnt}</span></td><td class="mono${hlCls}" style="${rBdr};text-align:right;padding:5px 7px;"><span style="font-size:11px;color:${valColor}">${val}</span></td>`;
+  };
+  const compOp=isComp?' opacity:.88':'';
+  return`<tr class="${ri.rowCls}${isComp?' comp-period-row':''}" style="${compOp}">
+  <td style="font-weight:600;white-space:nowrap;color:#0D1B2E;${fixedBr}">${isComp?'<span class="period-vs">VS</span>':''}${ML[j.month]||j.month}</td>
+  <td style="min-width:155px;${fixedBr}">${coBdg(j.company)}</td>
+  ${pair(2,fmtN(j.created||0),fmtK(j.total_val||0),'#0F2245','#3B5A80')}
+  ${pair(4,fmtN(j.active||0),fmtK(j.active_val||0),'#7A2E12','#C07040')}
+  ${pair(6,fmtN(j.completed||0),fmtK(j.completed_val||0),'#2A5A0A','#4A7E1A')}
+</tr>`;
+};
+  let compRowsJ=hasComp()?[...RAW_J].filter(j=>matchEntity(j.company)&&dateInPrevFilter(j.month)&&matchGlobal(j)):[];
+  if(!SORT_STATE.jobs) compRowsJ.sort((a,b)=>b.month.localeCompare(a.month));
+  else compRowsJ=applySort('jobs',compRowsJ);
+  return [...rows.map(j=>jRowHtml(j,false)),...compRowsJ.map(j=>jRowHtml(j,true))].join('')||noData();
+})():noData();
 }
 
 /* ── INVOICED ── */
@@ -1182,22 +1545,48 @@ function renderInvoiced(){
   else rows=applySort('invoiced',rows);
   const tot={completed:0,total_val:0,est_hrs:0,act_hrs:0};
   rows.forEach(r=>{tot.completed+=r.completed||0;tot.total_val+=r.total_val||0;tot.est_hrs+=r.est_hrs||0;tot.act_hrs+=r.act_hrs||0;});
+  // Delta vs previous period
+  const prevI=RAW_I.filter(i=>matchEntity(i.company)&&dateInPrevFilter(i.month));
+  const prev={completed:0,total_val:0,est_hrs:0,act_hrs:0};
+  prevI.forEach(r=>{prev.completed+=r.completed||0;prev.total_val+=r.total_val||0;prev.est_hrs+=r.est_hrs||0;prev.act_hrs+=r.act_hrs||0;});
   set('i-comp',fmtN(tot.completed));set('i-val',fmtK(tot.total_val));
-  set('i-est',Math.round(tot.est_hrs)+'h');set('i-act',Math.round(tot.act_hrs)+'h');
+  set('i-est',Math.round(tot.est_hrs).toLocaleString()+'h');set('i-act',Math.round(tot.act_hrs).toLocaleString()+'h');
+  updateHasComp();
+  setCT('i-comp-cv','i-comp-cs','i-comp-delta',fmtN(prev.completed),fmtK(prev.total_val||0),tot.completed,prev.completed,tot.total_val,prev.total_val);
+  setCT('i-val-cv','i-val-cs','i-val-delta',fmtK(prev.total_val||0),'revenue recognised',tot.total_val,prev.total_val);
+  setCT('i-est-cv','i-est-cs','i-est-delta',Math.round(prev.est_hrs||0).toLocaleString()+'h',Math.round(prev.act_hrs||0).toLocaleString()+'h',tot.est_hrs,prev.est_hrs,tot.act_hrs,prev.act_hrs);
+  setCT('i-act-cv','i-act-cs','i-act-delta',Math.round(prev.act_hrs||0).toLocaleString()+'h','hours worked',tot.act_hrs,prev.act_hrs);
   set('i-sub',`${rows.length} rows · most recent first`);
-  $('i-tbody').innerHTML=rows.length?rows.map(i=>{
-    const eff=i.est_hrs>0?Math.round(i.act_hrs/i.est_hrs*100):null;
-    return`<tr>
-      <td style="font-weight:600;white-space:nowrap">${ML[i.month]||i.month}</td>
-      <td>${coBdg(i.company)}</td>
-      <td class="mono">${i.completed||0}</td>
-      <td class="mono" style="color:var(--green);font-weight:600">${fmtK(i.total_val)}</td>
-      <td class="mono">${Math.round(i.est_hrs||0)}h</td>
-      <td class="mono">${Math.round(i.act_hrs||0)}h</td>
-      <td class="mono" style="font-weight:600">${eff!==null?eff+'%':'—'}</td>
-      <td style="font-weight:500">${i.top_sp||'—'}</td>
-    </tr>`;
-  }).join(''):noData();
+  const icm=buildCompMap(RAW_I);
+  $('i-tbody').innerHTML=rows.length||hasComp()?( ()=>{
+  const iRowHtml=(i,isComp=false)=>{
+  const eff=i.est_hrs>0?Math.round(i.act_hrs/i.est_hrs*100):null;
+  const ri=getRowInfo('invoiced',i,isComp);
+  const fixedBr='border-right:2px solid #1A3460';
+  const lBdr='border-left:2px solid #1A3460';
+  const rBdr='border-right:2px solid #1A3460';
+  const compOp=isComp?' opacity:.88':'';
+  const hlJobs=ri.hlCols.includes(2)?` ${ri.colorCls}`:'';
+  const hlVal=ri.hlCols.includes(3)?` ${ri.colorCls}`:'';
+  const hlEst=ri.hlCols.includes(4)?` ${ri.colorCls}`:'';
+  const hlAct=ri.hlCols.includes(5)?` ${ri.colorCls}`:'';
+  const hlEff=ri.hlCols.includes(6)?` ${ri.colorCls}`:'';
+  return`<tr class="${ri.rowCls}${isComp?' comp-period-row':''}" style="${compOp}">
+  <td style="font-weight:600;white-space:nowrap;color:#0D1B2E;${fixedBr}">${isComp?'<span class="period-vs">VS</span>':''}${ML[i.month]||i.month}</td>
+  <td style="min-width:155px;${fixedBr}">${coBdg(i.company)}</td>
+  <td class="mono${hlJobs}" style="${lBdr};text-align:right;padding:5px 7px;"><span style="font-weight:700;font-size:12px;color:#2A5A0A">${fmtN(i.completed||0)}</span></td>
+  <td class="mono${hlVal}" style="${rBdr};text-align:right;padding:5px 7px;"><span style="font-size:11px;color:#4A7E1A">${fmtK(i.total_val||0)}</span></td>
+  <td class="mono${hlEst}" style="${lBdr};text-align:right;padding:5px 7px;"><span style="font-weight:700;font-size:12px;color:#0F4A8A">${Math.round(i.est_hrs||0).toLocaleString()}h</span></td>
+  <td class="mono${hlAct}" style="${rBdr};text-align:right;padding:5px 7px;"><span style="font-size:11px;color:#2A78B8">${Math.round(i.act_hrs||0).toLocaleString()}h</span></td>
+  <td class="mono${hlEff}" style="${lBdr};${rBdr};text-align:center;padding:5px 7px;font-weight:700;color:#085A46">${eff!==null?eff+'%':'—'}</td>
+</tr>`;
+};
+  let compRowsI=hasComp()?[...RAW_I].filter(i=>matchEntity(i.company)&&dateInPrevFilter(i.month)&&matchGlobal(i)):[];
+  compRowsI=compRowsI.map(i=>({...i,eff:i.est_hrs>0?Math.round(i.act_hrs/i.est_hrs*100):0}));
+  if(!SORT_STATE.invoiced) compRowsI.sort((a,b)=>b.month.localeCompare(a.month));
+  else compRowsI=applySort('invoiced',compRowsI);
+  return [...rows.map(i=>iRowHtml(i,false)),...compRowsI.map(i=>iRowHtml(i,true))].join('')||noData();
+})():noData();
 }
 
 /* ── HOURS ── */
@@ -1252,18 +1641,19 @@ function renderHours(){
     <div class="flag-card none"><span class="flag-lbl">— No estimate</span><span class="flag-num">${noEst}</span></div>`;
   $('h-tbody').innerHTML=rows.length?rows.map(h=>{
     const isO=(h.pct_rem<0||h.unalloc<0),isA=(h.pct_rem>=0&&h.pct_rem<10&&!isO);
+    const RB='border-right:2px solid #1A3460';
     return`<tr style="${isO?'background:#FFF5F5;':isA?'background:#FFFBF0;':''}">
-      <td class="mono" style="color:var(--xdim)">${h.id}</td>
-      <td><div class="ln">${h.name}</div><div class="ls">${h.customer}</div></td>
-      <td>${coBdg(h.company)}</td>
-      <td style="font-weight:500">${h.sp}</td>
-      <td class="mono">${fmtK(h.value)}</td>
-      <td class="mono">${h.est_hrs||'—'}</td>
-      <td class="mono">${h.act_hrs||0}</td>
-      <td class="mono">${h.comm_hrs||0}</td>
-      <td class="mono" style="color:${isO?'var(--red2)':isA?'var(--orange)':'var(--green)'};font-weight:700">${h.unalloc}</td>
-      <td class="mono">${h.pct_rem>0?Math.round(h.pct_rem)+'%':'—'}</td>
-      <td>${isO?'<span style="color:var(--red2);font-size:16px;font-weight:700">⚠</span>':isA?'<span style="font-size:16px">🟡</span>':'<span style="color:var(--green);font-size:16px;font-weight:700">✓</span>'}</td>
+      <td class="mono" style="color:#6B7A8D;text-align:right;padding:5px 8px;${RB}">${h.id}</td>
+      <td style="${RB};padding:5px 8px"><div class="ln">${h.name}</div><div class="ls">${h.customer}</div></td>
+      <td style="${RB};min-width:155px;padding:5px 8px">${coBdg(h.company)}</td>
+      <td style="font-weight:600;color:#0D1B2E;${RB};padding:5px 8px">${h.sp}</td>
+      <td class="mono" style="text-align:right;color:#3B5A80;font-weight:700;${RB};padding:5px 7px">${fmtK(h.value)}</td>
+      <td class="mono" style="text-align:right;color:#0F4A8A;${RB};padding:5px 7px">${h.est_hrs||'—'}</td>
+      <td class="mono" style="text-align:right;color:#2A78B8;${RB};padding:5px 7px">${h.act_hrs||0}</td>
+      <td class="mono" style="text-align:right;color:#4A5568;${RB};padding:5px 7px">${h.comm_hrs||0}</td>
+      <td class="mono" style="text-align:right;font-weight:700;color:${isO?'#8B1A1A':isA?'#7A4800':'#2A5A0A'};${RB};padding:5px 7px">${h.unalloc}</td>
+      <td class="mono" style="text-align:right;color:#4A5568;${RB};padding:5px 7px">${h.pct_rem>0?Math.round(h.pct_rem)+'%':'—'}</td>
+      <td style="text-align:center;${RB};padding:5px 7px">${isO?'<span style="color:#8B1A1A;font-size:16px;font-weight:700">⚠</span>':isA?'<span style="font-size:16px">🟡</span>':'<span style="color:#2A5A0A;font-size:16px;font-weight:700">✓</span>'}</td>
     </tr>`;
   }).join(''):noData();
 }
@@ -1293,18 +1683,19 @@ function renderLB(){
     </div>`).join(''):'<div class="no-data" style="width:100%;padding:16px">No data</div>';
   $('lb-tbody').innerHTML=ranked.length?ranked.map(p=>{
     const rc=p.rank===1?'rank-1':p.rank===2?'rank-2':p.rank===3?'rank-3':'rank-n';
+    const RB='border-right:2px solid #1A3460';const LB='border-left:2px solid #1A3460';
     return`<tr>
-      <td><span class="rank ${rc}">${p.rank}</span></td>
-      <td style="font-weight:600;color:var(--text)">${p.sp}</td>
-      <td>${coBdg(p.company)}</td>
-      <td style="color:var(--dim);white-space:nowrap">${ML[p.month]||p.month}</td>
-      <td class="mono">${p.sub||0}</td>
-      <td class="mono">${fmtK(p.sub_val)}</td>
-      <td class="mono" style="color:var(--green);font-weight:700">${p.won||0}</td>
-      <td class="mono" style="color:var(--green)">${fmtK(p.won_val)}</td>
-      <td class="mono" style="color:var(--red2)">${p.lost||0}</td>
-      <td class="mono" style="color:var(--gold)">${p.pending||0}</td>
-      <td class="mono" style="font-weight:700;color:var(--navy)">${p.sub>0?pct(p.won/p.sub):'—'}</td>
+      <td style="text-align:center;${RB};padding:5px 8px"><span class="rank ${rc}">${p.rank}</span></td>
+      <td style="font-weight:600;color:#0D1B2E;${RB};padding:5px 8px">${p.sp}</td>
+      <td style="${RB};min-width:155px;padding:5px 8px">${coBdg(p.company)}</td>
+      <td style="color:#4A5568;white-space:nowrap;${RB};padding:5px 8px">${ML[p.month]||p.month}</td>
+      <td class="mono" style="text-align:right;${LB};padding:5px 7px;font-weight:700;font-size:12px;color:#0F2245">${p.sub||0}</td>
+      <td class="mono" style="text-align:right;${RB};padding:5px 7px;font-size:11px;color:#3B5A80">${fmtK(p.sub_val)}</td>
+      <td class="mono" style="text-align:right;${LB};padding:5px 7px;font-weight:700;font-size:12px;color:#2A5A0A">${p.won||0}</td>
+      <td class="mono" style="text-align:right;${RB};padding:5px 7px;font-size:11px;color:#4A7E1A">${fmtK(p.won_val)}</td>
+      <td class="mono" style="text-align:right;${LB};${RB};padding:5px 7px;font-weight:700;color:#8B1A1A">${p.lost||0}</td>
+      <td class="mono" style="text-align:right;${LB};${RB};padding:5px 7px;font-weight:700;color:#6B3E08">${p.pending||0}</td>
+      <td class="mono" style="text-align:right;${LB};${RB};padding:5px 7px;font-weight:700;color:#0F4A8A">${p.sub>0?pct(p.won/p.sub):'—'}</td>
     </tr>`;
   }).join(''):noData();
   // SP aggregate bars
@@ -1334,49 +1725,303 @@ function renderLB(){
 })();
 
 // ── DATE FILTER (entity bar) ─────────────────────────────────────
+// ── FILTER STATE ─────────────────────────────────────────────────
+// years/quarters/months = [] means "all"; quickPick = preset key or null
+let CURR_FILTER={years:[],quarters:[],months:[],quickPick:'all',label:'All time'};
+let COMP_FILTER={years:[],quarters:[],months:[],quickPick:null,label:null};
+// Legacy aliases
 let DATE_FILTER='all';
-function setDateFilter(mode,btn){
-  DATE_FILTER=mode;
-  document.querySelectorAll('.edate-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  const rw=document.getElementById('edate-range-wrap');
-  if(mode==='range') rw.classList.add('visible'); else rw.classList.remove('visible');
+let DATE_FILTER_VAL=null;
+
+const MO_SHORT=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const Q_MONTHS={1:[1,2,3],2:[4,5,6],3:[7,8,9],4:[10,11,12]};
+
+// ── ENTITY (chip-based) ──────────────────────────────────────────
+function setEntityChip(e, btn){
+  STATE.entity=e;
+  ACTIVE_TILE=null;
+  document.querySelectorAll('.tile.tile-clicked').forEach(t=>t.classList.remove('tile-clicked'));
+  // sync all entity chip sets
+  document.querySelectorAll('.entity-chip').forEach(b=>b.classList.remove('active'));
+  // activate both filter-bar and panel chips
+  const ids={'all':['ec-all'],'Services':['ec-svc'],
+    'Coatings':['ec-coat'],'Services GC':['ec-gc'],
+    'Property Maintenance':['ec-pm']};
+  if(ids[e]) ids[e].forEach(id=>{const el=document.getElementById(id);if(el)el.classList.add('active');});
   renderTab();
 }
-function applyDateRange(){ DATE_FILTER='range'; renderTab(); }
-function dateInFilter(monthStr){
-  // monthStr format: "2026-06"
-  if(DATE_FILTER==='all') return true;
+
+// ── FILTER PANEL OPEN/CLOSE ──────────────────────────────────────
+function toggleFilterPanel(){
+  const panel=document.getElementById('filter-panel');
+  const btn=document.getElementById('filter-panel-btn');
+  const lbl=document.getElementById('filter-btn-lbl');
+  const ico=document.getElementById('filter-btn-icon');
+  const isOpen=panel.classList.contains('open');
+  if(isOpen){
+    applyAndClose();
+  } else {
+    panel.classList.add('open');
+    btn.classList.add('panel-open');
+    if(lbl) lbl.textContent='Apply';
+    if(ico) ico.textContent='✓';
+  }
+}
+function applyAndClose(){
+  document.getElementById('filter-panel').classList.remove('open');
+  document.getElementById('filter-panel-btn').classList.remove('panel-open');
+  const lbl=document.getElementById('filter-btn-lbl');
+  const ico=document.getElementById('filter-btn-icon');
+  if(lbl) lbl.textContent='Filter';
+  if(ico) ico.textContent='⚙';
+}
+document.addEventListener('click',function(e){
+  if(!e.target.closest('#filter-panel')&&!e.target.closest('#filter-bar')){
+    applyAndClose();
+  }
+});
+
+// ── QUICK PICK PRESETS ───────────────────────────────────────────
+function buildQuickPickLabels(){
+  const now=new Date();
+  const cy=now.getFullYear(),cm=now.getMonth()+1;
+  const curFY=cm>=7?cy+1:cy;
+  const curQ=Math.ceil(cm/3);
+  const el=id=>document.getElementById(id);
+  if(el('qp-ytd-yr'))  el('qp-ytd-yr').textContent=cy;
+  if(el('qp-ytd1-yr')) el('qp-ytd1-yr').textContent=cy-1;
+  if(el('qp-fy-lbl'))  el('qp-fy-lbl').textContent=(curFY-1)+'/'+String(curFY).slice(-2);
+  if(el('qp-fy1-lbl')) el('qp-fy1-lbl').textContent=(curFY-2)+'/'+String(curFY-1).slice(-2);
+  if(el('qp-fy2-lbl')) el('qp-fy2-lbl').textContent=(curFY-3)+'/'+String(curFY-2).slice(-2);
+}
+
+function applyQuickPick(key, btn){
+  const now=new Date();
+  const cy=now.getFullYear(),cm=now.getMonth()+1;
+  const curFY=cm>=7?cy+1:cy;
+  const curQ=Math.ceil(cm/3);
+  const qmos=Q_MONTHS[curQ];
+
+  // deselect all qp items
+  document.querySelectorAll('.fp-qp-item').forEach(b=>b.classList.remove('sel'));
+  if(btn) btn.classList.add('sel');
+
+  let f={years:[],quarters:[],months:[],quickPick:key,label:''};
+
+  if(key==='all'){
+    f.label='All time';
+  } else if(key==='ytd'){
+    f.years=[cy];f.months=Array.from({length:cm},(_,i)=>i+1);
+    f.label='YTD '+cy;
+  } else if(key==='ytd1'){
+    f.years=[cy-1];f.months=Array.from({length:12},(_,i)=>i+1);
+    f.label='YTD '+(cy-1);
+  } else if(key==='fy'){
+    f.years=[curFY-1,curFY];f.quarters=[3,4,1,2];
+    f.label='FY '+(curFY-1)+'/'+String(curFY).slice(-2);
+  } else if(key==='fy1'){
+    f.years=[curFY-2,curFY-1];f.quarters=[3,4,1,2];
+    f.label='FY '+(curFY-2)+'/'+String(curFY-1).slice(-2);
+  } else if(key==='fy2'){
+    f.years=[curFY-3,curFY-2];f.quarters=[3,4,1,2];
+    f.label='FY '+(curFY-3)+'/'+String(curFY-2).slice(-2);
+  } else if(key==='thisq'){
+    f.years=[cy];f.quarters=[curQ];
+    f.label='Q'+curQ+' '+cy;
+  } else if(key==='thismo'){
+    f.years=[cy];f.months=[cm];
+    f.label=MO_SHORT[cm-1]+' '+cy;
+  }
+
+  CURR_FILTER=f;
+  syncLegacyFilter();
+  refreshFpUI('curr');
+  updateFilterChips();
+  clearTileHighlights();
+  renderTab();
+}
+
+// ── MANUAL FILTER TOGGLES ────────────────────────────────────────
+function toggleFpYr(grp, yr, el){
+  const f=grp==='curr'?CURR_FILTER:COMP_FILTER;
+  if(f.years.includes(yr)) f.years=f.years.filter(y=>y!==yr);
+  else f.years.push(yr);
+  f.quickPick=null;f.label=null;
+  el.classList.toggle(grp+'-on',f.years.includes(yr));
+  if(grp==='curr'){clearQpSel();syncLegacyFilter();}
+  updateFilterChips();
+  clearTileHighlights();
+  renderTab();
+}
+function toggleFpQ(grp, q, el){
+  const f=grp==='curr'?CURR_FILTER:COMP_FILTER;
+  if(f.quarters.includes(q)) f.quarters=f.quarters.filter(x=>x!==q);
+  else f.quarters.push(q);
+  f.quickPick=null;f.label=null;
+  el.classList.toggle(grp+'-on',f.quarters.includes(q));
+  if(grp==='curr'){clearQpSel();syncLegacyFilter();}
+  updateFilterChips();
+  clearTileHighlights();
+  renderTab();
+}
+function toggleFpMo(grp, mo, el){
+  const f=grp==='curr'?CURR_FILTER:COMP_FILTER;
+  if(f.months.includes(mo)) f.months=f.months.filter(m=>m!==mo);
+  else f.months.push(mo);
+  f.quickPick=null;f.label=null;
+  el.classList.toggle(grp+'-on',f.months.includes(mo));
+  if(grp==='curr'){clearQpSel();syncLegacyFilter();}
+  updateFilterChips();
+  clearTileHighlights();
+  renderTab();
+}
+function clearQpSel(){
+  document.querySelectorAll('.fp-qp-item').forEach(b=>b.classList.remove('sel'));
+}
+
+// ── POPULATE YEAR LISTS (called after data loads) ────────────────
+function populatePeriodDropdowns(){
+  const allMonths=[...new Set([...RAW_Q,...RAW_J,...RAW_I,...RAW_LB,...ALL_LEADS].map(r=>r.month).filter(Boolean))];
+  const years=[...new Set(allMonths.map(m=>parseInt(m.split('-')[0])))].sort((a,b)=>b-a);
+  ['curr','comp'].forEach(grp=>{
+    const list=document.getElementById('fp-'+grp+'-yr-list');
+    if(!list) return;
+    list.innerHTML=years.map(y=>`<div class="fp-pill" onclick="toggleFpYr('${grp}',${y},this)">${y}</div>`).join('');
+  });
+  buildQuickPickLabels();
+  refreshFpUI('curr');
+  refreshFpUI('comp');
+}
+
+// ── SYNC PANEL UI TO FILTER STATE ───────────────────────────────
+function refreshFpUI(grp){
+  const f=grp==='curr'?CURR_FILTER:COMP_FILTER;
+  const cls=grp+'-on';
+  // Year pills
+  document.querySelectorAll('#fp-'+grp+'-yr-list .fp-pill').forEach(el=>{
+    const y=parseInt(el.textContent.trim());
+    el.classList.toggle(cls,f.years.includes(y));
+  });
+  // Quarter pills
+  document.querySelectorAll('#fp-'+grp+'-q-list .fp-pill').forEach(el=>{
+    const q=parseInt(el.dataset.q);
+    el.classList.toggle(cls,f.quarters.includes(q));
+  });
+  // Month cells
+  document.querySelectorAll('#fp-'+grp+'-mo-grid .mo-cell').forEach(el=>{
+    const mo=parseInt(el.dataset.mo);
+    el.classList.toggle(cls,f.months.includes(mo));
+  });
+  // Quick pick
+  if(grp==='curr'&&f.quickPick){
+    document.querySelectorAll('.fp-qp-item').forEach(b=>b.classList.remove('sel'));
+    const qpEl=document.getElementById('qp-'+f.quickPick);
+    if(qpEl) qpEl.classList.add('sel');
+  }
+  // Period summary label
+  const sumEl=document.getElementById('fp-'+grp+'-summary');
+  if(sumEl){
+    const yrs=f.years&&f.years.length?f.years.join(', '):'';
+    const mos=f.months&&f.months.length?f.months.map(m=>['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][m-1]).join(', '):'';
+    const qts=f.quarters&&f.quarters.length?f.quarters.map(q=>'Q'+q).join(', '):'';
+    const parts=[yrs,qts?qts+(mos?'':' all months'):'',mos].filter(Boolean);
+    sumEl.textContent=parts.join(' · ')||'No filter';
+  }
+}
+
+// ── ACTIVE FILTER CHIPS (filter bar) ────────────────────────────
+function updateFilterChips(){
+  const wrap=document.getElementById('active-filter-chips');
+  if(!wrap) return;
+  const chips=[];
+  if(CURR_FILTER.label){
+    chips.push(`<span class="fchip-curr">${CURR_FILTER.label}<span class="fchip-x" onclick="clearAllFilters()">×</span></span>`);
+  } else {
+    const parts=[];
+    if(CURR_FILTER.years.length) parts.push(CURR_FILTER.years.sort((a,b)=>b-a).join(', '));
+    if(CURR_FILTER.quarters.length) parts.push(CURR_FILTER.quarters.map(q=>'Q'+q).join(', '));
+    if(CURR_FILTER.months.length) parts.push(CURR_FILTER.months.map(m=>MO_SHORT[m-1]).join(', '));
+    if(parts.length) chips.push(`<span class="fchip-curr">${parts.join(' · ')}<span class="fchip-x" onclick="clearAllFilters()">×</span></span>`);
+  }
+  if(COMP_FILTER.years.length||COMP_FILTER.quarters.length||COMP_FILTER.months.length){
+    const parts=[];
+    if(COMP_FILTER.years.length) parts.push(COMP_FILTER.years.sort((a,b)=>b-a).join(', '));
+    if(COMP_FILTER.quarters.length) parts.push(COMP_FILTER.quarters.map(q=>'Q'+q).join(', '));
+    if(COMP_FILTER.months.length) parts.push(COMP_FILTER.months.map(m=>MO_SHORT[m-1]).join(', '));
+    chips.push(`<span class="fchip-comp">vs ${parts.join(' · ')}<span class="fchip-x" onclick="clearCompFilter()">×</span></span>`);
+  }
+  wrap.innerHTML=chips.join('');
+  // Active count badge
+  const cnt=document.getElementById('filter-active-count');
+  const n=(CURR_FILTER.quickPick&&CURR_FILTER.quickPick!=='all'?1:0)+(COMP_FILTER.years.length||COMP_FILTER.months.length||COMP_FILTER.quarters.length?1:0);
+  if(cnt){cnt.textContent=n||'';cnt.style.display=n?'inline':'none';}
+}
+
+function clearAllFilters(){
+  CURR_FILTER={years:[],quarters:[],months:[],quickPick:'all',label:'All time'};
+  COMP_FILTER={years:[],quarters:[],months:[],quickPick:null,label:null};
+  updateHasComp();
+  syncLegacyFilter();
+  refreshFpUI('curr');refreshFpUI('comp');
+  updateFilterChips();
+  clearTileHighlights();
+  renderTab();
+}
+function clearCompFilter(){
+  COMP_FILTER={years:[],quarters:[],months:[],quickPick:null,label:null};
+  updateHasComp();
+  refreshFpUI('comp');
+  updateFilterChips();
+  clearTileHighlights();
+  renderTab();
+}
+
+function syncLegacyFilter(){
+  DATE_FILTER=CURR_FILTER.quickPick||'custom';
+  DATE_FILTER_VAL=CURR_FILTER.years.length===1?CURR_FILTER.years[0]:null;
+}
+
+// ── CORE FILTER LOGIC ────────────────────────────────────────────
+function matchFilter(monthStr, filter){
+  if(!monthStr) return false;
   const [y,m]=monthStr.split('-').map(Number);
   const now=new Date();
   const cy=now.getFullYear(),cm=now.getMonth()+1;
-  if(DATE_FILTER==='ytd') return y===cy&&m<=cm;
-  if(DATE_FILTER==='fy'){
-    // FY July–June
-    const fyStart=cm>=7?cy:cy-1;
-    const yStart=new Date(fyStart,6,1), yEnd=new Date(fyStart+1,5,30);
-    const d=new Date(y,m-1,1);
-    return d>=yStart&&d<=yEnd;
+  const curFY=cm>=7?cy+1:cy;
+
+  // Quick pick shortcuts (for CURR_FILTER)
+  const qp=filter.quickPick;
+  if(qp==='all') return true;
+  if(qp==='ytd') return y===cy&&m<=cm;
+  if(qp==='ytd1') return y===cy-1;
+  if(qp==='fy'){const e=curFY;return(y===e-1&&m>=7)||(y===e&&m<=6);}
+  if(qp==='fy1'){const e=curFY-1;return(y===e-1&&m>=7)||(y===e&&m<=6);}
+  if(qp==='fy2'){const e=curFY-2;return(y===e-1&&m>=7)||(y===e&&m<=6);}
+  if(qp==='thisq'){const q=Math.ceil(cm/3);const qs=Q_MONTHS[q];return y===cy&&qs.includes(m);}
+  if(qp==='thismo') return y===cy&&m===cm;
+  if(qp===null&&!filter.years.length&&!filter.quarters.length&&!filter.months.length) return false; // comp off
+
+  // Manual selection — AND logic: record must match ALL selected dimensions
+  if(filter.years.length>0&&!filter.years.includes(y)) return false;
+  if(filter.months.length>0&&!filter.months.includes(m)) return false;
+  if(filter.quarters.length>0){
+    const q=Math.ceil(m/3);
+    if(!filter.quarters.includes(q)) return false;
   }
-  if(DATE_FILTER==='monthly') return y===cy&&m===cm;
-  if(DATE_FILTER==='range'){
-    const from=document.getElementById('edate-from').value;
-    const to=document.getElementById('edate-to').value;
-    if(!from&&!to) return true;
-    const d=y*100+m;
-    const f=from?parseInt(from.slice(0,4))*100+parseInt(from.slice(5,7)):0;
-    const t=to?parseInt(to.slice(0,4))*100+parseInt(to.slice(5,7)):99999;
-    return d>=f&&d<=t;
-  }
+  // Only pass if at least one dimension was selected
+  if(!filter.years.length&&!filter.months.length&&!filter.quarters.length) return false;
   return true;
 }
 
-// ── GLOBAL SEARCH ────────────────────────────────────────────────
+function dateInFilter(monthStr){ return matchFilter(monthStr,CURR_FILTER); }
+function dateInPrevFilter(monthStr){ return matchFilter(monthStr,COMP_FILTER); }
+
+// ── GLOBAL SEARCH (restored) ─────────────────────────────────────
 let GLOBAL_SEARCH='';
 function globalSearch(val){
   GLOBAL_SEARCH=val.toLowerCase();
   const cl=document.getElementById('search-clear');
-  if(cl) cl.classList.toggle('visible', val.length>0);
+  if(cl) cl.classList.toggle('visible',val.length>0);
   renderTab();
 }
 function clearGlobalSearch(){
@@ -1391,6 +2036,87 @@ function matchGlobal(row){
   if(!GLOBAL_SEARCH) return true;
   return Object.values(row).some(v=>String(v).toLowerCase().includes(GLOBAL_SEARCH));
 }
+
+// ── COMPARATIVE STATE ────────────────────────────────────────────
+function hasComp(){
+  return COMP_FILTER.years.length>0||COMP_FILTER.months.length>0||COMP_FILTER.quarters.length>0||(COMP_FILTER.quickPick&&COMP_FILTER.quickPick!=='all'&&COMP_FILTER.quickPick!==null);
+}
+function compPeriodLabel(){
+  if(COMP_FILTER.years.length===1) return String(COMP_FILTER.years[0]);
+  if(COMP_FILTER.years.length>1) return COMP_FILTER.years.sort((a,b)=>b-a).join('/');
+  if(COMP_FILTER.label) return COMP_FILTER.label;
+  return 'prev';
+}
+function updateHasComp(){
+  document.body.classList.toggle('has-comp',hasComp());
+  const lbl=hasComp()?'vs '+compPeriodLabel():'Comparative';
+  document.querySelectorAll('[id^="cpl-"]').forEach(el=>el.textContent=lbl);
+}
+
+// ── DELTA BADGES ─────────────────────────────────────────────────
+function calcDelta(curr, prev){
+  if(!prev||prev===0) return null;
+  const pct=Math.round((curr-prev)/prev*100);
+  return {pct, dir: pct>0?'up':pct<0?'down':'flat'};
+}
+function setDelta(id, curr, prev){
+  const el=document.getElementById(id);
+  if(!el) return;
+  const d=calcDelta(curr,prev);
+  if(!d){el.innerHTML='';return;}
+  const arrow=d.dir==='up'?'▲':d.dir==='down'?'▼':'→';
+  const cls='delta-badge delta-'+d.dir;
+  el.innerHTML=`<span class="${cls}">${arrow} ${Math.abs(d.pct)}% vs prev</span>`;
+}
+
+// Comp tile delta (light background)
+function setCompDelta(id, curr, prev){
+  const el=document.getElementById(id); if(!el) return;
+  const d=calcDelta(curr,prev);
+  if(!d||!hasComp()){el.innerHTML='';return;}
+  const arrow=d.dir==='up'?'▲':d.dir==='down'?'▼':'→';
+  el.innerHTML=`<span class="cdelta-${d.dir}">${arrow} ${Math.abs(d.pct)}%</span>`;
+}
+// Populate comp tile half
+function setCT(valId, subId, deltaId, val, sub, curr, prev, currVal, prevVal){
+  const mkBadge=(c,p,sz)=>{
+    if(!hasComp()||p===undefined||p===null||Number(p)===0)return '';
+    const pct=Math.round((c-p)/Math.abs(p)*100);
+    if(pct===0)return '';
+    const up=pct>0;
+    return `<span class="cdelta-${up?'up':'down'}" style="font-size:${sz||10}px;">${up?'▲':'▼'} ${Math.abs(pct)}%</span>`;
+  };
+  const isSingle=currVal===undefined;
+  const ve=document.getElementById(valId);
+  if(ve) ve.innerHTML=`<span>${val||'—'}</span>${mkBadge(curr,prev,isSingle?12:10)}`;
+  const se=document.getElementById(subId);
+  if(se) se.innerHTML=`<span>${sub||''}</span>${!isSingle?mkBadge(currVal,prevVal,10):''}`;
+  const el=document.getElementById(deltaId); if(el) el.innerHTML='';
+}
+// Build comp lookup map for table rows: key = company|calMonth
+function buildCompMap(rawData){
+  const map={};
+  rawData.filter(r=>matchEntity(r.company)&&dateInPrevFilter(r.month)).forEach(r=>{
+    const key=r.company;
+    if(!map[key]){map[key]={};}
+    Object.keys(r).forEach(k=>{
+      if(typeof r[k]==='number') map[key][k]=(map[key][k]||0)+r[k];
+      else if(!map[key][k]) map[key][k]=r[k];
+    });
+  });
+  return map;
+}
+// Render stacked table cell
+function sc(curr,comp,fmt,style=''){
+  const compHtml=comp!==undefined&&comp!==null&&hasComp()?(()=>{
+    const d=calcDelta(curr,comp);
+    const dinl=d?`<span class="dinl dinl-${d.dir}">${d.dir==='up'?'▲':'▼'} ${Math.abs(d.pct)}%</span>`:'';
+    return`<div class="pv-row"><span class="pval">${fmt(comp)}</span>${dinl}</div>`;
+  })():'';
+  return`<td style="${style}"><div>${fmt(curr)}</div>${compHtml}</td>`;
+}
+function scN(curr,comp,style=''){return sc(curr,comp,fmtN,style);}
+function scK(curr,comp,style=''){return sc(curr,comp,fmtK,style);}
 
 // ── TILE HIGHLIGHT & CLICK FILTER ────────────────────────────────
 const TILE_COL_MAP={
@@ -1407,7 +2133,9 @@ const TILE_COL_MAP={
   'q-pend':    {tab:'quotes'},
   'q-pend-val':{tab:'quotes'},
   'q-wr':      {tab:'quotes'},
+  'q-wrv':     {tab:'quotes'},
   'q-rev':     {tab:'quotes'},
+  'q-direct':  {tab:'quotes'},
   'j-created':    {tab:'jobs'},
   'j-tval':       {tab:'jobs'},
   'j-active':     {tab:'jobs'},
@@ -1440,6 +2168,7 @@ const TILE_FILTER_FUNCS={
   'q-pend':    r=>(r.pending||0)>0,
   'q-pend-val':r=>(r.pending_val||0)>0,
   'q-wr':      r=>(r.sub||0)>0,
+  'q-wrv':     r=>(r.sub_val||0)>0,
   'q-rev':     r=>(r.total_rev||0)>0,
   'j-created':    r=>(r.created||0)>0,
   'j-tval':       r=>(r.total_val||0)>0,
@@ -1459,15 +2188,86 @@ const TILE_FILTER_FUNCS={
 };
 
 let ACTIVE_TILE=null;
+let ACTIVE_PERIOD=null;
+let HOVER_TILE=null;
 
-function applyTileFilter(tab,rows){
-  if(!ACTIVE_TILE) return rows;
-  const m=TILE_COL_MAP[ACTIVE_TILE];
-  if(!m||m.tab!==tab) return rows;
-  const fn=TILE_FILTER_FUNCS[ACTIVE_TILE];
-  if(!fn) return rows;
-  return rows.filter(fn);
+// Tile highlight map — colour class + match predicate per tile
+const TILE_HL_MAP={
+  'l-total':     {tab:'leads',    cls:'hl-navy',   fn:r=>true},
+  'l-svc':       {tab:'leads',    cls:'hl-mid',    fn:r=>r.company==='Services'},
+  'l-coat':      {tab:'leads',    cls:'hl-green',  fn:r=>r.company==='Coatings'},
+  'l-gc':        {tab:'leads',    cls:'hl-orange', fn:r=>r.company==='Services GC'},
+  'l-pm':        {tab:'leads',    cls:'hl-teal',   fn:r=>r.company==='Property Maintenance'},
+  'q-sub':       {tab:'quotes',   cls:'hl-navy',   fn:r=>(r.sub||0)>0},
+  'q-won':       {tab:'quotes',   cls:'hl-green',  fn:r=>(r.won||0)>0},
+  'q-lost':      {tab:'quotes',   cls:'hl-red',    fn:r=>(r.lost||0)>0},
+  'q-pend':      {tab:'quotes',   cls:'hl-gold',   fn:r=>(r.pending||0)>0},
+  'q-wr':        {tab:'quotes',   cls:'hl-mid',    fn:r=>(r.sub||0)>0},
+  'q-wrv':       {tab:'quotes',   cls:'hl-mid',    fn:r=>(r.sub_val||0)>0},
+  'q-rev':       {tab:'quotes',   cls:'hl-orange', fn:r=>(r.total_rev||0)>0},
+  'j-created':   {tab:'jobs',     cls:'hl-navy',   fn:r=>(r.created||0)>0},
+  'j-active':    {tab:'jobs',     cls:'hl-orange', fn:r=>(r.active||0)>0},
+  'j-comp':      {tab:'jobs',     cls:'hl-green',  fn:r=>(r.completed||0)>0},
+  'j-active-val':{tab:'jobs',     cls:'hl-gold',   fn:r=>(r.active_val||0)>0},
+  'i-comp':      {tab:'invoiced', cls:'hl-green',  fn:r=>(r.completed||0)>0},
+  'i-val':       {tab:'invoiced', cls:'hl-navy',   fn:r=>(r.total_val||0)>0},
+  'i-est':       {tab:'invoiced', cls:'hl-mid',    fn:r=>(r.est_hrs||0)>0},
+  'q-direct':    {tab:'quotes',   cls:'hl-teal',   fn:r=>(r.direct||0)>0},
+  'i-act':       {tab:'invoiced', cls:'hl-teal',   fn:r=>(r.act_hrs||0)>0},
+};
+const TILE_COL_IDX={
+  // Quotes: 0=Month,1=Entity,2=Submitted,3=Won,4=Lost,5=Pending,6=WinRate,7=Direct,8=TotalRev
+  'q-sub':        [2],
+  'q-won':        [3],
+  'q-lost':       [4],
+  'q-pend':       [5],
+  'q-wr':         [6],
+  'q-wrv':        [6],
+  'q-direct':     [7],
+  'q-rev':        [8],
+  // Jobs: 0=Month,1=Entity,2=Created,3=TotalVal,4=Active,5=ActiveVal,6=Completed,7=CompletedVal
+  'j-created':    [2,3],
+  'j-active':     [4,5],
+  'j-comp':       [6,7],
+  'j-active-val': [5],
+  // Invoiced: 0=Month,1=Entity,2=Completed,3=TotalVal,4=EstHrs,5=ActHrs,6=Eff,7=TopSP
+  'i-comp': [2,3],
+  'i-val':  [3],
+  'i-est':  [4],
+  'i-act':  [5],
+};
+// Colour for tile border on click
+const TILE_HL_COLOR={
+  'hl-navy':'#0F2245','hl-green':'#3B6D11','hl-red':'#A32D2D',
+  'hl-gold':'#854F0B','hl-mid':'#185FA5','hl-orange':'#C2410C','hl-teal':'#0F6E56'
+};
+function getRowHl(tab,row){
+  // Used by leads and hours (row-level highlighting)
+  const effectiveTile=ACTIVE_TILE||HOVER_TILE;
+  if(!effectiveTile) return '';
+  const hl=TILE_HL_MAP[effectiveTile];
+  if(!hl||hl.tab!==tab) return '';
+  return hl.fn(row)?hl.cls:'dim';
 }
+function getRowInfo(tab,row,isComp){
+  const effectiveTile=ACTIVE_TILE||HOVER_TILE;
+  if(!effectiveTile) return {rowCls:'',hlCols:[],colorCls:''};
+  const hl=TILE_HL_MAP[effectiveTile];
+  if(!hl||hl.tab!==tab) return {rowCls:'',hlCols:[],colorCls:''};
+  if(ACTIVE_PERIOD==='curr'&&isComp) return {rowCls:'dim',hlCols:[],colorCls:''};
+  if(ACTIVE_PERIOD==='comp'&&!isComp) return {rowCls:'dim',hlCols:[],colorCls:''};
+  if(!hl.fn(row)) return {rowCls:'dim',hlCols:[],colorCls:''};
+  const cols=TILE_COL_IDX[effectiveTile]||[];
+  return {rowCls:'',hlCols:cols,colorCls:hl.cls.replace('hl-','cell-hl-')};
+}
+function clearTileHighlights(){
+  document.querySelectorAll('.tile.tile-clicked').forEach(t=>{t.classList.remove('tile-clicked');t.style.borderColor='';});
+  document.querySelectorAll('.half-selected').forEach(h=>h.classList.remove('half-selected'));
+  ACTIVE_TILE=null;
+  ACTIVE_PERIOD=null;
+}
+// No longer filters — just returns all rows; highlighting done in row template
+function applyTileFilter(tab,rows){ return rows; }
 
 function highlightRows(tab,on){
   const tbody=document.getElementById(tab+'-tbody');
@@ -1480,35 +2280,66 @@ function highlightRows(tab,on){
 
 function setupTileHighlights(){
   document.querySelectorAll('.tile').forEach(tile=>{
-    // remove previous listeners by replacing with clone
     const clone=tile.cloneNode(true);
     tile.parentNode.replaceChild(clone,tile);
   });
   document.querySelectorAll('.tile').forEach(tile=>{
     const ids=[...tile.querySelectorAll('[id]')].map(e=>e.id);
-    const mapping=ids.map(id=>TILE_COL_MAP[id]).find(Boolean);
-    if(!mapping) return;
     const tileId=ids.find(id=>TILE_COL_MAP[id]);
-    tile.addEventListener('mouseenter',()=>{
-      highlightRows(mapping.tab,true);
-      tile.classList.add('tile-active');
-    });
-    tile.addEventListener('mouseleave',()=>{
-      highlightRows(mapping.tab,false);
-      tile.classList.remove('tile-active');
-    });
-    tile.addEventListener('click',()=>{
-      if(ACTIVE_TILE===tileId){
-        ACTIVE_TILE=null;
-        tile.classList.remove('tile-clicked');
-      } else {
-        document.querySelectorAll('.tile.tile-clicked').forEach(t=>t.classList.remove('tile-clicked'));
-        ACTIVE_TILE=tileId;
-        tile.classList.add('tile-clicked');
+    if(!tileId) return;
+    const mapping=TILE_COL_MAP[tileId];
+    const splitTabs=['quotes','jobs','invoiced'];
+    const isSplit=splitTabs.includes(mapping.tab);
+    const halfC=tile.querySelector('.thalf-c');
+    const halfP=tile.querySelector('.thalf-p');
+
+    if(isSplit&&halfC){
+      halfC.style.cursor='pointer';
+      halfC.onclick=(e)=>{
+        e.stopPropagation();
+        const same=ACTIVE_TILE===tileId&&ACTIVE_PERIOD==='curr';
+        clearTileHighlights();
+        if(!same){
+          ACTIVE_TILE=tileId; ACTIVE_PERIOD='curr';
+          tile.classList.add('tile-clicked');
+          const hlE=TILE_HL_MAP[tileId];
+          if(hlE) tile.style.borderColor=TILE_HL_COLOR[hlE.cls]||'';
+          halfC.classList.add('half-selected');
+        }
+        renderTab();
+      };
+      if(halfP){
+        halfP.style.cursor='pointer';
+        halfP.onclick=(e)=>{
+          e.stopPropagation();
+          const same=ACTIVE_TILE===tileId&&ACTIVE_PERIOD==='comp';
+          clearTileHighlights();
+          if(!same){
+            ACTIVE_TILE=tileId; ACTIVE_PERIOD='comp';
+            tile.classList.add('tile-clicked');
+            const hlE=TILE_HL_MAP[tileId];
+            if(hlE) tile.style.borderColor=TILE_HL_COLOR[hlE.cls]||'';
+            halfP.classList.add('half-selected');
+          }
+          renderTab();
+        };
       }
-      renderTab();
-      setupTileHighlights();
-    });
+    } else {
+      tile.onclick=()=>{
+        HOVER_TILE=null;
+        if(ACTIVE_TILE===tileId){ clearTileHighlights(); }
+        else {
+          clearTileHighlights();
+          ACTIVE_TILE=tileId; ACTIVE_PERIOD=null;
+          tile.classList.add('tile-clicked');
+          const hlE=TILE_HL_MAP[tileId];
+          if(hlE) tile.style.borderColor=TILE_HL_COLOR[hlE.cls]||'';
+        }
+        renderTab();
+      };
+    }
+    tile.onmouseenter=()=>{ if(!ACTIVE_TILE) tile.classList.add('tile-active'); };
+    tile.onmouseleave=()=>{ tile.classList.remove('tile-active'); };
   });
 }
 
@@ -1522,7 +2353,133 @@ function addCellTooltips(){
   });
 }
 
+
+// ══════════════════════════════════════════════════════════════════
+// SMART UPDATE — File System Access API with IndexedDB persistence
+// ══════════════════════════════════════════════════════════════════
+
+function showToast(msg,type,duration){
+  type=type||'info'; duration=duration||3000;
+  let t=document.getElementById('data-toast');
+  if(!t){t=document.createElement('div');t.id='data-toast';document.body.appendChild(t);}
+  const bg={info:'#EEF5FF',ok:'#D1FAE5',err:'#FEE2E2'};
+  const col={info:'#1A3460',ok:'#065F46',err:'#991B1B'};
+  t.style.background=bg[type]||bg.info;
+  t.style.color=col[type]||col.info;
+  t.style.border='1px solid '+(col[type]||col.info)+'55';
+  t.textContent=msg; t.style.opacity='1';
+  clearTimeout(t._t);
+  if(duration>0) t._t=setTimeout(()=>{t.style.opacity='0';},duration);
+}
+
+function _dbOpen(){
+  return new Promise((res,rej)=>{
+    const r=indexedDB.open('fidato-dash',1);
+    r.onupgradeneeded=e=>e.target.result.createObjectStore('fs');
+    r.onsuccess=e=>res(e.target.result);
+    r.onerror=()=>rej(r.error);
+  });
+}
+async function _dbGet(key){
+  try{const db=await _dbOpen();return new Promise(res=>{const tx=db.transaction('fs','readonly');const g=tx.objectStore('fs').get(key);g.onsuccess=()=>res(g.result||null);g.onerror=()=>res(null);});}
+  catch{return null;}
+}
+async function _dbPut(key,val){
+  try{const db=await _dbOpen();return new Promise(res=>{const tx=db.transaction('fs','readwrite');tx.objectStore('fs').put(val,key);tx.oncomplete=()=>res(true);tx.onerror=()=>res(false);});}
+  catch{return false;}
+}
+
+function autoApplyWorkbook(wb,filename){
+  // temporarily set global workbook so sheetToRows() can use it
+  _workbook=wb;
+  try{
+    const results=[];
+    function tryLoad(key,arr){
+      const hints=SHEET_HINTS[key]||[];
+      const match=wb.SheetNames.find(s=>hints.some(h=>s.toLowerCase().includes(h.toLowerCase())));
+      if(!match) return;
+      const rows=sheetToRows(match);
+      if(rows&&rows.length){arr.length=0;rows.forEach(r=>arr.push(r));results.push(key+': '+rows.length);}
+    }
+    tryLoad('quotes',RAW_Q);
+    tryLoad('jobs',RAW_J);
+    tryLoad('invoiced',RAW_I);
+    tryLoad('lb',RAW_LB);
+    tryLoad('leads',ALL_LEADS);
+    tryLoad('hours',ALL_HOURS);
+
+    const allMonths=[...new Set([...RAW_Q,...RAW_J,...RAW_I,...RAW_LB].map(r=>r.month).filter(Boolean))].sort();
+    DATA.months=allMonths;
+    allMonths.forEach(m=>{
+      if(!DATA.month_labels[m]){
+        const [y,mo]=m.split('-');
+        const mns=['','January','February','March','April','May','June','July','August','September','October','November','December'];
+        DATA.month_labels[m]=mns[parseInt(mo)]+' '+y;
+      }
+    });
+    populateHeaderDropdowns();
+    populatePeriodDropdowns();
+    renderTab();
+    setupTileHighlights();
+
+    const f=document.querySelector('footer span');
+    if(f) f.textContent=filename+' (synced '+new Date().toLocaleDateString('en-AU')+')';
+
+    if(results.length) showToast('✓ Synced — '+results.join(' · '),'ok',5000);
+    else showToast('⚠ No matching sheets found — check sheet names','err',6000);
+  }catch(e){
+    showToast('❌ Error: '+e.message,'err',6000);
+  }
+}
+
+async function updateDataDirect(){
+  // Fallback for browsers without File System Access API
+  if(!window.showOpenFilePicker){openUpload();return;}
+
+  showToast('⏳ Checking for saved file…');
+  let handle=await _dbGet('excel-handle');
+  let file=null;
+
+  if(handle){
+    try{
+      let perm=await handle.queryPermission({mode:'read'});
+      if(perm!=='granted') perm=await handle.requestPermission({mode:'read'});
+      if(perm==='granted') file=await handle.getFile();
+      else handle=null;
+    }catch{handle=null;}
+  }
+
+  if(!file){
+    try{
+      [handle]=await window.showOpenFilePicker({
+        types:[{description:'Excel files',accept:{'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':['.xlsx','.xls']}}],
+        multiple:false
+      });
+      await _dbPut('excel-handle',handle);
+      file=await handle.getFile();
+    }catch(e){
+      if(e.name!=='AbortError') showToast('❌ Could not open file','err');
+      else document.getElementById('data-toast').style.opacity='0';
+      return;
+    }
+  }
+
+  showToast('⏳ Reading '+file.name+'…');
+  try{
+    const buf=await file.arrayBuffer();
+    const wb=XLSX.read(buf,{type:'array'});
+    autoApplyWorkbook(wb,file.name);
+  }catch(e){
+    showToast('❌ Could not read file: '+e.message,'err',6000);
+  }
+}
+
+async function forgetSavedFile(){
+  await _dbPut('excel-handle',null);
+  showToast('File link cleared — next sync will ask you to pick a file','info',3000);
+}
 populateHeaderDropdowns();
+populatePeriodDropdowns();
 setupTileHighlights();
 renderLeads();
 // Set topbar date
@@ -1533,7 +2490,7 @@ renderLeads();
 
 </script>
 <!-- ── EXCEL UPLOAD BUTTON & MODAL ── -->
-<button class="upload-btn" onclick="openUpload()" title="Update data from Excel">📊</button>
+<button class="upload-btn" onclick="updateDataDirect()" title="Sync data from your Excel file">📊</button>
 
 <div class="upload-overlay" id="upload-overlay">
   <div class="upload-modal">
@@ -1579,18 +2536,4 @@ renderLeads();
       </div>
       <div class="sheet-row">
         <span class="sheet-row-label">Hours</span>
-        <select class="sheet-sel" id="sm-hours"></select>
-        <span class="sheet-status" id="ss-hours">—</span>
-      </div>
-    </div>
-
-    <div class="upload-progress" id="upload-progress">⏳ Processing data…</div>
-
-    <div class="upload-actions">
-      <button class="upload-cancel" onclick="closeUpload()">Cancel</button>
-      <button class="upload-confirm" id="upload-confirm" onclick="applyUpload()" disabled>Apply Data</button>
-    </div>
-  </div>
-</div>
-
-</body></html>
+        <select
