@@ -327,6 +327,7 @@ tr.comp-row .dinl{font-size:10px;padding:1px 3px;}
 
 /* ── TABLE ── */
 .dt{width:100%;border-collapse:collapse;font-size:15px;table-layout:auto;}
+#leads-table{table-layout:fixed;}
 .dt th{
   font-family:'Roboto Mono',monospace;font-size:11px;letter-spacing:.8px;
   text-transform:uppercase;color:var(--xdim);text-align:left;
@@ -384,8 +385,8 @@ tr.comp-row .dinl{font-size:10px;padding:1px 3px;}
 .dt tr:last-child td{border-bottom:none;}
 .dt tr:hover td{background:#F5F9FD;}
 .dt td.mono{font-family:'Roboto Mono',monospace;font-size:12px;}
-.ln{font-weight:600;color:var(--text);font-size:13px;line-height:1.3;}
-.ls{font-size:11px;color:var(--dim);margin-top:2px;}
+.ln{font-weight:600;color:var(--text);font-size:13px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.ls{font-size:11px;color:var(--dim);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
 
 /* ── TABLE COLUMN WIDTHS ── */
 .col-month  {width:130px;}
@@ -1543,13 +1544,15 @@ function renderLeads(){
 }
 /* ── QUOTES ── */
 function renderQuotes(){
-  let rows=[...RAW_Q].filter(q=>matchEntity(q.company)&&matchMonth(q.month)&&matchGlobal(q));
-  rows=applyColFilters('quotes',rows);
-  rows=applyTileFilter('quotes',rows);
+  // Base: entity + date filtered — tile totals always computed from here (zeros kept)
+  let baseRows=[...RAW_Q].filter(q=>matchEntity(q.company)&&matchMonth(q.month)&&matchGlobal(q));
+  baseRows=applyColFilters('quotes',baseRows);
+  const tot={sub:0,sub_val:0,won:0,won_val:0,lost:0,lost_val:0,pending:0,pending_val:0,direct:0,direct_val:0,total_rev:0,wrv:0};
+  baseRows.forEach(r=>{tot.sub+=r.sub||0;tot.sub_val+=r.sub_val||0;tot.won+=r.won||0;tot.won_val+=r.won_val||0;tot.lost+=r.lost||0;tot.lost_val+=r.lost_val||0;tot.pending+=r.pending||0;tot.pending_val+=r.pending_val||0;tot.direct+=r.direct||0;tot.direct_val+=r.direct_val||0;tot.total_rev+=r.total_rev||0;});
+  // Table rows: tile filter applied on top
+  let rows=applyTileFilter('quotes',[...baseRows]);
   if(!SORT_STATE.quotes) rows.sort((a,b)=>b.month.localeCompare(a.month));
   else rows=applySort('quotes',rows);
-  const tot={sub:0,sub_val:0,won:0,won_val:0,lost:0,lost_val:0,pending:0,pending_val:0,direct:0,direct_val:0,total_rev:0,wrv:0};
-  rows.forEach(r=>{tot.sub+=r.sub||0;tot.sub_val+=r.sub_val||0;tot.won+=r.won||0;tot.won_val+=r.won_val||0;tot.lost+=r.lost||0;tot.lost_val+=r.lost_val||0;tot.pending+=r.pending||0;tot.pending_val+=r.pending_val||0;tot.direct+=r.direct||0;tot.direct_val+=r.direct_val||0;tot.total_rev+=r.total_rev||0;});
   // Delta vs previous period
   const prevQ=RAW_Q.filter(q=>matchEntity(q.company)&&dateInPrevFilter(q.month));
   const prev={sub:0,sub_val:0,won:0,won_val:0,lost:0,lost_val:0,pending:0,pending_val:0,direct:0,direct_val:0,total_rev:0};
@@ -1611,13 +1614,13 @@ function renderQuotes(){
 
 /* ── JOBS ── */
 function renderJobs(){
-  let rows=[...RAW_J].filter(j=>matchEntity(j.company)&&matchMonth(j.month)&&matchGlobal(j));
-  rows=applyColFilters('jobs',rows);
-  rows=applyTileFilter('jobs',rows);
+  let baseRowsJ=[...RAW_J].filter(j=>matchEntity(j.company)&&matchMonth(j.month)&&matchGlobal(j));
+  baseRowsJ=applyColFilters('jobs',baseRowsJ);
+  const tot={created:0,total_val:0,active:0,active_val:0,completed:0,completed_val:0};
+  baseRowsJ.forEach(r=>{tot.created+=r.created||0;tot.total_val+=r.total_val||0;tot.active+=r.active||0;tot.active_val+=r.active_val||0;tot.completed+=r.completed||0;tot.completed_val+=r.completed_val||0;});
+  let rows=applyTileFilter('jobs',[...baseRowsJ]);
   if(!SORT_STATE.jobs) rows.sort((a,b)=>b.month.localeCompare(a.month));
   else rows=applySort('jobs',rows);
-  const tot={created:0,total_val:0,active:0,active_val:0,completed:0,completed_val:0};
-  rows.forEach(r=>{tot.created+=r.created||0;tot.total_val+=r.total_val||0;tot.active+=r.active||0;tot.active_val+=r.active_val||0;tot.completed+=r.completed||0;tot.completed_val+=r.completed_val||0;});
   // Delta vs previous period
   const prevJ=RAW_J.filter(j=>matchEntity(j.company)&&dateInPrevFilter(j.month));
   const prev={created:0,total_val:0,active:0,active_val:0,completed:0,completed_val:0};
@@ -1661,15 +1664,15 @@ function renderJobs(){
 
 /* ── INVOICED ── */
 function renderInvoiced(){
-  let rows=[...RAW_I].filter(i=>matchEntity(i.company)&&matchMonth(i.month)&&matchGlobal(i));
-  rows=applyTileFilter('invoiced',rows);
+  let baseRowsI=[...RAW_I].filter(i=>matchEntity(i.company)&&matchMonth(i.month)&&matchGlobal(i));
+  baseRowsI=applyColFilters('invoiced',baseRowsI);
+  const tot={completed:0,total_val:0,est_hrs:0,act_hrs:0};
+  baseRowsI.forEach(r=>{tot.completed+=r.completed||0;tot.total_val+=r.total_val||0;tot.est_hrs+=r.est_hrs||0;tot.act_hrs+=r.act_hrs||0;});
+  let rows=applyTileFilter('invoiced',[...baseRowsI]);
   // compute eff for sort
   rows=rows.map(i=>({...i,eff:i.est_hrs>0?Math.round(i.act_hrs/i.est_hrs*100):0}));
-  rows=applyColFilters('invoiced',rows);
   if(!SORT_STATE.invoiced) rows.sort((a,b)=>b.month.localeCompare(a.month));
   else rows=applySort('invoiced',rows);
-  const tot={completed:0,total_val:0,est_hrs:0,act_hrs:0};
-  rows.forEach(r=>{tot.completed+=r.completed||0;tot.total_val+=r.total_val||0;tot.est_hrs+=r.est_hrs||0;tot.act_hrs+=r.act_hrs||0;});
   // Delta vs previous period
   const prevI=RAW_I.filter(i=>matchEntity(i.company)&&dateInPrevFilter(i.month));
   const prev={completed:0,total_val:0,est_hrs:0,act_hrs:0};
@@ -1716,8 +1719,11 @@ function renderInvoiced(){
 
 /* ── HOURS ── */
 function renderHours(){
-  let rows=ALL_HOURS.filter(h=>(STATE.hEntity==='all'||h.company===STATE.hEntity)&&matchGlobal(h));
-  rows=applyTileFilter('hours',rows);
+  // Base: global entity + tab-level entity toggle (no tile filter) — used for tile totals
+  let baseRowsH=ALL_HOURS.filter(h=>matchEntity(h.company)&&(STATE.hEntity==='all'||h.company===STATE.hEntity)&&matchGlobal(h));
+  baseRowsH=applyColFilters('hours',baseRowsH);
+  // Table rows: tile filter + flag filter on top of base
+  let rows=applyTileFilter('hours',[...baseRowsH]);
   // flag filter
   const flagF=STATE.hFlag;
   if(flagF){rows=rows.filter(h=>{
@@ -1727,14 +1733,13 @@ function renderHours(){
     if(flagF==='none') return !h.est_hrs||h.est_hrs===0;
     return true;
   });}
-  rows=applyColFilters('hours',rows);
   rows=applySort('hours',rows);
-  const tEst=rows.reduce((s,h)=>s+(h.est_hrs||0),0);
-  const tAct=rows.reduce((s,h)=>s+(h.act_hrs||0),0);
-  const tUn=rows.reduce((s,h)=>s+(h.unalloc||0),0);
-  const tVal=rows.reduce((s,h)=>s+(h.value||0),0);
-  const tComm=rows.reduce((s,h)=>s+(h.comm_hrs||0),0);
-  set('h-total',rows.length);set('h-val',fmtK(tVal));
+  const tEst=baseRowsH.reduce((s,h)=>s+(h.est_hrs||0),0);
+  const tAct=baseRowsH.reduce((s,h)=>s+(h.act_hrs||0),0);
+  const tUn=baseRowsH.reduce((s,h)=>s+(h.unalloc||0),0);
+  const tVal=baseRowsH.reduce((s,h)=>s+(h.value||0),0);
+  const tComm=baseRowsH.reduce((s,h)=>s+(h.comm_hrs||0),0);
+  set('h-total',baseRowsH.length);set('h-val',fmtK(tVal));
   set('h-est',Math.round(tEst).toLocaleString()+'h');
   set('h-act',Math.round(tAct).toLocaleString()+'h');
   set('h-comm',Math.round(tComm).toLocaleString()+'h');
@@ -1761,7 +1766,7 @@ function renderHours(){
     </div>`;
   }).join('');
   // Flag counts always from entity-filtered base (not flag-filtered) so other counts don't change on selection
-  const _fc=STATE.hEntity==='all'?ALL_HOURS:ALL_HOURS.filter(h=>h.company===STATE.hEntity);
+  const _fc=ALL_HOURS.filter(h=>(STATE.hEntity==='all'||h.company===STATE.hEntity));
   const over=_fc.filter(h=>(h.est_hrs&&h.est_hrs>0)&&(h.pct_rem<0||h.unalloc<0)).length;
   const amb=_fc.filter(h=>(h.est_hrs&&h.est_hrs>0)&&h.pct_rem>=0&&h.pct_rem<10&&!(h.pct_rem<0||h.unalloc<0)).length;
   const ok=_fc.filter(h=>(h.est_hrs&&h.est_hrs>0)&&h.pct_rem>=10).length;
